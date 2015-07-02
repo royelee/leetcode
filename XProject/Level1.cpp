@@ -12,6 +12,10 @@
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
+extern "C"
+{
+#include "FindMedian.h"
+}
 
 using namespace std;
 
@@ -435,6 +439,13 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 {
     // In statistics and probability theory, the median is the number separating the higher half of a data sample, a population, or a probability distribution, from the lower half. The median of a finite list of numbers can be found by arranging all the observations from lowest value to highest value and picking the middle one (e.g., the median of {3, 3, 5, 9, 11} is 5). If there is an even number of observations, then there is no single middle value; the median is then usually defined to be the mean of the two middle values [1] [2] (the median of {3, 5, 7, 9} is (5 + 7) / 2 = 6), which corresponds to interpreting the median as the fully trimmed mid-range.
     
+    // Method 1
+    // http://articles.leetcode.com/2011/03/median-of-two-sorted-arrays.html#comment-771
+    // Method 2
+    // http://www.programcreek.com/2012/12/leetcode-median-of-two-sorted-arrays-java/
+    // Method 3
+    // http://algorithmsandme.com/2014/12/find-median-of-two-sorted-arrays-of-different-sizes/
+    
     vector<int> list1 = nums1;
     vector<int> list2 = nums2;
     
@@ -445,44 +456,19 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
             // No intersection.
             size_t allNums = list1.size() + list2.size();
             size_t mid = allNums % 2;
-            if( allNums == 0 )
+            
+            vector<int>& first = list1.back() < list2.front() ? list1 : list2;
+            vector<int>& second = list1.back() < list2.front() ? list2 : list1;
+            if( allNums % 2 == 0 )
             {
+                int midNum1 = mid < first.size() ? first[mid] : second[mid - first.size()];
+                int midNum2 = mid + 1 < first.size() ? first[mid + 1] : second[mid + 1 - first.size()];
                 
+                return ( midNum1 + midNum2 ) / 2.0;
             }
             else
             {
-                if( list1.back() < list2.front() )
-                {
-                    // order lis1, list2
-                    if( mid + 1 < list1.size() )
-                    {
-                        return list1[mid + 1];
-                    }
-                    else if( mid + 1 - list1.size() < list2.size() )
-                    {
-                        return list2[mid + 1 - list1.size()];
-                    }
-                    else
-                    {
-                        cout << "error" << endl;
-                    }
-                }
-                else
-                {
-                    // order list2, list1
-                    if( mid + 1 < list1.size() )
-                    {
-                        return list1[mid + 1];
-                    }
-                    else if( mid + 1 - list1.size() < list2.size() )
-                    {
-                        return list2[mid + 1 - list1.size()];
-                    }
-                    else
-                    {
-                        cout << "error" << endl;
-                    }
-                }
+                return mid < first.size() ? first[mid] : second[mid - first.size()];
             }
         }
         else
@@ -523,8 +509,8 @@ void testFindMedianSortedArrays()
     
     vector<int> nums1, nums2;
     vector<int> all;
-    constexpr int NUM1_SIZE = 12;
-    constexpr int NUM2_SIZE = 12;
+    constexpr int NUM1_SIZE = 8;
+    constexpr int NUM2_SIZE = 7;
     for( int i = 0; i < NUM1_SIZE; i++ )
     {
         int random = std::rand() % 50;
@@ -544,11 +530,11 @@ void testFindMedianSortedArrays()
     sort( all.begin(), all.end(), std::less<int>() );
     
     for( auto i : nums1 )
-        cout << i << " ";
+        cout << i << ", ";
     cout << endl;
     
     for( auto i : nums2 )
-        cout << i << " ";
+        cout << i << ", ";
     cout << endl;
     
     for( auto i : all )
@@ -568,6 +554,64 @@ void testFindMedianSortedArrays()
     cout << "my = " << endl << findMedianSortedArrays(nums1, nums2) << endl;
 }
 
+// Driver program to test above functions
+int TestFindMedia()
+{
+    int A[] = {7, 8, 22, 23, 28, 30, 44, 49};
+    int B[] = {3, 9, 15, 23, 37, 40, 42, 42};
+    
+    int N = sizeof(A) / sizeof(A[0]);
+    int M = sizeof(B) / sizeof(B[0]);
+    
+    printf( "%f", findMedian( A, N, B, M ) );
+    
+    return 0;
+}
+
+int find_kth(int a[], int b[], int size_a, int size_b, int k){
+    /* to maintain uniformaty, we will assume that size_a is smaller than size_b
+     else we will swap array in call :) */
+    if(size_a > size_b)
+        return find_kth(b, a, size_b, size_a, k);
+    /* Now case when size of smaller array is 0 i.e there is no elemt in one array*/
+    if(size_a == 0)
+        return b[k-1]; // due to zero based index
+    /* case where K ==1 that means we have hit limit */
+    if(k ==1)
+        return min(a[0], b[0]);
+    
+    /* Now the divide and conquer part */
+    
+    int i =  min(size_a, k/2) ; // K should be less than the size of array
+    int j =  min(size_b, k/2) ; // K should be less than the size of array
+    
+    if(a[i-1] > b[j-1])
+        // Now we need to find only K-j th element
+        return find_kth(a, b+j, i, size_b -j, k-j);
+    else
+        return find_kth(a+i, b, size_a-i, j,  k-i);
+    
+    return -1;
+}
+
+double  find_median_ne(int a[], int b[], int size_a, int size_b){
+    int left  =  (size_a + size_b +1) / 2;
+    int right =  (size_a + size_b +2) / 2;
+    
+    return ((find_kth(a,b, size_a,size_b, left) +
+             find_kth(a,b, size_a,size_b, right))/2.0);
+}
+
+void TestFindMedian2()
+{
+    int* a = nullptr;
+    int b[] = {1};
+    
+    int size_a  = sizeof(a)/sizeof(a[0]);
+    int size_b  = sizeof(b)/sizeof(b[0]);
+    
+    printf("\nMedian is : %f", find_median_ne(a,b,size_a, size_b));
+}
 
 #pragma mark - run
 
@@ -575,4 +619,6 @@ void testFindMedianSortedArrays()
 void Level1::run()
 {
     testFindMedianSortedArrays();
+    TestFindMedia();
+    TestFindMedian2();
 }
