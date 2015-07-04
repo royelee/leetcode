@@ -435,6 +435,52 @@ void testZigzag()
 
 #pragma mark - findMedianSortedArrays
 
+int findKthInSortedArrays(vector<int>& l1, vector<int>& l2, size_t k)
+{
+    // always assume size of l1 < size of l2.
+    if( l1.size() > l2.size() )
+        return findKthInSortedArrays(l2, l1, k);
+    
+    if( l1.size() == 0 )
+        return k - 1 < l2.size() ? l2[k - 1] : -1;
+    
+    if( k == 1 )
+        return l2.size() > 0 ? min( l1[0], l2[0] ) : 0;
+    
+    size_t m1 = ( min( k, l1.size() ) + 1 ) / 2;  // median number.
+    size_t m2 = ( min( k - m1, l2.size() ) + 1 ) / 2;
+    
+    if( l1[m1 -1] == l2[m1 - 1] )
+    {
+        if( k - m1 - m2 == 0 )
+        {
+            return l1[m1 - 1];
+        }
+        else
+        {
+            l1.erase( l1.begin(), l1.begin() + m1 );
+            l2.erase( l2.begin(), l2.begin() + m2 );
+            return findKthInSortedArrays(l1, l2, k - m1 - m2 );
+        }
+    }
+    else if( l1[m1 - 1] < l2[m2 - 1] )
+    {
+        l1.erase( l1.begin(), l1.begin() + m1 );
+        if( l2.begin() + m2 + ( k - m1 - m2) < l2.end() )
+            l2.erase( l2.begin() + m2 + ( k - m1 - m2), l2.end() );
+        
+        return findKthInSortedArrays(l1, l2, k - m1 );
+    }
+    else
+    {
+        l2.erase( l2.begin(), l2.begin() + m2 );
+        if( l1.begin() + m1 + (k - m1 - m2) < l1.end() )
+            l1.erase( l1.begin() + m1 + (k - m1 - m2), l1.end() );
+        
+        return findKthInSortedArrays(l1, l2, k - m2 );
+    }
+}
+
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
 {
     // In statistics and probability theory, the median is the number separating the higher half of a data sample, a population, or a probability distribution, from the lower half. The median of a finite list of numbers can be found by arranging all the observations from lowest value to highest value and picking the middle one (e.g., the median of {3, 3, 5, 9, 11} is 5). If there is an even number of observations, then there is no single middle value; the median is then usually defined to be the mean of the two middle values [1] [2] (the median of {3, 5, 7, 9} is (5 + 7) / 2 = 6), which corresponds to interpreting the median as the fully trimmed mid-range.
@@ -446,87 +492,25 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2)
     // Method 3
     // http://algorithmsandme.com/2014/12/find-median-of-two-sorted-arrays-of-different-sizes/
     
-    vector<int> list1 = nums1;
-    vector<int> list2 = nums2;
-    
-    while( list1.size() + list2.size() > 4 )
+    size_t sum = nums1.size() + nums2.size();
+    if( sum % 2 == 0 )
     {
-        if( list1.back() < list2.front() || list1.front() > list2.back() )
-        {
-            // No intersection.
-            size_t allNums = list1.size() + list2.size();
-            size_t mid = allNums % 2;
-            
-            vector<int>& first = list1.back() < list2.front() ? list1 : list2;
-            vector<int>& second = list1.back() < list2.front() ? list2 : list1;
-            if( allNums % 2 == 0 )
-            {
-                int midNum1 = mid < first.size() ? first[mid] : second[mid - first.size()];
-                int midNum2 = mid + 1 < first.size() ? first[mid + 1] : second[mid + 1 - first.size()];
-                
-                return ( midNum1 + midNum2 ) / 2.0;
-            }
-            else
-            {
-                return mid < first.size() ? first[mid] : second[mid - first.size()];
-            }
-        }
-        else
-        {
-            size_t mid1 = list1.size() / 2;
-            size_t mid2 = list2.size() / 2;
-            
-            cout << list1[mid1] << " " << list2[mid2] << endl;
-            if( list1[mid1] < list2[mid2] )
-            {
-                list1.erase(list1.begin(), list1.begin() + list1.size() / 2 );
-                list2.erase(list2.begin() + list2.size() / 2 + 1, list2.end() );
-            }
-            else
-            {
-                list2.erase(list2.begin(), list2.begin() + list2.size() / 2 );
-                list1.erase(list1.begin() + list1.size() / 2 + 1, list1.end() );
-            }
-        }
-    }
-    
-    vector<int> all = list1;
-    all.insert(all.end(), list2.begin(), list2.end());
-    sort( all.begin(), all.end(), less<int>() );
-    if( all.size() % 2 == 0 )
-    {
-        return ( all[0] + all[1] ) / 2.0;
+        vector<int> nums3 = nums1;
+        vector<int> nums4 = nums2;
+        
+        return ( findKthInSortedArrays(nums1, nums2, ( sum + 1 ) / 2 ) + findKthInSortedArrays( nums3, nums4, ( sum + 1 ) / 2 + 1 ) ) / 2.0;
     }
     else
     {
-        return all[1];
+        return findKthInSortedArrays( nums1, nums2, ( sum  + 1 )/ 2 );
     }
 }
 
-void testFindMedianSortedArrays()
+double printMedian(vector<int>& nums1, vector<int>& nums2)
 {
-    srand( 1 /*time(0)*/ ); // use current time as seed for random generator
-    
-    vector<int> nums1, nums2;
     vector<int> all;
-    constexpr int NUM1_SIZE = 8;
-    constexpr int NUM2_SIZE = 7;
-    for( int i = 0; i < NUM1_SIZE; i++ )
-    {
-        int random = std::rand() % 50;
-        nums1.push_back( random );
-        all.push_back( random );
-    }
-    
-    for( int i = 0; i < NUM2_SIZE; i++ )
-    {
-        int random = std::rand() % 50;
-        nums2.push_back( random );
-        all.push_back( random );
-    }
-    
-    sort( nums1.begin(), nums1.end(), std::less<int>() );
-    sort( nums2.begin(), nums2.end(), std::less<int>() );
+    all.insert(all.begin(), nums1.begin(), nums1.end());
+    all.insert(all.begin(), nums2.begin(), nums2.end());
     sort( all.begin(), all.end(), std::less<int>() );
     
     for( auto i : nums1 )
@@ -540,18 +524,88 @@ void testFindMedianSortedArrays()
     for( auto i : all )
         cout << i << " ";
     cout << endl;
-
+    
+    if( all.size() == 0 )
+    {
+        cout << "all size is 0" << endl;
+        return -1.0;
+    }
+    
+    double median = -1.0;
     if( all.size() % 2 == 0 )
     {
         cout <<  all[all.size() / 2 -1] << " " << all[all.size() / 2] << endl;
-        cout << "median = " << ( all[all.size() / 2 -1] + all[all.size() / 2] ) / 2.0 << endl;
+        median = ( all[all.size() / 2 -1] + all[all.size() / 2] ) / 2.0;
     }
     else
     {
-        cout << "media = " << all[all.size() / 2 - 1] << endl;
+        median = all[all.size() / 2];
+    }
+    cout << "median = " << median << endl;
+    
+    return median;
+}
+
+void testFindMedianSortedArrays(const int NUM1_SIZE, const int NUM2_SIZE )
+{
+    srand( time(0) ); // use current time as seed for random generator
+    
+    vector<int> nums1, nums2;
+    for( int i = 0; i < NUM1_SIZE; i++ )
+    {
+        int random = std::rand() % 50;
+        nums1.push_back( random );
     }
     
-    cout << "my = " << endl << findMedianSortedArrays(nums1, nums2) << endl;
+    for( int i = 0; i < NUM2_SIZE; i++ )
+    {
+        int random = std::rand() % 50;
+        nums2.push_back( random );
+    }
+    
+    sort( nums1.begin(), nums1.end(), std::less<int>() );
+    sort( nums2.begin(), nums2.end(), std::less<int>() );
+    double trueM = printMedian( nums1, nums2 );
+
+    double myM = findMedianSortedArrays(nums1, nums2);
+    cout << "my = " << myM << endl;
+    if( myM != trueM )
+        throw exception();
+}
+
+void TestMyFailedCases()
+{
+    // Failed 1
+    {
+        vector<int> n1 = {1};
+        vector<int> n2 = {2, 3, 4, 5, 6};
+        printMedian( n1, n2 );
+        cout << "failed = " << findMedianSortedArrays(n1, n2) << endl;
+    }
+    
+    // Failed 2
+    {
+        vector<int> n1 = {15, 25, 29, 33, 34, 39};
+        vector<int> n2 = {38};
+        printMedian( n1, n2 );
+        cout << "failed = " << findMedianSortedArrays(n1, n2) << endl;
+    }
+    
+    // Failed 3
+    {
+        vector<int> n1 = {1, 2, 4, 5, 21, 25, 41};
+        vector<int> n2 = {17, 35, 43};
+        printMedian( n1, n2 );
+        cout << "failed = " << findMedianSortedArrays(n1, n2) << endl;
+    }
+    
+    // Failed 4
+    {
+        vector<int> n1 = {9, 25, 31, 44};
+        vector<int> n2 = {23, 25, 37, 41, 49};
+        printMedian( n1, n2 );
+        cout << "failed = " << findMedianSortedArrays(n1, n2) << endl;
+    }
 }
 
 // Driver program to test above functions
@@ -613,12 +667,26 @@ void TestFindMedian2()
     printf("\nMedian is : %f", find_median_ne(a,b,size_a, size_b));
 }
 
+#pragma mark - reverse integer
+
+int reverse(int x)
+{
+    
+}
+
+void TestReverInteger()
+{
+    
+}
+
+
 #pragma mark - run
 
 
 void Level1::run()
 {
-    testFindMedianSortedArrays();
-    TestFindMedia();
-    TestFindMedian2();
+    for( int i = 0; i < 5; i++ )
+        for( int j = 0; j < 10; j++ )
+            testFindMedianSortedArrays(i, j);
+    TestMyFailedCases();
 }
