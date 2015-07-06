@@ -15,6 +15,7 @@
 extern "C"
 {
 #include "FindMedian.h"
+#include <ctype.h>
 }
 
 using namespace std;
@@ -671,11 +672,105 @@ void TestFindMedian2()
 
 int reverse(int x)
 {
+    long r = 0;
+    while( x != 0 )
+    {
+        r *= 10;
+        r += x % 10;
+        x = x / 10;
+    }
     
+    // This is important as reverse might cause the integer overflow.
+    if( r > numeric_limits<int>::max() || r < numeric_limits<int>::min() )
+        return 0;
+
+    return static_cast<int>( r );
 }
 
 void TestReverInteger()
 {
+    cout << reverse( 1534236469 );
+}
+
+#pragma mark - atoi
+
+int myAtoi(string str)
+{
+    // If the first sequence of non-whitespace characters in str is not a valid integral number, or if no such sequence exists because either str is empty or it contains only whitespace characters, no conversion is performed and zero is returned.
+    int j = 0;
+    while( j < str.length() && isspace(str[j]) )
+    {
+        j++;
+    }
+    
+    // start from first non-whitespace char.
+    
+    if( j > str.length() )
+        return 0;
+    
+    bool sign = false;
+    if( str[j] == '-' || str[j] == '+' )
+    {
+        sign = (str[j] == '-');
+        j++;
+    }
+    
+    long rtn = 0;
+    for( int i = j; i < str.length(); i++ )
+    {
+        if( str[i] >= '0' && str[i] <= '9' )
+        {
+            rtn *= 10;
+            rtn += str[i] - '0';
+            
+//            if( ( !sign && rtn > numeric_limits<int>::max() ) ||
+//               ( sign && -rtn < numeric_limits<int>::min() ) )
+//            {
+//                return 0;
+//            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    return sign ? -rtn : rtn;
+}
+
+void testAtoI()
+{
+    cout << myAtoi("") << endl;
+    cout << myAtoi(" ") << endl;
+    cout << myAtoi("\n") << endl;
+    cout << myAtoi("1") << endl;
+    cout << myAtoi("-1") << endl;
+    cout << myAtoi("123") << endl;
+    cout << myAtoi("321") << endl;
+    cout << myAtoi("1234567890") << endl;
+    cout << myAtoi("-1234567890") << endl;
+    cout << myAtoi("01") << endl;
+    cout << myAtoi("-01") << endl;
+    cout << myAtoi("1.0") << endl;
+    cout << myAtoi("-1.0") << endl;
+    cout << myAtoi("9e10") << endl;
+    cout << myAtoi("-9e10") << endl;
+    cout << myAtoi("99999999999999") << endl;
+    cout << myAtoi("-99999999999999") << endl;
+    
+    // My failed
+    cout << myAtoi("+1")  << endl;
+    string strings[] = {"  -0012a42", "+-1", "2147483648" };
+    for( auto s : strings )
+    {
+        cout << atoi( s.c_str() )  << endl;
+        cout << myAtoi(s) << endl;
+    }
+}
+
+#pragma mark - palindrome
+
+bool isPalindrome(int x) {
     
 }
 
@@ -685,8 +780,5 @@ void TestReverInteger()
 
 void Level1::run()
 {
-    for( int i = 0; i < 5; i++ )
-        for( int j = 0; j < 10; j++ )
-            testFindMedianSortedArrays(i, j);
-    TestMyFailedCases();
+    testAtoI();
 }
