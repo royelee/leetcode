@@ -770,15 +770,93 @@ void testAtoI()
 
 #pragma mark - palindrome
 
-bool isPalindrome(int x) {
+bool isPalindromeBrute(int x)
+{
+    if( x < 0 )
+    {
+        return false;
+    }
+    else if( x < 10 )
+    {
+        return true;
+    }
+    else if( x < 100 )
+    {
+        return x / 10 == x % 10;
+    }
+    else
+    {
+        // bigger than 3 digits.
+        string s = to_string(x);
+        for( int i = 0; i < s.length() / 2; i++ )
+        {
+            if( s[i] != s[s.length() - i - 1] )
+                return false;
+        }
+        
+        return true;
+    }
+}
+
+bool isPalindrome(int x)
+{
+    if( x < 0 )
+    {
+        return false;
+    }
+    else if( x < 10 )
+    {
+        return true;
+    }
+    else if( x < 100 )
+    {
+        return x / 10 == x % 10;
+    }
+    else
+    {
+        // bigger than 3 digits.
+        long r = 0;
+        int tmp = x;
+        while( tmp != 0 )
+        {
+            r *= 10;
+            r += tmp % 10;
+            tmp = tmp / 10;
+        }
+        
+        return r == x;
+    }
+}
+
+void TestIsPalindrome()
+{
+    pair<int, bool> tests[] = {
+        { -1, false },
+        {-100, false },
+        { 0, true },
+        { 5, true },
+        { 10, false },
+        { 11, true },
+        { 24, false },
+        { 121, true },
+        { 144, false },
+        { 1221, true },
+        { 12321, true },
+        { 123321, true },
+        { 4567654, true }
+    };
     
+    for( auto p : tests )
+    {
+        cout << p.first << "= " << ( isPalindrome(p.first) == p.second ) << endl;
+    }
 }
 
 
 #pragma mark - run
 
 
-void Level1::run()
+void Level1::Run()
 {
-    testAtoI();
+    TestIsPalindrome();
 }

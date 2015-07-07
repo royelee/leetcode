@@ -19,7 +19,7 @@ public:
 
     std::vector<int> twoSum(std::vector<int>& nums, int target);
     
-    void run();
+    void Run();
     
 private:
     void runTwoSum();

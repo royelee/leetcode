@@ -8,10 +8,11 @@
 
 #include <iostream>
 #include "Level1.h"
+#include "Level2.h"
 
 int main(int argc, const char * argv[]) {
-    Level1 level;
-    level.run();
+    Level2 level;
+    level.Run();
     return 0;
 }
 
