@@ -11,7 +11,7 @@
 #include "Level2.h"
 
 int main(int argc, const char * argv[]) {
-    Level2 level;
+    Level1 level;
     level.Run();
     return 0;
 }

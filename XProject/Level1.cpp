@@ -852,11 +852,63 @@ void TestIsPalindrome()
     }
 }
 
+#pragma mark - 
+
+bool isPalidrome(string s)
+{
+    if( s.length() <= 1 )
+        return true;
+
+    for( size_t i = 0, j = s.length() - 1; i < j; i++, j-- )
+    {
+        if( s[i] != s[j] )
+            return false;
+    }
+    
+    return true;
+}
+
+string longestPalindrome(string s)
+{
+    string longest;
+    for( int i = 0; i < s.length(); i++ )
+    {
+        for( int j = i; j < s.length(); j++ )
+        {
+            string testStr = s.substr(i, j - i);
+            if( testStr.length() > longest.length() )
+            {
+                if( isPalidrome( testStr ) )
+                {
+                    longest = testStr;
+                }
+            }
+        }
+    }
+    return longest;
+}
+
+void testLongestPalindrome()
+{
+    pair<string, string> tests[] =
+    {
+//        {"ab", "b"},
+//        {"a", "a"},
+    {"lcnvoknqgejxbfhijmxglisfzjwbtvhodwummdqeggzfczmetrdnoetmcydwddmtubcqmdjwnpzdqcdhplxtezctvgnpobnnscrmeqkwgiedhzsvskrxwfyklynkplbgefjbyhlgmkkfpwngdkvwmbdskvagkcfsidrdgwgmnqjtdbtltzwxaokrvbxqqqhljszmefsyewwggylpugmdmemvcnlugipqdjnriythsanfdxpvbatsnatmlusspqizgknabhnqayeuzflkuysqyhfxojhfponsndytvjpbzlbfzjhmwoxcbwvhnvnzwmkhjxvuszgtqhctbqsxnasnhrusodeqmzrlcsrafghbqjpyklaaqximcjmpsxpzbyxqvpexytrhwhmrkuybtvqhwxdqhsnbecpfiudaqpzsvfaywvkhargputojdxonvlprzwvrjlmvqmrlftzbytqdusgeupuofhgonqoyffhmartpcbgybshllnjaapaixdbbljvjomdrrgfeqhwffcknmcqbhvulwiwmsxntropqzefwboozphjectnudtvzzlcmeruszqxvjgikcpfclnrayokxsqxpicfkvaerljmxchwcmxhtbwitsexfqowsflgzzeynuzhtzdaixhjtnielbablmckqzcccalpuyahwowqpcskjencokprybrpmpdnswslpunohafvminfolekdleusuaeiatdqsoatputmymqvxjqpikumgmxaxidlrlfmrhpkzmnxjtvdnopcgsiedvtfkltvplfcfflmwyqffktsmpezbxlnjegdlrcubwqvhxdammpkwkycrqtegepyxtohspeasrdtinjhbesilsvffnzznltsspjwuogdyzvanalohmzrywdwqqcukjceothydlgtocukc", "a"}
+    };
+    
+    for( auto t : tests )
+    {
+        string my = longestPalindrome( t.first );
+        cout << t.first << " = " << my << " r = " << (my == t.second) << endl;
+    }
+}
+
 
 #pragma mark - run
 
 
 void Level1::Run()
 {
-    TestIsPalindrome();
+    testLongestPalindrome();
 }
