@@ -852,20 +852,24 @@ void TestIsPalindrome()
     }
 }
 
-#pragma mark - 
+#pragma mark -
 
-bool isPalidrome(string s)
+string palindromeCenter( string& s, int start, int end )
 {
-    if( s.length() <= 1 )
-        return true;
-
-    for( size_t i = 0, j = s.length() - 1; i < j; i++, j-- )
+    while( start >= 0 && end < s.length() )
     {
-        if( s[i] != s[j] )
-            return false;
+        if( start - 1 >= 0 && end + 1 < s.length() && s[start-1] == s[end +1] )
+        {
+            start--;
+            end++;
+        }
+        else
+        {
+            break;
+        }
     }
     
-    return true;
+    return s.substr(start, end - start + 1);
 }
 
 string longestPalindrome(string s)
@@ -873,16 +877,30 @@ string longestPalindrome(string s)
     string longest;
     for( int i = 0; i < s.length(); i++ )
     {
-        for( int j = i; j < s.length(); j++ )
+        if( i + 1 < s.length() )
         {
-            string testStr = s.substr(i, j - i);
-            if( testStr.length() > longest.length() )
+            // check current and next.
+            if( s[i] == s[i+1] )
             {
-                if( isPalidrome( testStr ) )
-                {
-                    longest = testStr;
-                }
+                // start from i, i+1. Expand the search.
+                string t = palindromeCenter( s, i, i + 1 );
+                if( t.length() > longest.length() )
+                    longest = t;
             }
+            
+            // check surrounding case.
+            if( i - 1 >= 0 && s[i - 1] == s[i + 1] )
+            {
+                // start from i, i+1. Expand the search.
+                string t = palindromeCenter( s, i - 1, i + 1 );
+                if( t.length() > longest.length() )
+                    longest = t;
+            }
+        }
+        else
+        {
+            if( longest.length() == 0 )
+                longest = s[i];
         }
     }
     return longest;
@@ -892,10 +910,18 @@ void testLongestPalindrome()
 {
     pair<string, string> tests[] =
     {
-//        {"ab", "b"},
-//        {"a", "a"},
-    {"lcnvoknqgejxbfhijmxglisfzjwbtvhodwummdqeggzfczmetrdnoetmcydwddmtubcqmdjwnpzdqcdhplxtezctvgnpobnnscrmeqkwgiedhzsvskrxwfyklynkplbgefjbyhlgmkkfpwngdkvwmbdskvagkcfsidrdgwgmnqjtdbtltzwxaokrvbxqqqhljszmefsyewwggylpugmdmemvcnlugipqdjnriythsanfdxpvbatsnatmlusspqizgknabhnqayeuzflkuysqyhfxojhfponsndytvjpbzlbfzjhmwoxcbwvhnvnzwmkhjxvuszgtqhctbqsxnasnhrusodeqmzrlcsrafghbqjpyklaaqximcjmpsxpzbyxqvpexytrhwhmrkuybtvqhwxdqhsnbecpfiudaqpzsvfaywvkhargputojdxonvlprzwvrjlmvqmrlftzbytqdusgeupuofhgonqoyffhmartpcbgybshllnjaapaixdbbljvjomdrrgfeqhwffcknmcqbhvulwiwmsxntropqzefwboozphjectnudtvzzlcmeruszqxvjgikcpfclnrayokxsqxpicfkvaerljmxchwcmxhtbwitsexfqowsflgzzeynuzhtzdaixhjtnielbablmckqzcccalpuyahwowqpcskjencokprybrpmpdnswslpunohafvminfolekdleusuaeiatdqsoatputmymqvxjqpikumgmxaxidlrlfmrhpkzmnxjtvdnopcgsiedvtfkltvplfcfflmwyqffktsmpezbxlnjegdlrcubwqvhxdammpkwkycrqtegepyxtohspeasrdtinjhbesilsvffnzznltsspjwuogdyzvanalohmzrywdwqqcukjceothydlgtocukc", "a"}
+        {"bb", "bb"},
+        {"a", "a"},
+        {"eeabccbadde", "abccba"},
+    {"lcnvoknqgejxbfhijmxglisfzjwbtvhodwummdqeggzfczmetrdnoetmcydwddmtubcqmdjwnpzdqcdhplxtezctvgnpobnnscrmeqkwgiedhzsvskrxwfyklynkplbgefjbyhlgmkkfpwngdkvwmbdskvagkcfsidrdgwgmnqjtdbtltzwxaokrvbxqqqhljszmefsyewwggylpugmdmemvcnlugipqdjnriythsanfdxpvbatsnatmlusspqizgknabhnqayeuzflkuysqyhfxojhfponsndytvjpbzlbfzjhmwoxcbwvhnvnzwmkhjxvuszgtqhctbqsxnasnhrusodeqmzrlcsrafghbqjpyklaaqximcjmpsxpzbyxqvpexytrhwhmrkuybtvqhwxdqhsnbecpfiudaqpzsvfaywvkhargputojdxonvlprzwvrjlmvqmrlftzbytqdusgeupuofhgonqoyffhmartpcbgybshllnjaapaixdbbljvjomdrrgfeqhwffcknmcqbhvulwiwmsxntropqzefwboozphjectnudtvzzlcmeruszqxvjgikcpfclnrayokxsqxpicfkvaerljmxchwcmxhtbwitsexfqowsflgzzeynuzhtzdaixhjtnielbablmckqzcccalpuyahwowqpcskjencokprybrpmpdnswslpunohafvminfolekdleusuaeiatdqsoatputmymqvxjqpikumgmxaxidlrlfmrhpkzmnxjtvdnopcgsiedvtfkltvplfcfflmwyqffktsmpezbxlnjegdlrcubwqvhxdammpkwkycrqtegepyxtohspeasrdtinjhbesilsvffnzznltsspjwuogdyzvanalohmzrywdwqqcukjceothydlgtocukc", "lbabl"}
     };
+    
+    /*
+     i-1   i ...  j j+1
+     aa sabccbas seea
+     
+     abcd efghijjijj
+     */
     
     for( auto t : tests )
     {
