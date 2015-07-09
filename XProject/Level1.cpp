@@ -885,7 +885,9 @@ string longestPalindrome(string s)
                 // start from i, i+1. Expand the search.
                 string t = palindromeCenter( s, i, i + 1 );
                 if( t.length() > longest.length() )
+                {
                     longest = t;
+                }
             }
             
             // check surrounding case.
@@ -910,6 +912,7 @@ void testLongestPalindrome()
 {
     pair<string, string> tests[] =
     {
+        {"eeeeeeeeee", "eeeeeeeeee"},
         {"bb", "bb"},
         {"a", "a"},
         {"eeabccbadde", "abccba"},
@@ -920,7 +923,9 @@ void testLongestPalindrome()
      i-1   i ...  j j+1
      aa sabccbas seea
      
-     abcd efghijjijj
+     abcd efghijjjjijjijjj
+     
+     yzzxzzxzzy
      */
     
     for( auto t : tests )
