@@ -854,58 +854,82 @@ void TestIsPalindrome()
 
 #pragma mark -
 
-string palindromeCenter( string& s, int start, int end )
+string longestPalindrome(string s)
 {
-    while( start >= 0 && end < s.length() )
-    {
-        if( start - 1 >= 0 && end + 1 < s.length() && s[start-1] == s[end +1] )
-        {
-            start--;
-            end++;
+    if (s.size() < 2)
+        return s;
+    int len = s.size(), max_left = 0, max_len = 1, left, right;
+    for (int start = 0; start < len && len - start > max_len / 2;) {
+        left = right = start;
+        while (right < len - 1 && s[right + 1] == s[right])
+            ++right;
+        start = right + 1;
+        while (right < len - 1 && left > 0 && s[right + 1] == s[left - 1]) {
+            ++right;
+            --left;
         }
-        else
+        if (max_len < right - left + 1) {
+            max_left = left;
+            max_len = right - left + 1;
+        }
+    }
+    return s.substr(max_left, max_len);
+}
+
+string longestPalindromeDP(string s)
+{
+    // Using DP.
+    // So the optimal sub is for Palindrome string s[i..j]
+    // then if s[i-1] == s[j+1] then, s[i-1..j+1] is palindrome.
+    // Means,
+    // We also know s[i..i] is parlidrome string.
+    if( s.length() < 2 )
+        return s;
+    
+    vector<vector<bool>> dp{s.length(), vector<bool>(s.length(), false)};
+    string longest;
+    
+    int longestBegin = 0;
+    int maxLen = 1;
+    
+    for (int i = 0; i < s.length(); i++) {
+        dp[i][i] = true;
+        
+        if (s[i] == s[i+1])
         {
-            break;
+            dp[i][i+1] = true;
+            longestBegin = i;
+            maxLen = 2;
         }
     }
     
-    return s.substr(start, end - start + 1);
-}
-
-string longestPalindrome(string s)
-{
-    string longest;
-    for( int i = 0; i < s.length(); i++ )
+    // Check for lengths greater than 2. k is length of substring
+    for (int k = 3; k <= s.length(); ++k)
     {
-        if( i + 1 < s.length() )
+        // Fix the starting index
+        for (int i = 0; i < s.length()-k+1 ; ++i)
         {
-            // check current and next.
-            if( s[i] == s[i+1] )
+            // Get the ending index of substring from
+            // starting index i and length k
+            int j = i + k - 1;
+            
+            // checking for sub-string from ith index to
+            // jth index iff str[i+1] to str[j-1] is a
+            // palindrome
+            if (dp[i+1][j-1] && s[i] == s[j])
             {
-                // start from i, i+1. Expand the search.
-                string t = palindromeCenter( s, i, i + 1 );
-                if( t.length() > longest.length() )
+                dp[i][j] = true;
+                
+                if( j - i + 1 > maxLen )
                 {
-                    longest = t;
+                    longestBegin = i;
+                    maxLen = j - i + 1;
                 }
             }
-            
-            // check surrounding case.
-            if( i - 1 >= 0 && s[i - 1] == s[i + 1] )
-            {
-                // start from i, i+1. Expand the search.
-                string t = palindromeCenter( s, i - 1, i + 1 );
-                if( t.length() > longest.length() )
-                    longest = t;
-            }
-        }
-        else
-        {
-            if( longest.length() == 0 )
-                longest = s[i];
         }
     }
-    return longest;
+
+    return s.substr(longestBegin, maxLen);
 }
 
 void testLongestPalindrome()
