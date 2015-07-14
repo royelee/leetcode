@@ -90,32 +90,18 @@ int maxArea(vector<int>& heights)
 {
     int maxA = 0;
     size_t size = heights.size();
-    for( int i = 0; i < size; i++ )
-    {
-        int current = heights[i];
-        
-        int j = size - 1;
-        while( j > i )
+    int i = 0;
+    int j = size - 1;
+    while ( i < j) {
+        int area = (j-i) * min(heights[j], heights[i]);
+        maxA = max( maxA, area );
+        if( heights[i] < heights[j] )
         {
-            if( heights[j] >= current )
-            {
-                maxA = max( maxA, (j - i) * current );
-                break;
-            }
-            
-            j--;
+            i++;
         }
-        
-        j = 0;
-        while( j < i )
+        else
         {
-            if( heights[j] >= current )
-            {
-                maxA = max( maxA, (i - j) * current );
-                break;
-            }
-            
-            j++;
+            j--;
         }
     }
     
@@ -166,10 +152,22 @@ void testMaxArea()
     cout << 48267879 << endl;
 }
 
+#pragma mark - romanToInt
+
+int romanToInt(string s)
+{
+    
+}
+
+void testRomanToInt()
+{
+    
+}
+
 
 #pragma mark - run
 
 void Level2::Run()
 {
-    testMaxArea();
+    testRomanToInt();
 }
