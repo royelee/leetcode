@@ -11,6 +11,7 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -156,12 +157,76 @@ void testMaxArea()
 
 int romanToInt(string s)
 {
+    map<string, int> buckets =
+    {
+        {"I", 1},
+        {"IV", 4},
+        {"V", 5},
+        {"IX", 9},
+        {"X", 10},
+        {"XL", 40},
+        {"L", 50},
+        {"XC", 90},
+        {"C", 100},
+        {"CD", 400},
+        {"D", 500},
+        {"CM", 900},
+        {"M", 1000}
+    };
     
+    int rtn = 0;
+    int i = 0;
+    while( i < s.length() && isspace(s[i]) )
+    {
+        i++;
+    }
+    
+    while( i < s.length() )
+    {
+        if( i + 1 < s.length() )
+        {
+            string sub = s.substr(i, 2);
+            if( buckets.find(sub) != buckets.end() )
+            {
+                rtn += buckets[sub];
+                
+                i = i + 2;
+                continue;
+            }
+        }
+        
+        string sub = s.substr(i, 1);
+        if( buckets.find(sub) != buckets.end() )
+        {
+            rtn += buckets[sub];
+        }
+        
+        i++;
+    }
+    
+    return rtn;
 }
 
 void testRomanToInt()
 {
+    pair<int, string> tests[] = {
+        {40, "XL"}, // failed
+        {1, "I"},
+        {2, "II"},
+        {3, "III"},
+        {4, "IV"},
+        {6, "VI"},
+        {9, "IX"},
+        {11, "XI"},
+        {80, "LXXX"},
+        {84, "LXXXIV"},
+        {1800, "MDCCC"}
+    };
     
+    for( auto p : tests )
+    {
+        cout << p.first << "= " << romanToInt(p.second) << " " << " result = " << (romanToInt(p.second)  == p.first ) << endl;
+    }
 }
 
 
