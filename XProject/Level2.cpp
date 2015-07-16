@@ -229,10 +229,51 @@ void testRomanToInt()
     }
 }
 
+#pragma mark - longestCommonPrefix
+string longestCommonPrefix(vector<string>& strs)
+{
+    if( strs.size() < 1 )
+        return "";
+    
+    stringstream ss;
+    
+    int i = 0;
+    while( i < strs[0].size() )
+    {
+        char curC = strs[0][i];
+
+        bool stop = false;
+        for( int j = 1; j < strs.size(); j++ )
+        {
+            if( curC != strs[j][i] )
+            {
+                stop = true;
+                break;
+            }
+        }
+        
+        if(stop)
+        {
+            break;
+        }
+        
+        ss << curC;
+
+        i++;
+    }
+    
+    return ss.str();
+}
+
+void TestLongestCommonPrefix()
+{
+    vector<string> v = {"a", "b"};
+    cout << longestCommonPrefix(v) << endl;
+}
 
 #pragma mark - run
 
 void Level2::Run()
 {
-    testRomanToInt();
+    TestLongestCommonPrefix();
 }
