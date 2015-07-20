@@ -290,7 +290,9 @@ vector<vector<int>> threeSumBF(vector<int>& nums)
             {
                 if( nums[i] + nums[j] + nums[k] == 0 )
                 {
-                    r.push_back({nums[i], nums[j], nums[k]});
+                    vector<int> v = {nums[i], nums[j], nums[k]};
+                    sort(v.begin(), v.end());
+                    r.push_back(v);
                 }
             }
         }
@@ -302,10 +304,6 @@ vector<vector<int>> threeSumBF(vector<int>& nums)
 vector<vector<int>> threeSum(vector<int>& nums)
 {
     vector<vector<int>> r;
-    
-    // remove duplicates.
-    sort( nums.begin(), nums.end() );
-    nums.erase( unique( nums.begin(), nums.end() ), nums.end() );
     
     if( nums.size() < 4 )
         return r;
@@ -327,29 +325,17 @@ vector<vector<int>> threeSum(vector<int>& nums)
         {
             for( auto v : m[lookingFor] )
             {
-                if( unique < v[0] )
-                {
-                    r.push_back({unique, v[0], v[1]});
-                }
-                else if( unique > v[1])
-                {
-                    r.push_back({v[0], v[1], unique});
-                }
-                else
-                {
-                    r.push_back({v[0], unique, v[1]});
-                }
-            }
-            
-            if(m.find(unique) != m.end())
-            {
-                auto tmpV = m[unique];
-                tmpV.erase(remove_if(tmpV.begin(), tmpV.end(), [lookingFor](vector<int> t){
-                    return (t[0] == 0 && t[1] == lookingFor) || (t[0] == lookingFor && t[1] == 0);
-                }), tmpV.end());
+                vector<int> tmpV = {unique, v[0], v[1]};
+                sort(tmpV.begin(), tmpV.end());
+                r.push_back(tmpV);
             }
         }
     }
+    
+    
+    // remove duplicates.
+    sort( r.begin(), r.end() );
+    r.erase( unique( r.begin(), r.end() ), r.end() );
     
     return r;
 }
@@ -388,8 +374,10 @@ void testThreeSum()
     vector<int> t = {-1, 0, 1, 2, -1, -4};
     _testThreeSum(t);
     
-//    t = {8,-15,-2,-13,8,5,6,-3,-9,3,6,-6,8,14,-9,-8,-9,-6,-14,5,-7,3,-10,-14,-12,-11,12,-15,-1,12,8,-8,12,13,-13,-3,-5,0,10,2,-11,-7,3,4,-8,9,3,-10,11,5,10,11,-7,7,12,-12,3,1,11,9,-9,-4,9,-12,-6,11,-7,4,-4,-12,13,-8,-12,2,3,-13,-12,-8,14,14,12,9,10,12,-6,-1,8,4,8,4,-1,14,-15,-7,9,-14,11,9,5,14};
-//    _testThreeSum(t);
+    t = {8,-15,-2,-13,8,5,6,-3,-9,3,6,-6,8,14,-9,-8,-9,-6,-14,5,-7,3,-10,-14,-12,-11,12,-15,-1,12,8,-8,12,13,-13,-3,-5,0,10,2,-11,-7,3,4,-8,9,3,-10,11,5,10,11,-7,7,12,-12,3,1,11,9,-9,-4,9,-12,-6,11,-7,4,-4,-12,13,-8,-12,2,3,-13,-12,-8,14,14,12,9,10,12,-6,-1,8,4,8,4,-1,14,-15,-7,9,-14,11,9,5,14};
+    _testThreeSum(t);
+    
+    
 }
 
 #pragma mark - run
