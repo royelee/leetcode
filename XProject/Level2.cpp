@@ -12,6 +12,8 @@
 #include <sstream>
 #include <vector>
 #include <map>
+#include <numeric>
+#include <set>
 
 using namespace std;
 
@@ -271,9 +273,128 @@ void TestLongestCommonPrefix()
     cout << longestCommonPrefix(v) << endl;
 }
 
+#pragma mark - three sum
+
+vector<vector<int>> threeSumBF(vector<int>& nums)
+{
+    vector<vector<int>> r;
+    
+    if( nums.size() < 4 )
+        return r;
+    
+    for( int i = 0; i < nums.size(); i++ )
+    {
+        for( int j = i + 1; j < nums.size(); j++ )
+        {
+            for( int k = j + 1; k < nums.size(); k++ )
+            {
+                if( nums[i] + nums[j] + nums[k] == 0 )
+                {
+                    r.push_back({nums[i], nums[j], nums[k]});
+                }
+            }
+        }
+    }
+    
+    return r;
+}
+
+vector<vector<int>> threeSum(vector<int>& nums)
+{
+    vector<vector<int>> r;
+    
+    // remove duplicates.
+    sort( nums.begin(), nums.end() );
+    nums.erase( unique( nums.begin(), nums.end() ), nums.end() );
+    
+    if( nums.size() < 4 )
+        return r;
+    
+    map<int, vector<vector<int>>> m;
+    for( int i = 0; i < nums.size(); i++ )
+    {
+        for( int j = i + 1; j < nums.size(); j++ )
+        {
+            int sum = nums[i] + nums[j];
+            m[sum].push_back( {nums[i], nums[j]} );
+        }
+    }
+
+    for( auto unique : nums )
+    {
+        int lookingFor = -1 * unique;
+        if(m.find(lookingFor) != m.end())
+        {
+            for( auto v : m[lookingFor] )
+            {
+                if( unique < v[0] )
+                {
+                    r.push_back({unique, v[0], v[1]});
+                }
+                else if( unique > v[1])
+                {
+                    r.push_back({v[0], v[1], unique});
+                }
+                else
+                {
+                    r.push_back({v[0], unique, v[1]});
+                }
+            }
+            
+            if(m.find(unique) != m.end())
+            {
+                auto tmpV = m[unique];
+                tmpV.erase(remove_if(tmpV.begin(), tmpV.end(), [lookingFor](vector<int> t){
+                    return (t[0] == 0 && t[1] == lookingFor) || (t[0] == lookingFor && t[1] == 0);
+                }), tmpV.end());
+            }
+        }
+    }
+    
+    return r;
+}
+
+void _testThreeSum(vector<int>& t)
+{
+    cout << "vector is ";
+    for (auto i : t)
+        std::cout << i << ' ';
+    cout << endl;
+    
+    vector<vector<int>> r = threeSumBF(t);
+    
+    cout << "correct answer" << endl;
+    auto f = []( vector<int>& v )
+    {
+        cout << "result : ";
+        for( auto i : v )
+        {
+            cout << i << " ";
+        }
+        cout << endl;
+        
+        int sum = accumulate(v.begin(), v.end(), 0);
+        cout << "sum = " << sum << endl;
+    };
+    for_each(r.begin(), r.end(), f);
+    
+    cout << "my answer" << endl;
+    r = threeSum(t);
+    for_each(r.begin(), r.end(), f);
+}
+
+void testThreeSum()
+{
+    vector<int> t = {-1, 0, 1, 2, -1, -4};
+    _testThreeSum(t);
+    
+//    t = {8,-15,-2,-13,8,5,6,-3,-9,3,6,-6,8,14,-9,-8,-9,-6,-14,5,-7,3,-10,-14,-12,-11,12,-15,-1,12,8,-8,12,13,-13,-3,-5,0,10,2,-11,-7,3,4,-8,9,3,-10,11,5,10,11,-7,7,12,-12,3,1,11,9,-9,-4,9,-12,-6,11,-7,4,-4,-12,13,-8,-12,2,3,-13,-12,-8,14,14,12,9,10,12,-6,-1,8,4,8,4,-1,14,-15,-7,9,-14,11,9,5,14};
+//    _testThreeSum(t);
+}
+
 #pragma mark - run
 
 void Level2::Run()
 {
-    TestLongestCommonPrefix();
+    testThreeSum();
 }
