@@ -301,41 +301,73 @@ vector<vector<int>> threeSumBF(vector<int>& nums)
     return r;
 }
 
+vector<vector<int>> twoSum(vector<int>& nums, int start, int end, int target)
+{
+    vector<vector<int>> r;
+    
+    if( end - start < 1 || start < 0 || end > nums.size() - 1 )
+        return r;
+    
+    // Assume array is sorted.
+    
+    int i = start;
+    int j = end;
+    while( i < j )
+    {
+        int left = nums[i];
+        int right = nums[j];
+        if( left + right < target )
+        {
+            i++;
+        }
+        else if( left + right > target )
+        {
+            j--;
+        }
+        else
+        {
+            r.push_back({nums[i], nums[j]});
+
+            // This is important to make sure there is no duplicates.
+            // i.e. looking for -15
+            // array is {2,2,2,13,13,13}
+            while( i + 1 <= end && nums[i] == nums[i+1])
+                i++;
+            while( j - 1 >= start && nums[j] == nums[j-1])
+                j--;
+            
+            i++;
+            j--;
+        }
+    }
+    
+    return r;
+}
+
 vector<vector<int>> threeSum(vector<int>& nums)
 {
     vector<vector<int>> r;
     
-    if( nums.size() < 4 )
+    if( nums.size() < 3 )
         return r;
     
-    map<int, vector<vector<int>>> m;
+    sort(nums.begin(), nums.end());
+    
     for( int i = 0; i < nums.size(); i++ )
     {
-        for( int j = i + 1; j < nums.size(); j++ )
+        int tmp = nums[i];
+        vector<vector<int>> twoSums = twoSum( nums, i + 1, nums.size() - 1, -tmp );
+        
+        for( vector<int>& sums : twoSums )
         {
-            int sum = nums[i] + nums[j];
-            m[sum].push_back( {nums[i], nums[j]} );
+            // Found it, now insert it into result.
+            r.push_back({nums[i],  sums[0], sums[1]});
         }
+        
+        // This is important to make sure there is no duplicates.
+        while( i + 1 <= nums.size() && nums[i] == nums[i+1])
+            i++;
     }
-
-    for( auto unique : nums )
-    {
-        int lookingFor = -1 * unique;
-        if(m.find(lookingFor) != m.end())
-        {
-            for( auto v : m[lookingFor] )
-            {
-                vector<int> tmpV = {unique, v[0], v[1]};
-                sort(tmpV.begin(), tmpV.end());
-                r.push_back(tmpV);
-            }
-        }
-    }
-    
-    
-    // remove duplicates.
-    sort( r.begin(), r.end() );
-    r.erase( unique( r.begin(), r.end() ), r.end() );
     
     return r;
 }
@@ -371,13 +403,18 @@ void _testThreeSum(vector<int>& t)
 
 void testThreeSum()
 {
-    vector<int> t = {-1, 0, 1, 2, -1, -4};
+//    vector<int> t = {-1, 0, 1, 2, -1, -4};
+//    _testThreeSum(t);
+    
+//    vector<int>  t = {8,-15,-2,-13,8,5,6,-3,-9,3,6,-6,8,14,-9,-8,-9,-6,-14,5,-7,3,-10,-14,-12,-11,12,-15,-1,12,8,-8,12,13,-13,-3,-5,0,10,2,-11,-7,3,4,-8,9,3,-10,11,5,10,11,-7,7,12,-12,3,1,11,9,-9,-4,9,-12,-6,11,-7,4,-4,-12,13,-8,-12,2,3,-13,-12,-8,14,14,12,9,10,12,-6,-1,8,4,8,4,-1,14,-15,-7,9,-14,11,9,5,14};
+//    _testThreeSum(t);
+
+    // failed cases
+//    vector<int> t = {0, 0, 0};
+//    _testThreeSum(t);
+
+    vector<int> t = {0, 0, 0, 0};
     _testThreeSum(t);
-    
-    t = {8,-15,-2,-13,8,5,6,-3,-9,3,6,-6,8,14,-9,-8,-9,-6,-14,5,-7,3,-10,-14,-12,-11,12,-15,-1,12,8,-8,12,13,-13,-3,-5,0,10,2,-11,-7,3,4,-8,9,3,-10,11,5,10,11,-7,7,12,-12,3,1,11,9,-9,-4,9,-12,-6,11,-7,4,-4,-12,13,-8,-12,2,3,-13,-12,-8,14,14,12,9,10,12,-6,-1,8,4,8,4,-1,14,-15,-7,9,-14,11,9,5,14};
-    _testThreeSum(t);
-    
-    
 }
 
 #pragma mark - run
