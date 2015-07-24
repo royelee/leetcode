@@ -417,9 +417,95 @@ void testThreeSum()
     _testThreeSum(t);
 }
 
+
+#pragma mark - threeSumClosest
+
+// Assume array is sorted.
+// [Start, end)
+int twoSumClosest(vector<int>& nums, int start, int end, int target)
+{
+    if( end - start < 2 )
+        return numeric_limits<int>::max();
+    
+    int distance = numeric_limits<int>::max();
+    int r = numeric_limits<int>::max();
+
+    int i = start;
+    int j = end - 1;
+    while( i < j )
+    {
+        int sum = nums[i] + nums[j];
+        
+        if( abs( sum - target ) < distance )
+        {
+            distance = abs( sum - target );
+            r = sum;
+        }
+        
+        if( sum > target )
+        {
+            j--;
+        }
+        else if( sum < target )
+        {
+            i++;
+        }
+        else
+        {
+            return {sum};
+        }
+    }
+    
+    return r;
+}
+
+
+void testTwoSumCloest()
+{
+    vector<int> v = {-2, -4, -6, 0, 2, 4};
+    sort(v.begin(), v.end());
+    
+    for( int i = -10; i < 10; i ++)
+        cout << "target = " << i << " " << twoSumClosest(v, 0, v.size(), i) << endl;
+}
+
+
+int threeSumClosest(vector<int>& nums, int target)
+{
+    sort( nums.begin(), nums.end() );
+    
+    int r = numeric_limits<int>::max();
+    int distance = numeric_limits<int>::max();
+    
+    for( int i = 0; i < nums.size(); i++ )
+    {
+        int lookingFor = target - nums[i];
+        
+        int t = twoSumClosest(nums, i + 1, nums.size(), lookingFor );
+        if( t != numeric_limits<int>::max() && abs( t - lookingFor ) < distance )
+        {
+            distance = abs( t - lookingFor );
+            r = nums[i] + t;
+        }
+    }
+    
+    return r;
+}
+
+
+void test3SumCloest()
+{
+//    vector<int> v = {-1, 2, 1, -4};
+//    cout << threeSumClosest(v, 1);
+    
+    // failed
+    vector<int> v = {0, 0, 0};
+    cout << threeSumClosest(v, 1);
+}
+
 #pragma mark - run
 
 void Level2::Run()
 {
-    testThreeSum();
+    test3SumCloest();
 }
