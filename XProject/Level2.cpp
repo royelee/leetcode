@@ -503,9 +503,91 @@ void test3SumCloest()
     cout << threeSumClosest(v, 1);
 }
 
+
+#pragma mark - letterCombinations
+map<char, vector<string> > s_phoneMaps =
+{
+    { '1' , {} },
+    { '0' , {} },
+    { '2' , { "a", "b", "c" } },
+    { '3' , { "d", "e", "f" } },
+    { '4' , { "g", "h", "i" } },
+    { '5' , { "j", "k", "l" } },
+    { '6' , { "m", "n", "o" } },
+    { '7' , { "p", "q", "r", "s" } },
+    { '8' , { "t", "u", "v" } },
+    { '9' , { "w", "x", "y", "z" } }
+};
+
+vector<string> letterCombinations(string digits)
+{
+    // if digits size == 0
+    //      return {}
+    //
+    // char = digits.pop first char
+    // if digits size == 0
+    //      return { char reprents }
+    //
+    // vector<string> returnVector
+    // vector<string> v = letterCombinations( digits )
+    // for ( char x : { char reprents array } )
+    //      for ( string s : v )
+    //          newS = combine x + s
+    //          add it to return vector
+    //
+    // return returnVector
+    
+    if( digits.size() == 0 )
+        return {};
+    
+    char c = digits[0];
+    digits.erase(digits.begin());
+    
+    vector<string> returnVetor;
+    if( c >= '0' && c <= '9' )
+    {
+        if( digits.size() == 0 )
+        {
+            return s_phoneMaps[c];
+        }
+        
+        vector<string> v = letterCombinations(digits);
+        
+        for( string s : s_phoneMaps[c] )
+        {
+            for( string restS : v )
+            {
+                string newS = s + restS;
+                returnVetor.push_back(newS);
+            }
+        }
+    }
+    
+    return returnVetor;
+}
+
+void testLetterCombinations()
+{
+    string digits = "23";
+    vector<string> v = letterCombinations(digits);
+    for_each(v.begin(), v.end(), [](string s){
+        cout << s << " ";
+    });
+    cout << endl;
+}
+
+#pragma mark - fourSum
+
+vector<vector<int>> fourSum(vector<int>& nums, int target)
+{
+    vector<vector<int>> r;
+    return r;
+}
+
+
 #pragma mark - run
 
 void Level2::Run()
 {
-    test3SumCloest();
+    testLetterCombinations();
 }
