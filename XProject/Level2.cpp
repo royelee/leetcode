@@ -581,6 +581,14 @@ void testLetterCombinations()
 vector<vector<int>> fourSum(vector<int>& nums, int target)
 {
     vector<vector<int>> r;
+    
+    // Sort the nums.
+    // Add two sum to a hash map. ( No duplciate ).
+    // Maps is Key ( two sums ) : { vector of all sum to that value }
+    // Go through the A in maps keys  , looking for target - key in the maps, if it's there
+    // There are two cases:
+    // 1. It's the key A itself and it has more than two values, combine all of them.
+    // 2. It's not key A -> B, then check the size of B and combine all A & B.
     return r;
 }
 
