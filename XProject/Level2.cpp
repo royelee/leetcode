@@ -578,18 +578,132 @@ void testLetterCombinations()
 
 #pragma mark - fourSum
 
+// [Start, end) looking for sum is target.
+// Assume the array is sorted.
+vector<vector<int>> _twoSum(vector<int>& nums, int start, int end, int target)
+{
+    vector<vector<int>> r;
+    
+    if( nums.size() < 1 )
+        return r;
+    
+    if( end - start < 2 )
+        return r;
+    
+    int i = start;
+    int j = end - 1;
+    while( i < j )
+    {
+        // remove the duplicate by increase the i, j
+        while( i + 1 < end && nums[i] == nums[i+1] )
+            i++;
+        
+        while( j -1 >= start && nums[j] == nums[j-1] )
+            j--;
+        
+        if( nums[i] + nums[j] < target )
+        {
+            i++;
+        }
+        else if( nums[i] + nums[j] > target )
+        {
+            j--;
+        }
+        else
+        {
+            r.push_back({nums[i], nums[j]});
+            i++;
+            j--;
+        }
+    }
+    
+    return r;
+}
+
 vector<vector<int>> fourSum(vector<int>& nums, int target)
 {
     vector<vector<int>> r;
     
     // Sort the nums.
-    // Add two sum to a hash map. ( No duplciate ).
-    // Maps is Key ( two sums ) : { vector of all sum to that value }
-    // Go through the A in maps keys  , looking for target - key in the maps, if it's there
-    // There are two cases:
-    // 1. It's the key A itself and it has more than two values, combine all of them.
-    // 2. It's not key A -> B, then check the size of B and combine all A & B.
+    // int i = 0 j = nums - 1
+    // bool left = true
+    // while( i < j )
+    //      looking for two sums between [ i + 1, j - 1 ] = target - nums[i] - nums[j]
+    //      if match
+    //          add { nums[i], twosums, nums[j] }
+    //          while(nums[i+1] == nums[i])
+    //              i++
+    //          while(nums[j-1] == nums[j])
+    //              j--
+    //      if left
+    //          i++
+    //          left = false
+    //       else
+    //          j--
+    //          left = true
+    
+    if( nums.size() < 4 )
+        return r;
+    
+    sort(nums.begin(), nums.end());
+    
+    int i = 0;
+    int j = nums.size() - 1;
+    bool left = true;
+    while( i < j )
+    {
+        vector<vector<int>>&& twoSumsV = _twoSum(nums, i + 1, j, target - nums[i] - nums[j] );
+        if(twoSumsV.size() > 0)
+        {
+            for(auto t : twoSumsV )
+            {
+                r.push_back({nums[i], t[0], t[1], nums[j]});
+            }
+            
+//            while( i + 1 < nums.size() && nums[i+1] == nums[i])
+//                i++;
+//                
+//            while( j - 1 >= 0 && nums[j-1] == nums[j] )
+//                j--;
+        }
+        
+        if( nums[i] + nums[j] < target )
+        {
+            
+        }
+        else
+        {
+        }
+    }
+    
     return r;
+}
+
+
+void test4Sum()
+{
+//    vector<int> t = {1, 0, -1, 0, -2, 2 };
+//    vector<vector<int>> r = fourSum(t, 0);
+//    for( auto v : r )
+//    {
+//        for_each(v.begin(), v.end(), [](int tmp)
+//                 {
+//                     cout << tmp << ", ";
+//                 });
+//        cout << endl;
+//    }
+    
+    // wrong
+    vector<int> t = {-3,-1,0,2,4,5};
+    vector<vector<int>> r = fourSum(t, 0);
+    for( auto v : r )
+    {
+        for_each(v.begin(), v.end(), [](int tmp)
+                 {
+                     cout << tmp << ", ";
+                 });
+        cout << endl;
+    }
 }
 
 
@@ -597,5 +711,5 @@ vector<vector<int>> fourSum(vector<int>& nums, int target)
 
 void Level2::Run()
 {
-    testLetterCombinations();
+    test4Sum();
 }
