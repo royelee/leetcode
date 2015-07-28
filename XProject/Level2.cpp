@@ -594,13 +594,6 @@ vector<vector<int>> _twoSum(vector<int>& nums, int start, int end, int target)
     int j = end - 1;
     while( i < j )
     {
-        // remove the duplicate by increase the i, j
-        while( i + 1 < end && nums[i] == nums[i+1] )
-            i++;
-        
-        while( j -1 >= start && nums[j] == nums[j-1] )
-            j--;
-        
         if( nums[i] + nums[j] < target )
         {
             i++;
@@ -612,6 +605,14 @@ vector<vector<int>> _twoSum(vector<int>& nums, int start, int end, int target)
         else
         {
             r.push_back({nums[i], nums[j]});
+            
+            // remove the duplicate by increase the i, j
+            while( i + 1 < end && nums[i] == nums[i+1] )
+                i++;
+            
+            while( j -1 >= start && nums[j] == nums[j-1] )
+                j--;
+
             i++;
             j--;
         }
@@ -647,33 +648,30 @@ vector<vector<int>> fourSum(vector<int>& nums, int target)
     
     sort(nums.begin(), nums.end());
     
-    int i = 0;
-    int j = nums.size() - 1;
-    bool left = true;
-    while( i < j )
+    for( int k = 0; k < nums.size(); k++ )
     {
-        vector<vector<int>>&& twoSumsV = _twoSum(nums, i + 1, j, target - nums[i] - nums[j] );
-        if(twoSumsV.size() > 0)
+        int i = k;
+        int j = nums.size() - 1;
+        
+        while( j - i  >= 3 )
         {
-            for(auto t : twoSumsV )
+            vector<vector<int>>&& twoSumsV = _twoSum(nums, i + 1, j, target - nums[i] - nums[j] );
+            if(twoSumsV.size() > 0)
             {
-                r.push_back({nums[i], t[0], t[1], nums[j]});
+                for(auto t : twoSumsV )
+                {
+                    r.push_back({nums[i], t[0], t[1], nums[j]});
+                }
             }
             
-//            while( i + 1 < nums.size() && nums[i+1] == nums[i])
-//                i++;
-//                
-//            while( j - 1 >= 0 && nums[j-1] == nums[j] )
-//                j--;
+            while( j - 1 >= 0 && nums[j-1] == nums[j] )
+                j--;
+            
+            j--;
         }
         
-        if( nums[i] + nums[j] < target )
-        {
-            
-        }
-        else
-        {
-        }
+        while( k + 1 < nums.size() && nums[k+1] == nums[k] )
+            k++;
     }
     
     return r;
@@ -694,14 +692,50 @@ void test4Sum()
 //    }
     
     // wrong
-    vector<int> t = {-3,-1,0,2,4,5};
-    vector<vector<int>> r = fourSum(t, 0);
-    for( auto v : r )
+//    vector<int> t = {-3,-1,0,2,4,5};
+//    vector<vector<int>> r = fourSum(t, 0);
+//    for( auto v : r )
+//    {
+//        for_each(v.begin(), v.end(), [](int tmp)
+//                 {
+//                     cout << tmp << ", ";
+//                 });
+//        cout << endl;
+//    }
+    
+//    vector<int> t = {5,5,3,5,1,-5,1,-2 };
+//    vector<vector<int>> r = fourSum(t, 4);
+//    for( auto v : r )
+//    {
+//        for_each(v.begin(), v.end(), [](int tmp)
+//                 {
+//                     cout << tmp << ", ";
+//                 });
+//        cout << endl;
+//    }
+    
+    vector<pair<vector<int>, int>> tests =
     {
-        for_each(v.begin(), v.end(), [](int tmp)
-                 {
-                     cout << tmp << ", ";
-                 });
+//        {{0,0,0,0}, 0},
+        {{1,0,-1,0,-2,2}, 0}, // Expect: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
+//        {{2,1,0,-1}, 2},
+//        {{-1,2,2,-5,0,-1,4 }, 3},   //Expected: [[-5,2,2,4],[-1,0,2,2]]
+//        {{-3,-1,0,2,4,5}, 0},
+//        {{5,5,3,5,1,-5,1,-2 }, 4}
+    };
+    for( auto p : tests )
+    {
+        vector<int> t = p.first;
+        vector<vector<int>> r = fourSum(t, p.second);
+        for( auto v : r )
+        {
+            for_each(v.begin(), v.end(), [](int tmp)
+                     {
+                         cout << tmp << ", ";
+                     });
+            cout << endl;
+        }
+        
         cout << endl;
     }
 }
