@@ -741,6 +741,69 @@ void test4Sum()
 }
 
 
+#pragma mark - removeNthFromEnd
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+struct ListNode
+{
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL)
+    {
+    }
+};
+
+ListNode* removeNthFromEnd(ListNode* head, int n)
+{
+    if( n < 1 )
+        return nullptr;
+    
+    ListNode* listIter = head;
+    ListNode* preNode = nullptr;
+    int i = 0;
+    while( listIter != nullptr )
+    {
+        listIter = listIter->next;
+        
+        if( i == n )
+        {
+            preNode = head;
+        }
+        else
+        {
+            if( preNode != nullptr )
+            {
+                preNode = preNode->next;
+            }
+        }
+        
+        i++;
+    }
+    
+    // preNode is the one before we want to remove
+    if( preNode == nullptr)
+    {
+        // need to remove the head.
+        return head->next;
+    }
+    else
+    {
+        ListNode* tmp = nullptr ;
+        if( preNode->next != nullptr )
+            tmp = preNode->next->next;
+        preNode->next = tmp;
+    }
+    
+    return head;
+}
+
+
 #pragma mark - run
 
 void Level2::Run()
