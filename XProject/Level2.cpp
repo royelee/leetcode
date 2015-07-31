@@ -803,10 +803,75 @@ ListNode* removeNthFromEnd(ListNode* head, int n)
     return head;
 }
 
+# pragma mark - Valid Parentheses
+
+bool isValid(string s)
+{
+    vector<char> checkVector;
+
+    for( size_t i = 0; i < s.length(); i++ )
+    {
+        char lastChar = ' ';
+        if( checkVector.size() > 0 )
+        {
+            lastChar = checkVector.back();
+            checkVector.pop_back();
+        }
+        
+        switch (s[i]) {
+            case '(':
+            case '[':
+            case '{':
+            {
+                if( lastChar != ' ' )
+                {
+                    checkVector.push_back(lastChar);
+                }
+                checkVector.push_back(s[i]);
+                break;
+            }
+            case ')':
+            {
+                if( lastChar != '(' )
+                {
+                    return false;
+                }
+                break;
+            }
+            case ']':
+            {
+                if( lastChar != '[' )
+                {
+                    return false;
+                }
+                break;
+            }
+            case '}':
+            {
+                if( lastChar != '{' )
+                {
+                    return false;
+                }
+                break;
+            }
+            default:
+                return false;
+        }
+    }
+
+    return checkVector.empty();
+}
+
+void testPMatch()
+{
+    string s = "()[]{}";
+    cout << isValid(s) << endl;
+}
+
 
 #pragma mark - run
 
 void Level2::Run()
 {
-    test4Sum();
+    testPMatch();
 }
