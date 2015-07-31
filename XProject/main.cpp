@@ -7,12 +7,20 @@
 //
 
 #include <iostream>
+#include "ILevel.h"
 #include "Level1.h"
 #include "Level2.h"
+#include "Level3.h"
+
+
+template <typename T>
+void runLevel() {
+    std::unique_ptr<ILevel> level( new T );
+    level->Run();
+}
 
 int main(int argc, const char * argv[]) {
-    Level2 level;
-    level.Run();
+    runLevel<Level3>();
     return 0;
 }
 

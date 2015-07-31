@@ -11,15 +11,16 @@
 
 #include <stdio.h>
 #include <vector>
+#include "ILevel.h"
 
-class Level1
+class Level1 : public ILevel
 {
 public:
     std::vector<int> twoSum_binarysearch(std::vector<int>& nums, int target);
 
     std::vector<int> twoSum(std::vector<int>& nums, int target);
     
-    void Run();
+    void Run() override;
     
 private:
     void runTwoSum();

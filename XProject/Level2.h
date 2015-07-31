@@ -9,10 +9,12 @@
 #ifndef __XProject__Level2__
 #define __XProject__Level2__
 
-class Level2
+#include "ILevel.h"
+
+class Level2 : public ILevel
 {
 public:
-    void Run();
+    void Run() override;
 };
 
 #endif /* defined(__XProject__Level2__) */
