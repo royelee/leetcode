@@ -64,91 +64,50 @@ ListNode* mergeTwoLists(ListNode* l1, ListNode* l2)
 
 #pragma mark - generateParenthesis
 
-vector< pair<string, int>> _generateParenthesis( int n, vector< pair<string, int>> v )
+struct ParenthesisStruct
 {
-    // if leftBracket == 0
-    //      can only add ), check the bracketInstack, add all.
-    // else
-    //      two ways,
-    //      1) Add left bracket to already generated, bracketInstack++, left bracket--
-    //          _generateParenthesis( left - 1, bracketInstack + 1, new alreadyGenerated )
-    //      2) 2a. complete one bracket if possible.
-    //          _generateParenthesis( left, bracketInstack - 1, new alreadyGenerated )
-    //         2b. if not possible
+public:
+    string current; // Current string
+    int left;   // Left (
+    int used;   // Used (
     
-    // vector< pair<string, bracketInStack > >
-    // two ways,
-    // 1. if n > 0, add left bracket to string, bracketInstack++
-    //      _generateParenthesis( n - 1, v )
-    // 2. consume the bracketInstack, add right bracket to string, bracketInstack--
-    //      _generateParenthesis( n, v )
-    //
-    // return if bracketInsString is 0 and n is 0
-    //
-    // Combine the 1 & 2.
-    if( n == 0 )
-    {
-        bool allDone =  true;
-        for( auto& p : v )
-        {
-            if( p.second != 0 )
-            {
-                allDone = false;
-            }
-        }
-        
-        if( allDone )
-            return v;
-    }
-    
-    vector< pair<string, int > > v1 = v;
-    vector< pair<string, int > > v2 = v;
-    
-    if( n > 0 )
-    {
-        for( auto& p : v1 )
-        {
-            p.first += "(";
-            p.second++;
-        }
-        
-        v1 = _generateParenthesis( n - 1, v1 );
-    }
- 
-    {
-        bool fixed = false;
-        for( auto& p : v2 )
-        {
-            if( p.second > 0 )
-            {
-                p.first += ")";
-                p.second--;
-                fixed = true;
-            }
-        }
-        
-        if( fixed )
-            v2 = _generateParenthesis( n, v2 );
-    }
-    
-    vector< pair<string, int > > rtn;
-    rtn.insert( rtn.begin(), v1.begin(), v1.end() );
-    rtn.insert( rtn.begin(), v2.begin(), v2.end() );
-    
-    return rtn;
-}
+    ParenthesisStruct( string c, int l, int u ) : current( c ), left( l ), used( u ) {}
+};
+
 
 vector<string> generateParenthesis(int n)
 {
     vector<string> g;
     
-    vector< pair<string, int > > v;
-    v.push_back( make_pair("", 0) );
-     vector< pair<string, int > > rtn = _generateParenthesis( n, v);
+    vector<ParenthesisStruct> stack;
     
-    for( auto p : rtn )
+    stack.push_back({"", n, 0 });
+    
+    while( stack.size() != 0 )
     {
-        g.push_back( p.first );
+        ParenthesisStruct p = stack.back();
+        stack.pop_back();
+        
+        if( p.left > 0 )
+        {
+            stack.push_back( ParenthesisStruct( p.current + "(", p.left - 1, p.used + 1 ) );
+        }
+
+        if( p.used > 0 )
+        {
+            // we have something to complete
+            p.current += ")";
+            p.used--;
+            
+            if( p.left == 0 && p.used == 0 )
+            {
+                g.push_back( p.current );
+            }
+            else
+            {
+                stack.push_back( p );
+            }
+        }
     }
     
     return g;
@@ -156,7 +115,7 @@ vector<string> generateParenthesis(int n)
 
 void testGenerateParenthesis()
 {
-    vector<string> v = generateParenthesis(2);
+    vector<string> v = generateParenthesis(0);
     for( auto& s : v )
     {
         cout << s << ", ";
