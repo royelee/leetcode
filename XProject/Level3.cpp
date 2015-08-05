@@ -122,8 +122,74 @@ void testGenerateParenthesis()
     }
 }
 
+#pragma mark - swapPairs
+
+ListNode* swapPairs(ListNode* head)
+{
+    if( head == nullptr )
+        return head;
+    
+    
+    ListNode* c1 = head;
+    ListNode* c2 = head->next;
+    ListNode* previous = nullptr;
+
+    ListNode* newHead = head->next == nullptr ? c1 : c2;
+    
+    while( c1 != nullptr && c2 != nullptr )
+    {
+        if( previous != nullptr )
+            previous->next = c2;
+        
+        ListNode* tmp = c2->next;
+        c2->next = c1;
+        
+        previous = c1;
+        
+        c1 = tmp;
+        if( c1 != nullptr )
+            c2 = c1->next;
+        
+    }
+    
+    if( previous != nullptr )
+    {
+        previous->next = c1;
+    }
+    
+    return newHead;
+}
+
+void testSwapPairs()
+{
+    vector<int> v = { 1 };
+    ListNode* head = new ListNode( 0 );
+    ListNode* iter = head;
+    for( auto i : v )
+    {
+        ListNode* listNode = new ListNode( i );
+        iter->next = listNode;
+        iter = iter->next;
+    }
+    
+    iter = head->next;
+    while( iter != nullptr )
+    {
+        cout << iter->val << endl;
+        iter = iter->next;
+    }
+    
+    cout << "new ===== " << endl;
+    ListNode* newHead = swapPairs( head->next );
+    while( newHead != nullptr )
+    {
+        cout << newHead->val << endl;
+        newHead = newHead->next;
+    }
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testGenerateParenthesis();
+    testSwapPairs();
 }
