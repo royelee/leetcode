@@ -211,44 +211,30 @@ void testSwapPairs()
 //Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively. It doesn't matter what you leave beyond the new length.
 int removeDuplicates(vector<int>& nums)
 {
-    int size = nums.size();
-    if( size < 2 )
-        return size;
+    // Using the way O(N) implements it. http://blog.csdn.net/fightforyourdream/article/details/12719683
     
-    for( int i = 0; i < nums.size(); i++ )
+    // The idea is use i always point to unqiue index in the array, and let j to move from (1..n) in array V[N].
+    // If V[i] == V[j] then, i don't move and j continue move, if not equal then i+1 is the duplicate one or maybe is V[j], so V[i+1] = V[j].
+    // When it's end, then the index of i is last elements, the array size is i + 1.
+    int i = 0;
+    int j = 1;
+    while( j < nums.size() )
     {
-        if( i + 1 < nums.size() )
+        if( nums[i] != nums[j] )
         {
-            if( nums[i] == nums[i + 1] && nums[i] != std::numeric_limits<int>::max())
-            {
-                int j = i + 1;
-                while( j + 1 < nums.size() && nums[j] == nums[j + 1] )
-                {
-                    j++;
-                }
-                
-                size -= ( j - i);
-                
-                for( int k = i + 1; k <= j; k++ )
-                {
-                    nums[k] = std::numeric_limits<int>::max();
-                }
-            }
+            i++;
+            nums[i] = nums[j];
         }
+
+        j++;
     }
     
-    // resort the array
-    sort(nums.begin(), nums.end());
-    
-    return size;
-    
-    // TODO : Using the way O(N) implements it. http://blog.csdn.net/fightforyourdream/article/details/12719683
-    
+    return nums.size() - ( j - i ) + 1; // which is i + 1
 }
 
 void testRemoveDuplicates()
 {
-    vector<int> v = {1, 1, 2, 2, 3, 5, 5};
+    vector<int> v = {1,2,3,};
     int r = removeDuplicates(v);
     for( int i = 0; i < r; i++ )
     {
