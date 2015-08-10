@@ -243,6 +243,47 @@ void testRemoveDuplicates()
     cout << endl;
 }
 
+#pragma mark - removeElement
+//Given an array and a value, remove all instances of that value in place and return the new length.
+//
+//The order of elements can be changed. It doesn't matter what you leave beyond the new length.
+int removeElement(vector<int>& nums, int val)
+{
+    // similar to quick sort
+    if( nums.size() == 0 )
+        return 0;
+    
+    int i = 0;
+    int j = nums.size() - 1;
+    
+    while( nums[j] == val && j >= 0 )
+    {
+        j--;
+    }
+    
+    while( i <= j )
+    {
+        
+        if( nums[i] != val )
+        {
+            i++;
+        }
+        else
+        {
+            swap( nums[i], nums[j] );
+            j--;
+            i++;
+            
+            while( nums[j] == val && j >= 0 )
+            {
+                j--;
+            }
+        }
+    }
+    
+    return j + 1;
+}
+
 #pragma mark - run
 void Level3::Run()
 {
