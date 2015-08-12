@@ -284,8 +284,52 @@ int removeElement(vector<int>& nums, int val)
     return j + 1;
 }
 
+#pragma mark - strStr
+//Implement strStr().
+//
+//Returns the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+int strStr(string haystack, string needle)
+{
+    if( needle.size() == 0 )
+        return 0;
+    
+    int i = 0;
+    int j = 0;
+    for( ; i < haystack.size(); i++ )
+    {
+        if( j < needle.size() )
+        {
+            if( haystack[i] == needle[j] )
+            {
+                j++;
+            }
+            else
+            {
+                if( j > 0 )
+                    i = i - j;
+                j = 0;
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    
+    return j == needle.size() ? i - needle.size() : -1;
+}
+
+void testStrStr()
+{
+    cout << strStr("aaa", "aa") << endl;
+    cout << strStr("mississippi", "pi") << endl;
+    cout << strStr("mississippi", "issip") << endl; // The case where at index 4, we should rescan.
+    cout << strStr("", "") << endl;
+    cout <<  strStr("a", "a") << endl;
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testRemoveDuplicates();
+    testStrStr();
 }
