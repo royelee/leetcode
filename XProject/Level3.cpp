@@ -317,6 +317,10 @@ int strStr(string haystack, string needle)
     }
     
     return j == needle.size() ? i - needle.size() : -1;
+    
+    // TODO : Use KMP implements it
+    // http://blog.csdn.net/v_july_v/article/details/7041827
+    // http://www.matrix67.com/blog/archives/115
 }
 
 void testStrStr()
