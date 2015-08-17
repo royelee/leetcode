@@ -332,8 +332,57 @@ void testStrStr()
     cout <<  strStr("a", "a") << endl;
 }
 
+#pragma mark - 
+
+//Divide two integers without using multiplication, division and mod operator.
+//
+//If it is overflow, return MAX_INT.
+int divide(int dividend, int divisor)
+{
+    if( divisor == 0 )
+        return numeric_limits<int>::max();
+    
+    if( dividend == 0 )
+        return 0;
+    
+    int shift = 0;
+    int tmp = dividend;
+    while( tmp != 0 )
+    {
+        tmp = tmp >> 1;
+        shift++;
+    }
+    
+    int result = 0;
+    int c = 0;
+    int d = dividend;
+    int toShift = shift - 1;
+    while( toShift != 0 )
+    {
+        while( c < divisor && toShift > 0 )
+        {
+            c = d >> toShift;
+            toShift--;
+        }
+        
+        if( c >= divisor )
+        {
+            c = c - divisor;
+        }
+
+        d = d - (c << toShift);
+    }
+    
+    return result;
+}
+
+void testDivide()
+{
+    cout << divide(8, 4) << endl;
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testStrStr();
+    testDivide();
 }
