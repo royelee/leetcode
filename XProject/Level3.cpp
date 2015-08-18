@@ -332,53 +332,85 @@ void testStrStr()
     cout <<  strStr("a", "a") << endl;
 }
 
-#pragma mark - 
+#pragma mark - divide
+
+int GetBitAtFromLeft( int input, int index )
+{
+    unsigned int shift = 0;
+    int tmp = input;
+    while( tmp != 0 )
+    {
+        tmp = tmp >> 1;
+        shift++;
+    }
+
+    return ( (1 << (shift - index - 1) & input ) ) > 0 ? 1 : 0;
+}
+
+void TestGetBitAt()
+{
+    for( int i = 0; i < 5; i++ )
+    {
+        cout << GetBitAtFromLeft( 15, i ) << endl;
+    }
+}
 
 //Divide two integers without using multiplication, division and mod operator.
 //
 //If it is overflow, return MAX_INT.
 int divide(int dividend, int divisor)
 {
-    if( divisor == 0 )
+    if( divisor == 0 || ( dividend == numeric_limits<int>::min() && divisor == -1 ) )
         return numeric_limits<int>::max();
+
+    bool sign = ( dividend < 0 ) ^ ( divisor < 0 );
     
-    if( dividend == 0 )
-        return 0;
+    // 们知道任何一个整数可以表示成以2的幂为底的一组基的线性组合，
+    // 即num=a_0*2^0+a_1*2^1+a_2*2^2+...+a_n*2^n。基于以上这个公式以及左移一位相当于乘以2，我们先让除数左移直到大于被除数之前得到一个最大的基
     
-    int shift = 0;
-    int tmp = dividend;
-    while( tmp != 0 )
+    unsigned int divisorU = abs( divisor );
+    unsigned int dividendU = abs( dividend );
+    
+    int digits = 0;
+    while( divisorU < dividendU )
     {
-        tmp = tmp >> 1;
-        shift++;
+        divisorU = divisorU << 1;
+        digits++;
     }
     
-    int result = 0;
-    int c = 0;
-    int d = dividend;
-    int toShift = shift - 1;
-    while( toShift != 0 )
+    unsigned int result = 0;
+    while ( digits >= 0 )
     {
-        while( c < divisor && toShift > 0 )
+        if( dividendU >= divisorU )
         {
-            c = d >> toShift;
-            toShift--;
+            result |= 1 << digits;
+            dividendU = dividendU - divisorU;
         }
         
-        if( c >= divisor )
-        {
-            c = c - divisor;
-        }
-
-        d = d - (c << toShift);
+        divisorU = divisorU >> 1;
+        digits--;
     }
     
-    return result;
+    return sign ? -result : result;
 }
 
 void testDivide()
 {
-    cout << divide(8, 4) << endl;
+    cout << divide(0, 1) << endl;
+
+//    cout << divide(2147483647, 1) << endl;
+//    cout << divide(-2147483648, -1) << endl;
+
+    for( int i = 100; i > -100; i-- )
+    {
+        for( int j = 1; j < 10; j++ )
+        {
+            if( divide( i, j ) != i / j )
+            {
+                cout << divide(i, j) << "= " << i / j << endl;
+            }
+        }
+    }
 }
 
 #pragma mark - run
