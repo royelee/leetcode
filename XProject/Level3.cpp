@@ -496,8 +496,97 @@ void testNextPermutation()
     }
 }
 
+#pragma mark - 
+//Given a sorted array of integers, find the starting and ending position of a given target value.
+//
+//Your algorithm's runtime complexity must be in the order of O(log n).
+//
+//If the target is not found in the array, return [-1, -1].
+//
+//For example,
+//Given [5, 7, 7, 8, 8, 10] and target value 8,
+//return [3, 4].
+vector<int> _searchRange(vector<int>& nums, int start, int end, int target);
+
+vector<int> searchRange(vector<int>& nums, int target)
+{
+    if( nums.size() == 0 )
+        return {-1, -1 };
+    
+    return _searchRange(nums, 0, nums.size() - 1, target);
+}
+
+// [Start, end]
+vector<int> _searchRange(vector<int>& nums, int start, int end, int target)
+{
+    if( start > end )
+    {
+        return {-1, -1};
+    }
+    
+    if( start == end )
+    {
+        if( nums[start] == target )
+            return {start, start};
+        else
+            return {-1, -1};
+    }
+    
+    int mid = ( end - start ) / 2 + start;
+    if( nums[mid] < target )
+    {
+        return _searchRange(nums, mid+1, end, target);
+    }
+    else if( nums[mid] > target )
+    {
+        return _searchRange(nums, start, mid-1, target);
+    }
+    else
+    {
+        // Equal, need to merge.
+        vector<int> range1 = _searchRange(nums, start, mid, target);
+        vector<int> range2 = _searchRange(nums, mid + 1, end, target);
+        
+        if( range2[0] == -1 )
+        {
+            return range1;
+        }
+        else
+        {
+            return {range1.front(), range2.back()};
+        }
+    }
+}
+
+void testSearchRange()
+{
+    vector<vector<int>> num2s =
+    {
+        {5, 7, 7, 8, 8, 10},
+        {},
+        {8},
+        {8, 8},
+        {1, 8, 8},
+        {1, 8, 8, 9 },
+        {1, 8, 8, 8 },
+        {1, 8, 8, 8, 8},
+        {1, 8, 8, 8, 8, 9}
+    };
+    
+    for( auto& nums : num2s )
+    {
+        auto range = searchRange(nums, 8);
+        cout << "{ ";
+        for( auto& val : range )
+        {
+            cout << val << ", ";
+        }
+        cout << " }" << endl;
+    }
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testNextPermutation();
+    testSearchRange();
 }
