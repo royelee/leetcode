@@ -672,7 +672,103 @@ void testSearchInsert()
 //A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
 bool isValidSudoku(vector<vector<char>>& board)
 {
+    if( board.size() != 9 && board[0].size() != 9 )
+        return false;
     
+    set<char> vSet;
+    
+    // verify row.
+    for( int i = 0; i < 9; i++ )
+    {
+        for( int j = 0; j < 9; j++ )
+        {
+            char c = board[i][j];
+            if( c == '.' || ( c >= '1' && c <= '9' ) )
+            {
+                if( c != '.' )
+                {
+                    if( vSet.find( c ) != vSet.end() )
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        vSet.insert( c );
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        vSet.clear();
+    }
+    
+    // verify column.
+    for( int j = 0; j < 9; j++ )
+    {
+        for( int i = 0; i < 9; i++ )
+        {
+            char c = board[i][j];
+            if( c == '.' || ( c >= '1' && c <= '9' ) )
+            {
+                if( c != '.' )
+                {
+                    if( vSet.find( c ) != vSet.end() )
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        vSet.insert( c );
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        
+        vSet.clear();
+    }
+    
+    // verify cubic
+    for( int i = 0; i < 9; i = i + 3 )
+    {
+        for( int j = 0; j < 9; j = j + 3 )
+        {
+            for( int k = 0; k < 9; k++ )
+            {
+                char c = board[i + k / 3 ][j + k % 3];
+                
+                if( c == '.' || ( c >= '1' && c <= '9' ) )
+                {
+                    if( c != '.' )
+                    {
+                        if( vSet.find( c ) != vSet.end() )
+                        {
+                            return false;
+                        }
+                        else
+                        {
+                            vSet.insert( c );
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
+            vSet.clear();
+        }
+    }
+    
+    return true;
 }
 
 #pragma mark - run
