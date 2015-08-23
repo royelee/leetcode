@@ -585,8 +585,98 @@ void testSearchRange()
     }
 }
 
+#pragma mark - searchInsert
+
+//Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.
+//
+//You may assume no duplicates in the array.
+//
+//Here are few examples.
+//[1,3,5,6], 5 → 2
+//[1,3,5,6], 2 → 1
+//[1,3,5,6], 7 → 4
+//[1,3,5,6], 0 → 0
+int searchInsert(vector<int>& nums, int target)
+{
+    if( nums.size() == 0 )
+        return 0;
+
+    int start = 0;
+    int end = nums.size() - 1;
+    
+    while( end - start > 1 )
+    {
+        int mid = start + ( end - start ) / 2;
+        int c = nums[mid];
+        if( c == target )
+        {
+            return mid;
+        }
+        else if( c < target )
+        {
+            start = mid;
+        }
+        else
+        {
+            end = mid;
+        }
+    }
+    
+    vector<int> v;
+    if( end - start == 0 )
+    {
+        v = {nums[start], target };
+    }
+    else
+    {
+        v = {nums[start], nums[end], target};
+    }
+    
+    sort( v.begin(), v.end() );
+    for( int i = 0; i < v.size(); i++ )
+    {
+        if( v[i] == target )
+            return i + start;
+    }
+    
+    return -1;
+}
+
+void testSearchInsert()
+{
+    vector<pair<vector<int>, int>> num2s =
+    {
+        {{1,3,5,6}, 7},// → 4
+        {{1,3,5,6}, 2},// → 1
+        {{1,3,5,6}, 5},// → 2
+        {{1,3,5,6}, 0}// → 0
+    };
+    
+    for( auto& p : num2s )
+    {
+        auto pos = searchInsert(p.first, p.second);
+        cout << pos << endl;
+    }
+}
+
+#pragma mark - isValidSudoku
+
+//Determine if a Sudoku is valid, according to: Sudoku Puzzles - The Rules.
+//
+//The Sudoku board could be partially filled, where empty cells are filled with the character '.'.
+//
+//
+//A partially filled sudoku which is valid.
+//
+//Note:
+//A valid Sudoku board (partially filled) is not necessarily solvable. Only the filled cells need to be validated.
+bool isValidSudoku(vector<vector<char>>& board)
+{
+    
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testSearchRange();
+    testSearchInsert();
 }
