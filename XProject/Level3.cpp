@@ -748,8 +748,59 @@ void testVerifySudoku()
     cout << ( isValidSudoku( board ) ? "true" : "false" ) << endl;
 }
 
+#pragma mark - countAndSay
+
+//The count-and-say sequence is the sequence of integers beginning as follows:
+//1, 11, 21, 1211, 111221, ...
+//
+//1 is read off as "one 1" or 11.
+//11 is read off as "two 1s" or 21.
+//21 is read off as "one 2, then one 1" or 1211.
+//Given an integer n, generate the nth sequence.
+//
+//Note: The sequence of integers will be represented as a string.
+string countAndSay(int n)
+{
+    if( n <= 0 )
+        return "";
+    
+    string previous = "1";
+    if( n == 1 )
+        return previous;
+    
+    string current;
+    while( n-- > 1 )
+    {
+        for( int i = 0; i < previous.length(); i++ )
+        {
+            int repeat = 1;
+            while( i + 1 < previous.length() && previous[i] == previous[i+1] )
+            {
+                i++;
+                repeat++;
+            }
+            
+            current += to_string( repeat );
+            current += previous[i];
+        }
+        
+        previous = current;
+        current = "";
+    }
+    
+    return previous;
+}
+
+void testCountAndSay()
+{
+    for( int i = 0; i < 10; i++ )
+    {
+        cout << countAndSay(i) << endl;
+    }
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testVerifySudoku();
+    testCountAndSay();
 }
