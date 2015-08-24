@@ -675,104 +675,81 @@ bool isValidSudoku(vector<vector<char>>& board)
     if( board.size() != 9 && board[0].size() != 9 )
         return false;
     
-    set<char> vSet;
+    vector<set<char>> row(9);
+    vector<set<char>> col(9);
+    vector<set<char>> cub(9);
     
-    // verify row.
     for( int i = 0; i < 9; i++ )
     {
         for( int j = 0; j < 9; j++ )
         {
             char c = board[i][j];
-            if( c == '.' || ( c >= '1' && c <= '9' ) )
+            if( c != '.' )
             {
-                if( c != '.' )
+                // check row
+                if( row[i].find( c ) == row[i].end() )
                 {
-                    if( vSet.find( c ) != vSet.end() )
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        vSet.insert( c );
-                    }
+                    row[i].insert(c);
                 }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
-        vSet.clear();
-    }
-    
-    // verify column.
-    for( int j = 0; j < 9; j++ )
-    {
-        for( int i = 0; i < 9; i++ )
-        {
-            char c = board[i][j];
-            if( c == '.' || ( c >= '1' && c <= '9' ) )
-            {
-                if( c != '.' )
+                else
                 {
-                    if( vSet.find( c ) != vSet.end() )
-                    {
-                        return false;
-                    }
-                    else
-                    {
-                        vSet.insert( c );
-                    }
+                    return false;
                 }
-            }
-            else
-            {
-                return false;
-            }
-        }
-        
-        vSet.clear();
-    }
-    
-    // verify cubic
-    for( int i = 0; i < 9; i = i + 3 )
-    {
-        for( int j = 0; j < 9; j = j + 3 )
-        {
-            for( int k = 0; k < 9; k++ )
-            {
-                char c = board[i + k / 3 ][j + k % 3];
                 
-                if( c == '.' || ( c >= '1' && c <= '9' ) )
+                // check row
+                if( col[j].find( c ) == col[j].end() )
                 {
-                    if( c != '.' )
-                    {
-                        if( vSet.find( c ) != vSet.end() )
-                        {
-                            return false;
-                        }
-                        else
-                        {
-                            vSet.insert( c );
-                        }
-                    }
+                    col[j].insert(c);
+                }
+                else
+                {
+                    return false;
+                }
+                
+                // check cub
+                int cubIdx = ( i / 3 ) * 3 + j / 3;
+                if( cub[cubIdx].find( c ) == cub[cubIdx].end() )
+                {
+                    cub[cubIdx].insert(c);
                 }
                 else
                 {
                     return false;
                 }
             }
-            
-            vSet.clear();
+        }
+    }
+
+    return true;
+}
+
+void testVerifySudoku()
+{
+    vector<string> t = {".87654321","2........","3........","4........","5........","6........","7........","8........","9........"};
+    vector<vector<char>> board(9, vector<char>(9) );
+    for( int i = 0; i < t.size(); i++ )
+    {
+        for( int j = 0; j < t[i].length(); j++ )
+        {
+            board[i][j] = t[i][j];
         }
     }
     
-    return true;
+    for( int i = 0; i < 9; i++ )
+    {
+        for( int j = 0; j < 9; j++ )
+        {
+            cout << board[i][j] << " ";
+        }
+        
+        cout << endl;
+    }
+    
+    cout << ( isValidSudoku( board ) ? "true" : "false" ) << endl;
 }
 
 #pragma mark - run
 void Level3::Run()
 {
-    testSearchInsert();
+    testVerifySudoku();
 }
