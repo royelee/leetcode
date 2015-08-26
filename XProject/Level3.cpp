@@ -799,8 +799,77 @@ void testCountAndSay()
     }
 }
 
+#pragma makr - combinationSum
+
+//Given a set of candidate numbers (C) and a target number (T), find all unique combinations in C where the candidate numbers sums to T.
+//
+//The same repeated number may be chosen from C unlimited number of times.
+//
+//Note:
+//All numbers (including target) will be positive integers.
+//Elements in a combination (a1, a2, … , ak) must be in non-descending order. (ie, a1 ≤ a2 ≤ … ≤ ak).
+//The solution set must not contain duplicate combinations.
+//For example, given candidate set 2,3,6,7 and target 7,
+//A solution set is:
+//[7]
+//[2, 2, 3]
+
+
+void  _combinationSum(vector<int>& candidates, int end, int target, vector<vector<int>>& result )
+{
+    if( target <= 0 )
+        return;
+    
+    int j = end - 1;
+    
+    while( j >= 0 )
+    {
+        int c = candidates[j];
+        int numsOfC = target / c + 1;
+
+        for(int t = 0; t < numsOfC; t++ )
+        {
+            vector<vector<int>> r1;
+            
+            int remaining = target - t * c;
+            
+            if( t == 0 )
+            {
+                _combinationSum( candidates, j - 1, target, r1 );
+            }
+            else
+            {
+                _combinationSum( candidates, j, target - t * c, r1 );
+            }
+
+            result.insert(result.end(), r1.begin(), r1.end());
+        }
+        
+        j--;
+    }
+}
+
+
+vector<vector<int>> combinationSum(vector<int>& candidates, int target)
+{
+    // no bigest
+    // 1 bigest
+    // 2 bigest
+    // ..
+    // N bigest
+    vector<vector<int>> r;
+    _combinationSum(candidates, candidates.size(), target, r);
+    return r;
+}
+
+void testCombinationSum()
+{
+    vector<int> v = { 2,3 };
+    combinationSum( v, 7 );
+}
+
 #pragma mark - run
 void Level3::Run()
 {
-    testCountAndSay();
+    testCombinationSum();
 }
