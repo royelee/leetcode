@@ -815,37 +815,38 @@ void testCountAndSay()
 //[2, 2, 3]
 
 
-void  _combinationSum(vector<int>& candidates, int end, int target, vector<vector<int>>& result )
+void  _combinationSum(vector<int>& candidates, int end, int target, vector<int> current, vector<vector<int>>& result )
 {
-    if( target <= 0 )
+    // if target == 0
+    //  result push current
+    if( target == 0 )
+    {
+        result.push_back( current );
+        return;
+    }
+    
+    // if end < 0
+    //  it's end then return
+    if( end < 0 )
         return;
     
-    int j = end - 1;
+    // Get the last number. Possible count. N
+    int last = candidates[end];
+    int count = target / last;
     
-    while( j >= 0 )
+    // Go through each i in { 0 .. N }
+    //      do _combinationSum( can, j - 1, target - i * last number, { array of number already push in } )
+    for( int i = 0; i <= count; i++ )
     {
-        int c = candidates[j];
-        int numsOfC = target / c + 1;
+        vector<int> newV = current;
 
-        for(int t = 0; t < numsOfC; t++ )
+        if( i > 0 )
         {
-            vector<vector<int>> r1;
-            
-            int remaining = target - t * c;
-            
-            if( t == 0 )
-            {
-                _combinationSum( candidates, j - 1, target, r1 );
-            }
-            else
-            {
-                _combinationSum( candidates, j, target - t * c, r1 );
-            }
-
-            result.insert(result.end(), r1.begin(), r1.end());
+            for( int k = 0; k < i; k++ )
+                newV.insert(newV.begin(), last );
         }
         
-        j--;
+        _combinationSum( candidates, end - 1, target - i * last, newV, result );
     }
 }
 
@@ -858,14 +859,31 @@ vector<vector<int>> combinationSum(vector<int>& candidates, int target)
     // ..
     // N bigest
     vector<vector<int>> r;
-    _combinationSum(candidates, candidates.size(), target, r);
+    sort(candidates.begin(), candidates.end());
+    _combinationSum( candidates, candidates.size() - 1, target, {}, r );
     return r;
 }
 
 void testCombinationSum()
 {
-    vector<int> v = { 2,3 };
-    combinationSum( v, 7 );
+    vector<pair<vector<int>, int>> v =
+    {
+        {{8,7,4,3}, 11},
+        {{ 2,3, 6, 7 }, 7}
+    };
+
+    for( auto& p : v )
+    {
+        vector<vector<int>> r = combinationSum( p.first, p.second );
+        for( const auto& v : r )
+        {
+            for( const auto& i : v )
+            {
+                cout << i << " ";
+            }
+            cout << endl;
+        }
+    }
 }
 
 #pragma mark - run
