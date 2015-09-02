@@ -178,8 +178,164 @@ void testMultiply()
 
 }
 
+#pragma mark - Permutations
+
+//Given a collection of numbers, return all possible permutations.
+//
+//For example,
+//[1,2,3] have the following permutations:
+//[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], and [3,2,1].
+bool nextP( vector<int>& v )
+{
+    // 1. find in biggest a[i] < a[i+1], if can't then it's done.
+    // 2. find bigest j from i+1 which a[j] > a[i].
+    // 3. swap a[j], a[i]
+    // 4. reverse i + 1..N in a[N].
+
+    int k = -1;
+    for( int i = 0; i < v.size() - 1; i++ )
+    {
+        if( v[i] < v[i + 1] )
+        {
+            k = i;
+        }
+    }
+    
+    if( k == -1 )
+        return false;
+    
+    int l = k + 1;
+    for( int i = l; i < v.size(); i++ )
+    {
+        if( v[i] > v[k] )
+        {
+            l = i;
+        }
+    }
+    
+    swap( v[k], v[l] );
+    
+    // reverse k + 1 ... v.size()
+    int i = k + 1;
+    int j = v.size() - 1;
+    while( i < j )
+    {
+        swap( v[i], v[j] );
+        i++;
+        j--;
+    }
+    
+    return true;
+}
+
+vector<vector<int>> permute(vector<int>& nums)
+{
+    vector<vector<int>> rtn;
+    
+    while( true )
+    {
+        vector<int> tmp;
+        for( auto& i : nums )
+        {
+            tmp.push_back( i );
+        }
+        
+        rtn.push_back( tmp );
+        
+        if( !nextP( nums ) )
+            break;
+    }
+    
+    return rtn;
+}
+
+void permuteGenerating(vector<vector<int>>& result, vector<int>& nums, int i ) {
+    
+    if (i == nums.size()-1) {
+        result.push_back(nums);
+    } else {
+        for (int j = i; j < nums.size(); j++) {
+            // swap i and j
+            swap(nums[i], nums[j]);
+            
+            permuteGenerating(result, nums, i + 1 );
+            
+            // swap i and j back
+            swap(nums[i], nums[j]);
+        }
+    }
+}
+
+vector<vector<int>> permute1(vector<int>& nums)
+{
+    vector<vector<int>> result;
+    permuteGenerating(result, nums, 0);
+    return result;
+}
+
+void testPermute()
+{
+    vector<int> v = { 1, 2, 3 };
+    auto r = permute1( v );
+    
+    for( const auto& array : r )
+    {
+        for( auto value : array )
+        {
+            cout << value << " ";
+        }
+        
+        cout << endl;
+    }
+}
+
+#pragma mark - permuteUnique
+//Given a collection of numbers that might contain duplicates, return all possible unique permutations.
+//
+//For example,
+//[1,1,2] have the following unique permutations:
+//[1,1,2], [1,2,1], and [2,1,1].
+vector<vector<int>> permuteUnique(vector<int>& nums)
+{
+    vector<vector<int>> rtn;
+    
+    sort( nums.begin(), nums.end() );
+    
+    while( true )
+    {
+        vector<int> tmp;
+        for( auto& i : nums )
+        {
+            tmp.push_back( i );
+        }
+        
+        rtn.push_back( tmp );
+        
+        if( !nextP( nums ) )
+            break;
+    }
+    
+    return rtn;
+}
+
+void permuteUnique()
+{
+    vector<int> v = { 0, 0, 1 };
+    auto r = permuteUnique( v );
+    
+    for( const auto& array : r )
+    {
+        for( auto value : array )
+        {
+            cout << value << " ";
+        }
+        
+        cout << endl;
+    }
+}
+
 #pragma mark - run
 void Level4::Run()
 {
-    testMultiply();
+    testPermute();
 }
