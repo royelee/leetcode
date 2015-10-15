@@ -14,6 +14,7 @@
 #include <map>
 #include <numeric>
 #include <set>
+#include <cmath>
 
 using namespace std;
 
@@ -334,8 +335,158 @@ void permuteUnique()
     }
 }
 
+#pragma mark - 
+//You are given an n x n 2D matrix representing an image.
+//
+//Rotate the image by 90 degrees (clockwise).
+//
+//Follow up:
+//Could you do this in-place?
+void rotate(vector<vector<int>>& matrix)
+{
+    int n = matrix.size();
+
+    // The rule is from the outside of rectangle to inside
+    // 11111
+    // 12221
+    // 12321
+    // 12221
+    // 11111
+    // we first roate every 1, then 2 then 3....
+    for( int i = 0; i < n / 2; i++ )
+    {
+        int innerSize = n - i - 1;
+        for( int j = i; j < innerSize; j++ )
+        {
+            int tmp = matrix[i][j];
+            matrix[i][j] = matrix[innerSize-j+i][i];
+            matrix[innerSize-j+i][i] = matrix[innerSize][innerSize-j+i];
+            matrix[innerSize][innerSize-j+i] = matrix[j][innerSize];
+            matrix[j][innerSize] = tmp;
+        }
+    }
+}
+
+void testRotate()
+{
+//    vector<vector<int>> v= { {1, 2}, {3, 4} };
+//    vector<vector<int>> v= { {1, 2, 3}, {4, 5, 6}, {7, 8, 9} };
+    vector<vector<int>> v= { {1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}, {13, 14, 15, 16} };
+    rotate(v);
+    for( auto& vect : v )
+    {
+        for( auto& i : vect )
+        {
+            cout << i << " ";
+        }
+        
+        cout << endl;
+    }
+}
+
+
+//Given an array of strings, group anagrams together.
+//
+//For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"],
+//Return:
+//
+//[
+// ["ate", "eat","tea"],
+// ["nat","tan"],
+// ["bat"]
+// ]
+//Note:
+//For the return value, each inner list's elements must follow the lexicographic order.
+//All inputs will be in lower-case.
+vector<vector<string>> groupAnagrams(vector<string>& strs)
+{
+    vector<vector<string>>  rtn;
+    map<string, vector<string> > map;
+    for( const string& s : strs )
+    {
+        string t = s;
+        sort( t.begin(), t.end() );
+        
+        map[t].push_back( s );
+    }
+    
+    for( auto it = map.begin(); it != map.end(); it++ )
+    {
+        sort(it->second.begin(), it->second.end() );
+        
+        rtn.push_back( it->second );
+    }
+    
+    return rtn;
+}
+
+void testGroupAnagrams()
+{
+    vector<string> s = { "eat", "tea", "tan", "ate", "nat", "bat" };
+    vector<vector<string>> r = groupAnagrams(s);
+    for( const auto& v : r )
+    {
+        for( const auto& s : v )
+        {
+            cout << s << " ";
+        }
+        cout << endl;
+    }
+}
+
+#pragma mark - myPow
+
+// Implement pow(x, n).
+double myPow(double x, int n)
+{
+    if( n == 0 )
+        return 1.0;
+    
+    bool neg = ( n < 0 );
+    
+    n = abs( n );
+    int currentTime = 0;
+    double r = 1.0;
+    while( n > 0 )
+    {
+        if( n % 2 == 1 )
+        {
+            double c = x;
+            for( int i = 0; i < currentTime; i++ )
+            {
+                c *= c;
+            }
+            
+            r *= c;
+        }
+        
+        currentTime++;
+        n = n >> 1;
+    }
+    
+    return neg ? 1.0 / r : r;
+}
+
+void testMyPow()
+{
+    vector<pair<double, int>> tests = {
+        { 1, 1 },
+        { 1, 2 },
+        { 2, 2 },
+        { 0.5, 2 },
+        { 2, 0 },
+        { 2, -1 }
+    };
+    for( auto& p : tests )
+    {
+        cout << "my: " << myPow( p.first, p.second );
+        cout << " expected: " << pow( p.first, p.second );
+        cout << " isRight: " << ( myPow( p.first, p.second ) == pow( p.first, p.second ) )  << endl;
+    }
+}
+
 #pragma mark - run
 void Level4::Run()
 {
-    testPermute();
+    testMyPow();
 }
