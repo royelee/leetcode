@@ -284,10 +284,72 @@ void testLengthOfLastWord()
     cout << lengthOfLastWord(s) << endl;
 }
 
+#pragma mark - generateMatrix
+
+//Given an integer n, generate a square matrix filled with elements from 1 to n2 in spiral order.
+//
+//For example,
+//Given n = 3,
+//
+//You should return the following matrix:
+//[
+// [ 1, 2, 3 ],
+// [ 8, 9, 4 ],
+// [ 7, 6, 5 ]
+// ]
+vector<vector<int>> generateMatrix(int n)
+{
+    vector<vector<int>> output(n, vector<int>(n) );
+    int fill = 1;
+    for( int start = 0; start < ( n + 1 ) / 2; start++ )
+    {
+        int end = n - start - 1;
+        // go right
+        for( int t = start; t <= end; t++ )
+        {
+            output[start][t] = fill++;
+        }
+        
+        // go down
+        for( int t = start + 1; t <= end; t++ )
+        {
+            output[t][end] = fill++;
+        }
+        
+        // go left
+        for( int t = end - 1; t >= start; t-- )
+        {
+            output[end][t] = fill++;
+        }
+        
+        // go up
+        for( int t = end - 1; t > start; t-- )
+        {
+            output[t][start] = fill++;
+        }
+    }
+
+    return output;
+}
+
+void testGenerateMatrix()
+{
+    vector<vector<int>> output = generateMatrix(5);
+    for( auto& v : output )
+    {
+        for( auto& i : v )
+        {
+            cout << i << " ";
+        }
+        
+        cout << endl;
+    }
+}
+
 
 #pragma mark - run
 
 void Level5::Run()
 {
-    testLengthOfLastWord();
+    testGenerateMatrix();
 }
