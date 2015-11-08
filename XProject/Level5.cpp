@@ -383,6 +383,14 @@ bool getNextPermutation( string& current )
     return true;
 }
 
+unsigned int factorial(unsigned int n)
+{
+    unsigned int ret = 1;
+    for(unsigned int i = 1; i <= n; ++i)
+        ret *= i;
+    return ret;
+}
+
 //The set [1,2,3,…,n] contains a total of n! unique permutations.
 //
 //By listing and labeling all of the permutations in order,
@@ -400,37 +408,47 @@ bool getNextPermutation( string& current )
 string getPermutation(int n, int k)
 {
     string output;
-    if( n < 1 || n > 9 )
+    
+    // tgamma(n) = (n-1)!
+    if( k > tgamma(n + 1 ) )
         return output;
     
-    int max = 1;
+    vector<int> availables;
     for( int i = 1; i <= n; i++ )
     {
-        max *= i;
+        availables.push_back( i );
     }
     
-    if( k > max || k <= 0 )
-        return output;
-    
-    for( int i = 1; i <= n; i++ )
+    int remaining = k;
+    while( !availables.empty() )
     {
-        output.push_back( '0' + i );
+        for( int i = 0; i < availables.size(); i++ )
+        {
+            const auto c = factorial(availables.size() - 1);
+            if( ( ( i + 1 ) * c ) >= remaining )
+            {
+                output.push_back( ('0' + availables[i] ) );
+                
+                remaining = (( remaining - 1 ) % c ) + 1;
+                availables.erase( availables.begin() + i );
+                break;
+            }
+        }
     }
     
-    int cout = 1;
-    while( cout++ != k )
-    {
-        getNextPermutation( output );
-    }
     
     return output;
 }
 
 void testGetNextPermutation()
 {
+
+    for( int i = 31492; i<= 31492; i++)
+        cout << "i = " << i << " " << getPermutation(8, i) << endl;
+
     for( int i = 1; i < 7; i++ )
     {
-        cout << getPermutation(5, i) << endl;
+        cout << getPermutation(3, i) << endl;
     }
 }
 
