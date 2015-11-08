@@ -346,10 +346,97 @@ void testGenerateMatrix()
     }
 }
 
+#pragma mark - getPermutation
+
+bool getNextPermutation( string& current )
+{
+    int first = -1;
+    for( int i = 0; i < current.size() - 1; i++ )
+    {
+        if( current[i] < current[i+1] )
+        {
+            first = i;
+        }
+    }
+    
+    if( first == -1 )
+        return false;
+    
+    int nextMax = first + 1;
+    for( int i = first + 1; i < current.size(); i++ )
+    {
+        if( current[i] > current[first] )
+            nextMax = i;
+    }
+    
+    swap(current[first], current[nextMax]);
+    
+    int begin = first + 1;
+    int end = current.size() - 1;
+    while( begin < end )
+    {
+        swap( current[begin], current[end] );
+        begin++;
+        end--;
+    }
+    
+    return true;
+}
+
+//The set [1,2,3,…,n] contains a total of n! unique permutations.
+//
+//By listing and labeling all of the permutations in order,
+//We get the following sequence (ie, for n = 3):
+//
+//"123"
+//"132"
+//"213"
+//"231"
+//"312"
+//"321"
+//Given n and k, return the kth permutation sequence.
+//
+//Note: Given n will be between 1 and 9 inclusive.
+string getPermutation(int n, int k)
+{
+    string output;
+    if( n < 1 || n > 9 )
+        return output;
+    
+    int max = 1;
+    for( int i = 1; i <= n; i++ )
+    {
+        max *= i;
+    }
+    
+    if( k > max || k <= 0 )
+        return output;
+    
+    for( int i = 1; i <= n; i++ )
+    {
+        output.push_back( '0' + i );
+    }
+    
+    int cout = 1;
+    while( cout++ != k )
+    {
+        getNextPermutation( output );
+    }
+    
+    return output;
+}
+
+void testGetNextPermutation()
+{
+    for( int i = 1; i < 7; i++ )
+    {
+        cout << getPermutation(5, i) << endl;
+    }
+}
 
 #pragma mark - run
 
 void Level5::Run()
 {
-    testGenerateMatrix();
+    testGetNextPermutation();
 }
