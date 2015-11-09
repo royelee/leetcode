@@ -452,9 +452,86 @@ void testGetNextPermutation()
     }
 }
 
+#pragma mark - rotateRight
+
+struct ListNode {
+    int val;
+    ListNode *next;
+    ListNode(int x) : val(x), next(NULL) {}
+};
+
+//Given a list, rotate the list to the right by k places, where k is non-negative.
+//
+//For example:
+//Given 1->2->3->4->5->NULL and k = 2,
+//return 4->5->1->2->3->NULL.
+ListNode* rotateRight(ListNode* head, int k)
+{
+    if( head == nullptr )
+        return head;
+    
+    int count = 1;
+    ListNode* it = head;
+    while( it->next )
+    {
+        it = it->next;
+        count++;
+    }
+    
+    k = k % count;
+    if( k == 0 )
+        return head;
+    
+    int i = 1;
+    ListNode* beforeNewHead = nullptr;
+    it = head;
+    while( it->next )
+    {
+        it = it->next;
+        if( beforeNewHead )
+            beforeNewHead = beforeNewHead->next;
+        
+        i++;
+        if( i == k + 1 && beforeNewHead == nullptr )
+            beforeNewHead = head;
+    }
+    
+    // Now rotate
+    ListNode* newHead = beforeNewHead->next;
+    it->next = head;
+    beforeNewHead->next = nullptr;
+    
+    return newHead;
+}
+
+void testRotateRight()
+{
+    ListNode* newHead = new ListNode(0);
+    ListNode* it = newHead;
+    for( int i = 1; i <= 5; i++ )
+    {
+        it->next = new ListNode(i);
+        it = it->next;
+    }
+    
+    it = newHead->next;
+    while ( it ) {
+        cout << it->val << " ";
+        it = it->next;
+    }
+    cout << endl;
+    
+    it = rotateRight( newHead->next, 2);
+    while ( it ) {
+        cout << it->val << " ";
+        it = it->next;
+    }
+    cout << endl;
+}
+
 #pragma mark - run
 
 void Level5::Run()
 {
-    testGetNextPermutation();
+    testRotateRight();
 }
