@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		B21551AB1BD20B9000D5B6F8 /* Level5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B21551A91BD20B9000D5B6F8 /* Level5.cpp */; };
+		B21974D21BF7029100F60937 /* Level6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B21974D01BF7029100F60937 /* Level6.cpp */; };
 		B245C6C21B6B2A9A00006EF0 /* Level3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B245C6C01B6B2A9A00006EF0 /* Level3.cpp */; };
 		B24820001B940446009FB1BC /* Level4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2481FFE1B940446009FB1BC /* Level4.cpp */; };
 		B27DA3531B425867006755E7 /* FindMedian.c in Sources */ = {isa = PBXBuildFile; fileRef = B27DA3511B425867006755E7 /* FindMedian.c */; };
@@ -31,6 +32,8 @@
 /* Begin PBXFileReference section */
 		B21551A91BD20B9000D5B6F8 /* Level5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level5.cpp; sourceTree = "<group>"; };
 		B21551AA1BD20B9000D5B6F8 /* Level5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level5.h; sourceTree = "<group>"; };
+		B21974D01BF7029100F60937 /* Level6.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level6.cpp; sourceTree = "<group>"; };
+		B21974D11BF7029100F60937 /* Level6.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level6.h; sourceTree = "<group>"; };
 		B245C6C01B6B2A9A00006EF0 /* Level3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level3.cpp; sourceTree = "<group>"; };
 		B245C6C11B6B2A9A00006EF0 /* Level3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level3.h; sourceTree = "<group>"; };
 		B245C6C31B6B2D5500006EF0 /* ILevel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ILevel.h; sourceTree = "<group>"; };
@@ -90,6 +93,8 @@
 				B2481FFF1B940446009FB1BC /* Level4.h */,
 				B21551A91BD20B9000D5B6F8 /* Level5.cpp */,
 				B21551AA1BD20B9000D5B6F8 /* Level5.h */,
+				B21974D01BF7029100F60937 /* Level6.cpp */,
+				B21974D11BF7029100F60937 /* Level6.h */,
 			);
 			path = XProject;
 			sourceTree = "<group>";
@@ -151,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B2A703BF1B3275270011EC87 /* Level1.cpp in Sources */,
+				B21974D21BF7029100F60937 /* Level6.cpp in Sources */,
 				B297C5281B4B8DE1005936C8 /* Level2.cpp in Sources */,
 				B21551AB1BD20B9000D5B6F8 /* Level5.cpp in Sources */,
 				B2A703B71B3274760011EC87 /* main.cpp in Sources */,

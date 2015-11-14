@@ -13,7 +13,7 @@
 #include "Level3.h"
 #include "Level4.h"
 #include "Level5.h"
-
+#include "Level6.h"
 
 template <typename T>
 void runLevel() {
@@ -22,7 +22,7 @@ void runLevel() {
 }
 
 int main(int argc, const char * argv[]) {
-    runLevel<Level5>();
+    runLevel<Level6>();
     return 0;
 }
 

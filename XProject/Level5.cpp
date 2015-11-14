@@ -529,9 +529,153 @@ void testRotateRight()
     cout << endl;
 }
 
+#pragma mark - uniquePaths
+
+//A robot is located at the top-left corner of a m x n grid (marked 'Start' in the diagram below).
+//
+//The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked 'Finish' in the diagram below).
+//
+//How many possible unique paths are there?
+//
+//
+//Above is a 3 x 7 grid. How many possible unique paths are there?
+//
+//Note: m and n will be at most 100.
+int uniquePaths(int m, int n)
+{
+    vector<vector<int>> dp( m, vector<int>(n) );
+    for( int i = 0; i < dp.size(); i++ )
+    {
+        for( int j = 0; j < dp[i].size(); j++ )
+        {
+            if( i == dp.size() - 1 || j == dp[i].size() - 1 )
+            {
+                dp[i][j] = 1;
+            }
+            else
+            {
+                dp[i][j] = -1;
+            }
+        }
+    }
+    
+    for( int i = dp.size() - 1; i >= 0; i-- )
+    {
+        for( int j = dp[i].size() - 1; j >= 0; j-- )
+        {
+            if( dp[i][j] == -1 )
+            {
+                dp[i][j] = dp[i][j+1] + dp[i+1][j];
+            }
+        }
+    }
+
+    
+    return dp[0][0];
+}
+
+#pragma mark - uniquePathsWithObstacles
+
+//Follow up for "Unique Paths":
+//
+//Now consider if some obstacles are added to the grids. How many unique paths would there be?
+//
+//An obstacle and empty space is marked as 1 and 0 respectively in the grid.
+//
+//For example,
+//There is one obstacle in the middle of a 3x3 grid as illustrated below.
+//
+//[
+// [0,0,0],
+// [0,1,0],
+// [0,0,0]
+// ]
+//The total number of unique paths is 2.
+int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid)
+{
+    int m = obstacleGrid.size();
+    int n = obstacleGrid[0].size();
+    
+    vector<vector<int>> dp( m, vector<int>(n) );
+    
+    if( obstacleGrid[m-1][n-1] == 0 )
+    {
+        dp[m-1][n-1] = 1;
+    }
+    else
+    {
+        return 0;
+    }
+    
+    for( int i = dp.size() - 1; i >= 0; i-- )
+    {
+        for( int j = dp[i].size() - 1; j >= 0; j-- )
+        {
+            if( i == dp.size() - 1 )
+            {
+                // check the right one.
+                if( j + 1 < dp[i].size() )
+                {
+                    if( dp[i][j+1] == 1 && obstacleGrid[i][j] == 0 )
+                    {
+                        dp[i][j] = 1;
+                    }
+                }
+            }
+            else if( j == dp[i].size() - 1 )
+            {
+                // check the bottom one.
+                if( i + 1 < dp.size() )
+                {
+                    if( dp[i+1][j] == 1 && obstacleGrid[i][j] == 0 )
+                    {
+                        dp[i][j] = 1;
+                    }
+                }
+            }
+            else
+            {
+                if( obstacleGrid[i][j] == 0 )
+                {
+                    int d = 0;
+                    if( obstacleGrid[i][j+1] != 1 && dp[i][j+1] != -1 )
+                        d += dp[i][j+1];
+                    if( obstacleGrid[i+1][j] != 1 && dp[i+1][j] != -1 )
+                        d += dp[i+1][j];
+                    dp[i][j] = d;
+                }
+            }
+        }
+    }
+    
+    return dp[0][0];
+}
+
+void testUniquePathsWithObstacles()
+{
+//    vector<vector<int>> g
+//    {
+//        {0,0,0},
+//        {0,1,0},
+//        {0,0,0}
+//    };
+//    vector<vector<int>> g
+//    {
+//        {1, 0}
+//    };
+    vector<vector<int>> g
+    {
+        {1, 0},
+        {0, 0}
+    };
+    
+    
+    cout << uniquePathsWithObstacles(g);
+}
+
 #pragma mark - run
 
 void Level5::Run()
 {
-    testRotateRight();
+    testUniquePathsWithObstacles();
 }
