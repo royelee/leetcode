@@ -325,37 +325,38 @@ void setZeroes(vector<vector<int>>& matrix)
     int m = matrix.size();
     int n = matrix[0].size();
     
-    vector<bool> f( m + n );
+    vector<bool> f( n );
     
     for( int i = 0; i < m; i++ )
     {
+        bool currentLineHasZero = false;
         for( int j = 0; j < n; j++ )
         {
             if( matrix[i][j] == 0 )
             {
-                f[i] = true;
-                f[m+j] = true;
-            }
-        }
-    }
-    
-    for( int i = 0; i < f.size(); i++ )
-    {
-        if( f[i] )
-        {
-            if( i < m ) // row
-            {
-                for( int t = 0; t < n; t++ )
+                if( !currentLineHasZero )
                 {
-                    matrix[i][t] = 0;
+                    for( int t = 0; t <= j; t++ )
+                    {
+                        matrix[i][t] = 0;
+                    }
+                    
+                    currentLineHasZero = true;
+                }
+                
+                if( !f[j] )
+                {
+                    for( int t = 0; t <= i; t++ )
+                    {
+                        matrix[t][j] = 0;
+                    }
+                    
+                    f[j] = true;
                 }
             }
-            else    // col
+            else if( f[j] || currentLineHasZero )
             {
-                for( int t = 0; t < m; t++ )
-                {
-                    matrix[t][i-m] = 0;
-                }
+                matrix[i][j] = 0;
             }
         }
     }
@@ -364,9 +365,22 @@ void setZeroes(vector<vector<int>>& matrix)
 void testSetZeroes()
 {
     vector<vector<int>> m = {
-        { 1, 0 }
+        { 1, 2, 3, 4 },
+        { 1, 2, 0, 4 },
+        { 0, 2, 3, 4 },
+        { 1, 2, 3, 4 },
     };
     setZeroes( m );
+    
+    for( auto& v : m )
+    {
+        for( auto& i : v )
+        {
+            cout << i << " ";
+        }
+        
+        cout << endl;
+    }
 }
 
 
