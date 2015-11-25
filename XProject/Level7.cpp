@@ -91,12 +91,94 @@ void testSearchMatrix()
 //
 //Could you come up with an one-pass algorithm using only constant space?
 void sortColors(vector<int>& nums) {
+    if( nums.size() <= 1 )
+        return ;
     
+    int fill0 = 0;
+    int fill2 = nums.size() - 1;
+    
+    for( int i = fill0; i <= fill2; )
+    {
+        if( nums[i] == 0 )
+        {
+            swap(nums[fill0], nums[i]);
+            fill0++;
+            i++;
+        }
+        else if( nums[i] == 2 )
+        {
+            swap(nums[fill2], nums[i]);
+            fill2--;
+        }
+        else
+        {
+            i++;
+        }
+    }
+}
+
+void testSortColors()
+{
+    vector<pair<vector<int>, vector<int>>> tests
+    {
+        // pair vector<int> -- input, vector<int> -- expect
+        {
+            { 0 }, { 0 }
+        },
+        {
+            { 0, 1 }, { 0, 1 }
+        },
+        {
+            { 1, 0 }, { 0, 1 }
+        },
+        {
+            { 0, 2 }, { 0, 2 }
+        },
+        {
+            { 2, 0 }, { 0, 2 }
+        },
+        {
+            { 0, 1, 2 }, { 0, 1, 2 }
+        },
+        {
+            { 1, 0, 2 }, { 0, 1, 2 }
+        },
+        {
+            { 2, 0, 1 }, { 0, 1, 2 }
+        },
+        {
+            { 1, 0, 1, 0 }, { 0, 0, 1, 1 }
+        },
+        {
+            { 1, 0, 1, 0, 2, 0, 2, 0, 1, 1 }, { 0, 0, 0, 0, 1, 1, 1, 1, 2, 2 }
+        },
+    };
+    
+    for( auto& p : tests )
+    {
+        vector<int> input = p.first;
+        sortColors( p.first );
+        for( int i = 0; i < p.first.size(); i++ )
+        {
+            if( p.first[i] != p.second[i] )
+            {
+                cout << " failed for cases: " << endl;;
+                
+                for_each(input.begin(), input.end(), [](int value )
+                         {
+                             cout << value << " ";
+                         });
+                cout << endl;
+                
+                break;
+            }
+        }
+    }
 }
 
 #pragma mark - run
 
 void Level7::Run()
 {
-    testSearchMatrix();
+    testSortColors();
 }
