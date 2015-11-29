@@ -246,10 +246,66 @@ void testCombine()
     }
 }
 
+#pragma mark - subsets
+
+//Given a set of distinct integers, nums, return all possible subsets.
+//
+//Note:
+//Elements in a subset must be in non-descending order.
+//The solution set must not contain duplicate subsets.
+//For example,
+//If nums = [1,2,3], a solution is:
+//
+//[
+// [3],
+// [1],
+// [2],
+// [1,2,3],
+// [1,3],
+// [2,3],
+// [1,2],
+// []
+// ]
+vector<vector<int>> subsets(vector<int>& nums)
+{
+    sort( nums.begin(), nums.end() );
+    
+    vector<vector<int>> output;
+    output.push_back({});
+    for( int i = 1; i <= nums.size(); i++ )
+    {
+        vector<vector<int>> c = combine(nums.size(), i);
+        for( auto& v : c )
+        {
+            vector<int> tmp;
+            for( auto& j : v )
+                tmp.push_back(nums[j - 1]);
+            
+            output.push_back(tmp);
+        }
+    }
+    
+    return output;
+}
+
+void testSubsets()
+{
+    vector<int> v = {8, 4, 1};
+    vector<vector<int>> o = subsets(v);
+    
+    for( auto & t : o )
+    {
+        for_each(t.begin(), t.end(), []( int number )
+                 {
+                     cout << number << " ";
+                 });
+        cout << endl;
+    }
+}
 
 #pragma mark - run
 
 void Level7::Run()
 {
-    testCombine();
+    testSubsets();
 }
