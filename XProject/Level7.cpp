@@ -7,6 +7,7 @@
 //
 
 #include "Level7.h"
+#include "Utils.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -176,9 +177,79 @@ void testSortColors()
     }
 }
 
+#pragma mark - combine
+//Given two integers n and k, return all possible combinations of k numbers out of 1 ... n.
+//
+//For example,
+//If n = 4 and k = 2, a solution is:
+//
+//[
+// [2,4],
+// [3,4],
+// [2,3],
+// [1,2],
+// [1,3],
+// [1,4],
+// ]
+vector<vector<int>> combine(int n, int k)
+{
+    if( n < k || k < 0 )
+    {
+        return vector<vector<int>>();
+    }
+    
+    
+    vector<vector<int>> output;
+    if( k == 1 )
+    {
+        for( int i = 1; i <= n; i ++ )
+        {
+            output.push_back( { i } );
+        }
+        
+        return output;
+    }
+    
+    for( int i = n; i >= 1; i-- )
+    {
+        vector<vector<int>> c = combine( i - 1, k - 1 );
+        for( vector<int> v : c )
+        {
+            vector<int> t = v;
+            t.push_back( i );
+            
+            output.push_back( t );
+        }
+    }
+    
+    return output;
+}
+
+void testCombine()
+{
+    int n = 10;
+    int k = 7;
+    auto r = combine(n, k);
+    
+    cout << "Size check " << (r.size() == factorial(n) / (factorial(k) * factorial(n - k) )? "Pass" : "Fail") << endl;
+    cout << "Expect Size " << factorial(n) / (factorial(k) * factorial(n - k) ) << endl;
+    cout << "Acutal Size " << r.size() << endl;
+    
+    for( auto& v : r )
+    {
+        cout << "{";
+        for_each(v.begin(), v.end(), []( int i )
+                 {
+                     cout << i << " ";
+                 });
+        cout << "}" << endl;
+    }
+}
+
+
 #pragma mark - run
 
 void Level7::Run()
 {
-    testSortColors();
+    testCombine();
 }

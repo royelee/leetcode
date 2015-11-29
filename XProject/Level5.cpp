@@ -7,6 +7,7 @@
 //
 
 #include "Level5.h"
+#include "Utils.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -381,14 +382,6 @@ bool getNextPermutation( string& current )
     }
     
     return true;
-}
-
-unsigned int factorial(unsigned int n)
-{
-    unsigned int ret = 1;
-    for(unsigned int i = 1; i <= n; ++i)
-        ret *= i;
-    return ret;
 }
 
 //The set [1,2,3,…,n] contains a total of n! unique permutations.
