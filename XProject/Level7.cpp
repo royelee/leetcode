@@ -303,9 +303,104 @@ void testSubsets()
     }
 }
 
+#pragma mark - exist
+
+bool _exist(vector<vector<char>>& board, vector<vector<bool>>& visited, int x, int y, string word, int wordIndex )
+{
+    if( wordIndex >= 0 && wordIndex < word.size() )
+    {
+        if( board[x][y] != word[wordIndex] )
+        {
+            return false;
+        }
+        else
+        {
+            // last char, found it.
+            if( wordIndex == word.size() - 1 )
+                return true;
+        }
+    }
+    
+    // Go 4 directions and see if we can find the match.
+    vector<pair<int, int>> dirs =
+    {
+        { 1, 0},
+        { 0, 1 },
+        { -1, 0},
+        { 0, -1},
+    };
+    
+    for( auto& dir : dirs )
+    {
+        int newX = x + dir.first;
+        int newY = y + dir.second;
+        
+        if( newX >= 0 && newX < visited.size() &&
+           newY >= 0 && newY < visited[x].size()
+           && !visited[newX][newY] )
+        {
+            visited[newX][newY] = true;
+            
+            if(_exist(board, visited, newX, newY, word, wordIndex + 1) )
+                return true;
+            
+            visited[newX][newY] = false;
+        }
+    }
+    
+    return false;
+}
+
+//Given a 2D board and a word, find if the word exists in the grid.
+//
+//The word can be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once.
+//
+//For example,
+//Given board =
+//
+//[
+// ['A','B','C','E'],
+// ['S','F','C','S'],
+// ['A','D','E','E']
+// ]
+//word = "ABCCED", -> returns true,
+//word = "SEE", -> returns true,
+//word = "ABCB", -> returns false.
+bool exist(vector<vector<char>>& board, string word)
+{
+    vector<vector<bool>> visited( board.size(), vector<bool>( board[0].size() ) );
+    
+    for( int i = 0; i < board.size(); i++ )
+    {
+        for( int j = 0; j < board[i].size(); j++ )
+        {
+            visited[i][j] = true;
+
+            if( _exist(board, visited, i, j, word, 0 ) )
+                return true;
+            
+            visited[i][j] = false;
+        }
+    }
+    
+    return false;
+}
+
+void testExist()
+{
+    vector<vector<char>> board = {
+        {'A','B','C','E'},
+        {'S','F','C','S'},
+        {'A','D','E','E'}
+    };
+    cout << exist(board, "ABCCED" );
+    cout << exist(board, "SEE" );
+    cout << exist(board, "ABCB" );
+}
+
 #pragma mark - run
 
 void Level7::Run()
 {
-    testSubsets();
+    testExist();
 }
