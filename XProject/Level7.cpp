@@ -398,9 +398,79 @@ void testExist()
     cout << exist(board, "ABCB" );
 }
 
+#pragma mark - removeDuplicates
+
+//Remove Duplicates from Sorted Array II
+//Follow up for "Remove Duplicates":
+//What if duplicates are allowed at most twice?
+//
+//For example,
+//Given sorted array nums = [1,1,1,2,2,3],
+//
+//Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. It doesn't matter what you leave beyond the new length.
+//
+static int removeDuplicates(vector<int>& nums)
+{
+    int i = 0;
+    int j = 0;
+    while( j < nums.size() )
+    {
+        int oldJ = j;
+        while( j + 1 < nums.size() && nums[j] == nums[j+1] )
+        {
+            j++;
+        }
+        
+        if( j - oldJ >= 1 )
+        {
+            nums[i++] = nums[j];
+            nums[i++] = nums[j];
+        }
+        else
+        {
+            nums[i++] = nums[j];
+        }
+        j++;
+    }
+    
+    return i;
+}
+
+static void testRemoveDuplicates()
+{
+    
+    vector<vector<int>> tests = {
+        {1,1,1,1,3,3},
+        {1,1,1,2,2,3},
+        {},
+        {1},
+        {1,1},
+        {1,1,1,1,1,1,1,1,1},
+        {1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2}
+    };
+    for( auto& nums : tests )
+        cout << removeDuplicates(nums) << endl;
+}
+
+#pragma mark - search
+//Follow up for "Search in Rotated Sorted Array":
+//What if duplicates are allowed?
+//
+//Would this affect the run-time complexity? How and why?
+//
+//Write a function to determine if a given target is in the array.
+static bool search(vector<int>& nums, int target) {
+    return false;
+}
+
+static void testSearch()
+{
+    
+}
+
 #pragma mark - run
 
 void Level7::Run()
 {
-    testExist();
+    testRemoveDuplicates();
 }

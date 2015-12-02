@@ -209,7 +209,7 @@ void testSwapPairs()
 //Given input array nums = [1,1,2],
 //
 //Your function should return length = 2, with the first two elements of nums being 1 and 2 respectively. It doesn't matter what you leave beyond the new length.
-int removeDuplicates(vector<int>& nums)
+static int removeDuplicates(vector<int>& nums)
 {
     // Using the way O(N) implements it. http://blog.csdn.net/fightforyourdream/article/details/12719683
     
@@ -232,7 +232,7 @@ int removeDuplicates(vector<int>& nums)
     return nums.size() - ( j - i ) + 1; // which is i + 1
 }
 
-void testRemoveDuplicates()
+static void testRemoveDuplicates()
 {
     vector<int> v = {1,2,3,};
     int r = removeDuplicates(v);
