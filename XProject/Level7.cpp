@@ -453,24 +453,92 @@ static void testRemoveDuplicates()
 }
 
 #pragma mark - search
-//Follow up for "Search in Rotated Sorted Array":
-//What if duplicates are allowed?
+int binary_search(const vector<int>& sorted_vec, int begin, int end, int key) {
+    size_t mid, left = begin ;
+    size_t right = end;
+    while (left < right) {
+        mid = left + (right - left)/2;
+        if (key > sorted_vec[mid]){
+            left = mid+1;
+        }
+        else if (key < sorted_vec[mid]){
+            right = mid;
+        }
+        else {
+            return mid;
+        }
+    }
+    
+    return -1;
+}
+
+//Suppose a sorted array is rotated at some pivot unknown to you beforehand.
 //
-//Would this affect the run-time complexity? How and why?
+//(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
 //
-//Write a function to determine if a given target is in the array.
-static bool search(vector<int>& nums, int target) {
-    return false;
+//You are given a target value to search. If found in the array return its index, otherwise return -1.
+//
+//You may assume no duplicate exists in the array.
+//
+static int search(vector<int>& nums, int target)
+{
+    // 0 1 2 4 5 6 7 -> 4 5 6 7 0 1 2
+    // find the pivot.
+    int begin = 0;
+    int end = nums.size();
+    while( begin < end )
+    {
+        int mid = ( begin + end ) / 2;
+        if( nums[begin] < nums[mid] )
+        {
+            begin = mid;
+        }
+        else
+        {
+            end = mid;
+        }
+    }
+    
+    // Now binary search.
+    int b = binary_search(nums, 0, begin + 1, target);
+    if( b != -1 )
+        return b;
+    
+    return binary_search(nums, begin + 1, nums.size(), target);
 }
 
 static void testSearch()
 {
+    vector<int> array = { 1, 2, 3, 4, 5 };
+    for( int loop = 0; loop < 5; loop++ )
+    {
+        int first = array.front();
+        for( int i = 0; i < array.size(); i++ )
+        {
+            array[i] = array[i+1];
+        }
+        array.back() = first;
+        
+        for_each(array.begin(), array.end(), [](int value )
+                 {
+                     cout << value << " ";
+                 });
+        cout << endl;
+        
+        cout << search(array, 1) << endl;
+    }
     
+    array = { 1 };
+    cout << search(array, 0) << endl;
+    
+    array = { 1 };
+    cout << search(array, 1) << endl;
+
 }
 
 #pragma mark - run
 
 void Level7::Run()
 {
-    testRemoveDuplicates();
+    testSearch();
 }
