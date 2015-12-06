@@ -51,35 +51,6 @@ ListNode* deleteDuplicates(ListNode* head)
     return head;
 }
 
-void testDeleteDuplicates()
-{
-    vector<int> v = {1, 1, 1};
-    ListNode* head = new ListNode(-1);
-    ListNode* it = head;
-    for( int i = 0; i < v.size(); i++ )
-    {
-        it->next = new ListNode(v[i]);
-        it = it->next;
-    }
-    
-    cout << "before" << endl;
-    it = head->next;
-    while( it )
-    {
-        cout << it->val << endl;
-        it = it->next;
-    }
-    
-    it = deleteDuplicates( head->next );
-    
-    cout << "after" << endl;
-    while( it )
-    {
-        cout << it->val << endl;
-        it = it->next;
-    }
-}
-
 //Given a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list.
 //
 //For example,
@@ -97,9 +68,52 @@ ListNode* deleteDuplicates2(ListNode* head)
         }
         
         cur->next = next;
+        cur = cur->next;
     }
     
-    return nullptr;
+    return head;
+}
+
+void testDeleteDuplicates()
+{
+    vector<vector<int>> tests = {
+        {},
+        {1},
+        {1,1},
+        {1,1,1},
+        {1,2,2,2},
+        {1,2,2,2,3}
+    };
+    
+    for( vector<int> v : tests )
+    {
+        ListNode* head = new ListNode(-1);
+        ListNode* it = head;
+        for( int i = 0; i < v.size(); i++ )
+        {
+            it->next = new ListNode(v[i]);
+            it = it->next;
+        }
+        
+        cout << "before" << endl;
+        it = head->next;
+        while( it )
+        {
+            cout << it->val << " ";
+            it = it->next;
+        }
+        cout << endl;
+        
+        it = deleteDuplicates2( head->next );
+        
+        cout << "after" << endl;
+        while( it )
+        {
+            cout << it->val << " ";
+            it = it->next;
+        }
+        cout << endl;
+    }
 }
 
 #pragma mark - run
