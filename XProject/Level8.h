@@ -9,6 +9,13 @@
 #ifndef __XProject__Level8__
 #define __XProject__Level8__
 
-#include <stdio.h>
+
+#include "ILevel.h"
+
+class Level8 : public ILevel
+{
+public:
+    void Run() override;
+};
 
 #endif /* defined(__XProject__Level8__) */
