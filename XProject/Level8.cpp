@@ -59,6 +59,9 @@ ListNode* deleteDuplicates(ListNode* head)
 ListNode* deleteDuplicates2(ListNode* head)
 {
     ListNode* cur = head;
+    ListNode* pre = new ListNode(-1);
+    pre->next = head;
+    ListNode* newHead = pre;
     while( cur != nullptr )
     {
         ListNode* next = cur->next;
@@ -67,11 +70,20 @@ ListNode* deleteDuplicates2(ListNode* head)
             next = next->next;
         }
         
-        cur->next = next;
-        cur = cur->next;
+        if( next != cur->next )
+        {
+            // Found the duplicates, then we need to remove all the nodes duplicated.
+            pre->next = next;
+        }
+        else
+        {
+            pre = cur;
+        }
+
+        cur = next;
     }
     
-    return head;
+    return newHead->next;
 }
 
 void testDeleteDuplicates()
