@@ -169,9 +169,108 @@ void merge(vector<int>& nums1, int m, vector<int>& nums2, int n)
     }
 }
 
+#pragma mark - partition
+//Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
+//
+//You should preserve the original relative order of the nodes in each of the two partitions.
+//
+//For example,
+//Given 1->4->3->2->5->2 and x = 3,
+//return 1->2->2->4->3->5.
+ListNode* partition(ListNode* head, int x)
+{
+    ListNode* bigHead = nullptr;
+    ListNode* bigHeadIter = nullptr;
+    ListNode* iter = head;
+    ListNode* pre = nullptr;
+    ListNode* newHead = nullptr;
+    while( iter != nullptr )
+    {
+        ListNode* next = iter->next;
+
+        if( iter->val >= x )
+        {
+            // Move to big head
+            if( bigHead == nullptr )
+            {
+                bigHead = iter;
+                bigHeadIter = bigHead;
+            }
+            else
+            {
+                bigHeadIter->next = iter;
+                bigHeadIter = bigHeadIter->next;
+            }
+            
+            if( pre )
+                pre->next = iter->next;
+            
+            bigHeadIter->next = nullptr;
+        }
+        else
+        {
+            if( !pre )
+                newHead = iter;
+            pre = iter;
+        }
+        
+        iter = next;
+    }
+    
+    if( pre )
+        pre->next = bigHead;
+
+    return newHead ? newHead : bigHead;
+}
+
+void testPartition()
+{
+    vector<pair<vector<int>, int>> tests = {
+        {{1,4,3,2,5,2}, 3},
+        {{}, 0},
+        {{1},1},
+        {{1},2},
+        {{1},0},
+        {{1,1,1},1},
+        {{2,2,1},2},
+        {{2,2,2,2,1},1},
+    };
+    
+    for( auto& t : tests )
+    {
+        vector<int>& v = t.first;
+        ListNode* head = new ListNode(-1);
+        ListNode* it = head;
+        for( int i = 0; i < v.size(); i++ )
+        {
+            it->next = new ListNode(v[i]);
+            it = it->next;
+        }
+        
+        cout << "before" << endl;
+        it = head->next;
+        while( it )
+        {
+            cout << it->val << " ";
+            it = it->next;
+        }
+        cout << endl;
+        
+        it = partition( head->next, t.second );
+        
+        cout << "after" << endl;
+        while( it )
+        {
+            cout << it->val << " ";
+            it = it->next;
+        }
+        cout << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level8::Run()
 {
-    testDeleteDuplicates();
+    testPartition();
 }
