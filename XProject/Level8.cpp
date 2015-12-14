@@ -268,9 +268,193 @@ void testPartition()
     }
 }
 
+#pragma mark - grayCode
+//The gray code is a binary numeral system where two successive values differ in only one bit.
+//
+//Given a non-negative integer n representing the total number of bits in the code, print the sequence of gray code. A gray code sequence must begin with 0.
+//
+//For example, given n = 2, return [0,1,3,2]. Its gray code sequence is:
+//
+//00 - 0
+//01 - 1
+//11 - 3
+//10 - 2
+//Note:
+//For a given n, a gray code sequence is not uniquely defined.
+//
+//For example, [0,2,3,1] is also a valid gray code sequence according to the above definition.
+//
+//For now, the judge is able to judge based on one instance of gray code sequence. Sorry about that.
+vector<int> grayCode1(int n)
+{
+    int size = 1 << n;
+    vector<int> binary( n );
+    set<int> inserted;
+    vector<int> output;
+    
+    output.push_back( 0 );
+    inserted.insert( 0 );
+    
+    for( int i = 0; i < size - 1; i++ )
+    {
+        bool found = false;
+        while (!found )
+        {
+            for( int k = n - 1; k >= 0; k-- )
+            {
+                int old = binary[k];
+
+                binary[k] = ( binary[k] + 1 ) % 2;
+                
+                int binaryRep = 0;
+                for( int j = n - 1; j >= 0 ; j-- )
+                {
+                    binaryRep += binary[j] << ( n - 1 - j );
+                }
+                // can't find it
+                if( inserted.find( binaryRep ) == inserted.end() )
+                {
+                    output.push_back( binaryRep );
+                    inserted.insert( binaryRep );
+                    
+                    found = true;
+                    break;
+                }
+                else
+                {
+                    binary[k] = old;
+                }
+            }
+        }
+    }
+    
+    return output;
+}
+
+vector<int> grayCode(int n)
+{
+    vector<int> output;
+    int size = 1 << n;
+    output.push_back(0);
+    for( int i = 1; i < size; i++ )
+    {
+        // bigest bit
+        int t = i;
+        int b = -1;
+        while( t != 0 )
+        {
+            t = t >> 1;
+            b++;
+        }
+        
+        int base = 1 << b;
+        int index = base - 1 - i % base;
+        output.push_back(base + output[ index ]);
+    }
+    return output;
+}
+
+void testGrayCode()
+{
+    auto v = grayCode( 7 );
+    for( auto& i : v )
+    {
+        cout << i << " ";
+    }
+    
+    cout << endl;
+    
+    v = grayCode1( 7 );
+    for( auto& i : v )
+    {
+        cout << i << " ";
+    }
+}
+
+#pragma mark - subsetsWithDup
+//Given a collection of integers that might contain duplicates, nums, return all possible subsets.
+//
+//Note:
+//Elements in a subset must be in non-descending order.
+//The solution set must not contain duplicate subsets.
+//For example,
+//If nums = [1,2,2], a solution is:
+//
+//[
+// [2],
+// [1],
+// [1,2,2],
+// [2,2],
+// [1,2],
+// []
+//]
+vector<vector<int>> subsetsWithDup(vector<int>& nums)
+{
+    //    添加数字构建subset
+    //    
+    //    起始subset集为：[]
+    //    添加S0后为：[], [S0]
+    //    添加S1后为：[], [S0], [S1], [S0, S1]
+    //    添加S2后为：[], [S0], [S1], [S0, S1], [S2], [S0, S2], [S1, S2], [S0, S1, S2]
+    //    红色subset为每次新增的。显然规律为添加Si后，新增的subset为克隆现有的所有subset，并在它们后面都加上Si。
+    sort(nums.begin(), nums.end());
+    
+    vector<vector<int>> output;
+    
+    output.push_back({});
+    for( int i = 0; i < nums.size(); i++ )
+    {
+        // Adding subset { nums[i] }
+        // If it's duplicate, then the array is { nums[i] }, { nums[i], nums[i]} ... { nums[i]... }
+        int d = i;
+        while( d + 1 < nums.size() && nums[i] == nums[d+1] )
+            d++;
+        
+        vector<vector<int>> adding;
+        for( int j = 0; j < d - i + 1; j++ )
+        {
+            vector<int> c;
+            for( int k = 0; k < j + 1; k++ )
+                c.push_back(nums[i]);
+            
+            adding.push_back(c);
+        }
+        
+        i = d;
+        
+        vector<vector<int>> backup = output;
+        for( vector<int>& existed : backup )
+        {
+            for( vector<int>& newV : adding )
+            {
+                vector<int> old = existed;
+                old.insert(old.end(), newV.begin(), newV.end() );
+                output.push_back(old);
+            }
+        }
+    }
+    
+    return output;
+}
+
+void testSubsetsWithDup()
+{
+    vector<int> tests = { 1, 2, 2, 3 };
+    vector<vector<int>> r = subsetsWithDup( tests );
+    for( auto& v : r )
+    {
+        cout << "[";
+        for( auto& num : v )
+        {
+            cout << num << " ";
+        }
+        cout << "]" << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level8::Run()
 {
-    testPartition();
+    testSubsetsWithDup();
 }
