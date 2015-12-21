@@ -452,9 +452,125 @@ void testSubsetsWithDup()
     }
 }
 
+#pragma mark - numDecodings
+void _numDecodings1( string s, string decoded, set<string>& decodedSet )
+{
+    if( s.size() == 0 )
+    {
+        decodedSet.insert(decoded);
+        return;
+    }
+    
+    char c = ( s[0] - '1' ) + 'A';
+    if( s.size() == 1 )
+    {
+        decodedSet.insert(decoded + c);
+        return ;
+    }
+    
+    if( c > 'B' )
+    {
+        s.erase(0, 1);
+        _numDecodings1(s, decoded + c, decodedSet);
+    }
+    else
+    {
+        int c1 = ( s[0] - '0' );
+        int c2 = ( s[1] - '0' );
+        
+        {
+            string s1 = s;
+            s1.erase(0, 1);
+            _numDecodings1(s1, decoded + c, decodedSet);
+        }
+        
+        {
+            string s2 = s;
+            s2.erase(0, 2);
+            _numDecodings1(s2, decoded + (char)('A' + c2 * 10 + c1 - 1), decodedSet);
+        }
+    }
+}
+
+
+//A message containing letters from A-Z is being encoded to numbers using the following mapping:
+//
+//'A' -> 1
+//'B' -> 2
+//...
+//'Z' -> 26
+//Given an encoded message containing digits, determine the total number of ways to decode it.
+//
+//For example,
+//Given encoded message "12", it could be decoded as "AB" (1 2) or "L" (12).
+//
+//The number of ways decoding "12" is 2.
+int numDecodings1(string s)
+{
+    set<string> decodedSet;
+    _numDecodings1( s, "", decodedSet );
+//    for( auto& s : decodedSet )
+//        cout << s << " ";
+//    cout << endl << "======" << endl;
+    return decodedSet.size();
+}
+
+int numDecodings(string s)
+{
+    if( s.size() == 0 )
+        return 0;
+    
+    if( s.size() == 1 )
+        return 1;
+    
+    if( s.size() == 2 )
+    {
+        if( s[0] > '2' )
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
+    }
+    
+    if( s[0] > '2' )
+    {
+        return numDecodings(s.substr(1, s.size()));
+    }
+    else
+    {
+        return numDecodings(s.substr(1, s.size())) + numDecodings(s.substr(2, s.size()));
+    }
+}
+
+void testNumDecodings()
+{
+//    string s = "1211";
+//    int i = 1;
+//    while( numDecodings(s.substr(0, i)) == numDecodings1(s.substr(0, i) ))
+//    {
+//        i++;
+//    }
+//    cout << s.substr(0, i) << endl;
+    
+//    cout << numDecodings("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948") << endl;
+//    cout << numDecodings1("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948") << endl;
+//    cout << numDecodings("11") << endl;
+    cout << numDecodings("1211") << endl;
+    cout << numDecodings1("1211") << endl;  // 11 + 211 -> 2 + 3
+//    cout << numDecodings("12") << endl;
+//    cout << numDecodings("") << endl;
+//    cout << numDecodings("7") << endl;
+//    cout << numDecodings("71") << endl;
+//    cout << numDecodings("712") << endl;
+//    cout << numDecodings("7222") << endl;
+}
+
 #pragma mark - run
 
 void Level8::Run()
 {
-    testSubsetsWithDup();
+    testNumDecodings();
 }
