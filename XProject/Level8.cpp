@@ -6,9 +6,8 @@
 //  Copyright (c) 2015 Roye Li. All rights reserved.
 //
 
-#include "Level8.h"
+#include "Level.h"
 
-#include "Level7.h"
 #include "Utils.h"
 #include <algorithm>
 #include <iostream>

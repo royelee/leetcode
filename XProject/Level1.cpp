@@ -5,13 +5,14 @@
 //  Created by Roye Li on 6/17/15.
 //  Copyright (c) 2015 Roye Li. All rights reserved.
 //
-
-#include "Level1.h"
+#include "Level.h"
 #include <algorithm>
 #include <map>
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
+
 extern "C"
 {
 #include "FindMedian.h"
@@ -22,7 +23,7 @@ using namespace std;
 
 #pragma mark - twoSum
 
-vector<int> Level1::twoSum_binarysearch(vector<int>& nums, int target)
+static vector<int> twoSum_binarysearch(vector<int>& nums, int target)
 {
     vector<int> v;
     
@@ -50,7 +51,7 @@ vector<int> Level1::twoSum_binarysearch(vector<int>& nums, int target)
     return v;
 }
 
-vector<int> Level1::twoSum(vector<int>& nums, int target)
+static vector<int> twoSum(vector<int>& nums, int target)
 {
     vector<int> v;
     
@@ -73,7 +74,7 @@ vector<int> Level1::twoSum(vector<int>& nums, int target)
     return v;
 }
 
-void Level1::runTwoSum()
+static void runTwoSum()
 {
     vector<int> v{3, 2, 4};
     
