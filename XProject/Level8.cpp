@@ -509,13 +509,13 @@ int numDecodings1(string s)
 {
     set<string> decodedSet;
     _numDecodings1( s, "", decodedSet );
-//    for( auto& s : decodedSet )
-//        cout << s << " ";
-//    cout << endl << "======" << endl;
+    for( auto& s : decodedSet )
+        cout << s << " ";
+    cout << endl << "======" << endl;
     return decodedSet.size();
 }
 
-int numDecodings(string s)
+int _decode(string s)
 {
     if( s.size() == 0 )
         return 0;
@@ -537,29 +537,79 @@ int numDecodings(string s)
     
     if( s[0] > '2' )
     {
-        return numDecodings(s.substr(1, s.size()));
+        return _decode(s.substr(1, s.size()));
     }
     else
     {
-        return numDecodings(s.substr(1, s.size())) + numDecodings(s.substr(2, s.size()));
+        return _decode(s.substr(1, s.size())) + _decode(s.substr(2, s.size()));
     }
+}
+
+int numDecodings(string s)
+{
+    // Using DP
+    // For a array 1..n
+    // Given index i, so the DP[i] =
+    // 1) if s[1] + s[i-1] < 26, then DP[i] = DP[i-1] + DP[i-2] because
+    
+    //This is a really interesting problem. First, I will show how I would solve this problem. We will see that it is not that complicated when using recursion, and that the problem can be solved using dynamic programming. We will produce a general solution that does not hardcode an upper limit of 26 for each code point.
+    //
+    //A note on terminology: I will use the term code point (CP) not in the Unicode sense, but to refer to one of the code numbers 1 though 26. Each code point is represented as a variable number of characters. I will also use the terms encoded text (ET) and clear text (CT) in their obvious meanings. When talking about a sequence or array, the first element is called the head. The remaining elements are the tail.
+    //
+    //Theoretical Prelude
+    //The EC "" has one decoding: the CT "".
+    //The EC "3" can be destructured into '3' + "", and has one decoding.
+    //The EC "23" can be destructured as '2' + "3" or '23' + "". Each of the tails has one decoding, so the whole EC has two decodings.
+    //The EC "123" can be destructured as '1' + "23" or '12' + "3". The tails have two and one decodings respectively. The whole EC has three decodings. The destructuring '123' + "" is not valid, because 123 > 26, our upper limit.
+    //… and so on for ECs of any length.
+    if( s.size() == 0 )
+        return 0;
+    
+    if( s[0] == '0' )
+        return 0;
+    
+    vector<int> dp(s.size() + 1);
+    dp[0] = 1;
+    dp[1] = ( s[0] >='1' && s[0] <= '9' ) ? 1 : 0;
+    for( int i = 1; i < s.size(); i++ )
+    {
+        if( s[i] != '0' )
+            dp[i+1] += dp[i];
+        int d = ( s[i-1] - '0' ) * 10 +  s[i] - '0';
+        if( s[i-1] >= '1' && s[i-1] <= '2' && d <= 26 )
+            dp[i+1] += dp[i-1];
+        if( dp[i+1] == 0 )
+            return 0;
+    }
+    
+    return dp[s.size()];
 }
 
 void testNumDecodings()
 {
-//    string s = "1211";
-//    int i = 1;
-//    while( numDecodings(s.substr(0, i)) == numDecodings1(s.substr(0, i) ))
-//    {
-//        i++;
-//    }
-//    cout << s.substr(0, i) << endl;
+    cout << numDecodings("10") << endl;
+    cout << numDecodings("11") << endl;
+    cout << numDecodings("27") << endl;
+    cout << numDecodings("17") << endl;
+
     
-//    cout << numDecodings("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948") << endl;
-//    cout << numDecodings1("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948") << endl;
+    cout << numDecodings("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948") << endl;
+    cout << _decode("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948") << endl;
+    
+//    cout << numDecodings("1223") << endl;
+//    cout << _decode("1223") << endl;
+//    cout << numDecodings1("1223") << endl;
+
+
 //    cout << numDecodings("11") << endl;
-    cout << numDecodings("1211") << endl;
-    cout << numDecodings1("1211") << endl;  // 11 + 211 -> 2 + 3
+    // 1 -> 1
+    // 11 -> 2
+    // 111 ->
+    // 12121 -> 1 + 4 + ( 2 + 1 ) = 8
+    // 111111 -> 1 + 5 + ( 3 + 2 + 1 ) + 1  = 13
+    // 1111111 -> 1 + 6 + ( 4 + 3 + 2 + 1 ) + ( 2 ) = 21
+//    cout << numDecodings("1111111") << endl;
+//    cout << numDecodings1("111111") << endl;
 //    cout << numDecodings("12") << endl;
 //    cout << numDecodings("") << endl;
 //    cout << numDecodings("7") << endl;
