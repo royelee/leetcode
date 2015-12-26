@@ -104,69 +104,78 @@ void tesetReverseBetween()
 
 
 #pragma mark - restoreIpAddresses
+bool _isValidPart( string& token )
+{
+    if( token.size() == 1 )
+        return true;
+    if( token.size() > 1 )
+    {
+        if( token[0] == '0' )
+            return false;
+        
+        int v = stoi(token);
+        if( v <= 255 )
+            return true;
+    }
+    
+    return false;
+}
+
 //Given a string containing only digits, restore it by returning all possible valid IP address combinations.
 //
 //For example:
 //Given "25525511135",
 //
 //return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
-void _restoreIpAddresses( string s, vector<int> stored, int currentSlotIndex, vector<string>& out )
-{
-    if( currentSlotIndex >= 4 )
-        return;
 
+void _restoreIpAddresses( string s, int current, vector<string>& inserted, vector<string>& out )
+{
+    if( inserted.size() == 4 )
+    {
+        if( current == s.size() )
+        {
+            stringstream ss;
+            for( int i = 0; i < 3; i++ )
+            {
+                ss << inserted[i] << ".";
+            }
+            
+            ss << inserted[3];
+            
+            out.push_back(ss.str());
+        }
+        
+        return;
+    }
+    
     for( int i = 1; i <= 3; i++ )
     {
-        string newS = s;
-        if( newS.size() >= i )
+        if( current + i - 1 < s.size() )
         {
-            string sub = newS.substr(0, i);
-            int newValue = stoi( sub );
-            if( newValue <= 255 )
+            string sub = s.substr(current, i);
+            bool isValid = _isValidPart(sub);
+            if( isValid )
             {
-                // Try to fill it
-                stored[currentSlotIndex] = newValue;
-                newS.erase(0, i);
-                
-                if( newS.size() == 0 )
-                {
-                    if( currentSlotIndex == 3 )
-                    {
-                        // Done
-                        stringstream ss;
-                        for( int i = 0; i < stored.size() - 1; i++ )
-                        {
-                            ss << to_string(stored[i]) << ".";
-                        }
-                        
-                        ss << to_string(stored.back() );
-                        
-                        out.push_back(ss.str());
-                    }
-                    
-                    return;
-                }
-                
-                _restoreIpAddresses(newS, stored, currentSlotIndex + 1, out);
+                inserted.push_back(sub);
+                _restoreIpAddresses(s, current+i, inserted, out);
+                inserted.pop_back();
             }
         }
     }
 }
 
+
 vector<string> restoreIpAddresses(string s)
 {
     vector<string> output;
-    if( s.size() < 4 )
-        return output;
-    
-    vector<int> store( 4 );
-    _restoreIpAddresses( s, store, 0, output );
+    vector<string> inserted;
+    _restoreIpAddresses( s, 0, inserted, output );
     return output;
 }
 
 void testRestoreIpAddresses()
 {
-    vector<string> out = restoreIpAddresses("010010");    //25525511135
+    vector<string> out = restoreIpAddresses("1111");    //25525511135
     for( auto s : out )
         cout << s << endl;
 }
