@@ -103,9 +103,77 @@ void tesetReverseBetween()
 }
 
 
+#pragma mark - restoreIpAddresses
+//Given a string containing only digits, restore it by returning all possible valid IP address combinations.
+//
+//For example:
+//Given "25525511135",
+//
+//return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
+void _restoreIpAddresses( string s, vector<int> stored, int currentSlotIndex, vector<string>& out )
+{
+    if( currentSlotIndex >= 4 )
+        return;
+
+    for( int i = 1; i <= 3; i++ )
+    {
+        string newS = s;
+        if( newS.size() >= i )
+        {
+            string sub = newS.substr(0, i);
+            int newValue = stoi( sub );
+            if( newValue <= 255 )
+            {
+                // Try to fill it
+                stored[currentSlotIndex] = newValue;
+                newS.erase(0, i);
+                
+                if( newS.size() == 0 )
+                {
+                    if( currentSlotIndex == 3 )
+                    {
+                        // Done
+                        stringstream ss;
+                        for( int i = 0; i < stored.size() - 1; i++ )
+                        {
+                            ss << to_string(stored[i]) << ".";
+                        }
+                        
+                        ss << to_string(stored.back() );
+                        
+                        out.push_back(ss.str());
+                    }
+                    
+                    return;
+                }
+                
+                _restoreIpAddresses(newS, stored, currentSlotIndex + 1, out);
+            }
+        }
+    }
+}
+
+vector<string> restoreIpAddresses(string s)
+{
+    vector<string> output;
+    if( s.size() < 4 )
+        return output;
+    
+    vector<int> store( 4 );
+    _restoreIpAddresses( s, store, 0, output );
+    return output;
+}
+
+void testRestoreIpAddresses()
+{
+    vector<string> out = restoreIpAddresses("010010");    //25525511135
+    for( auto s : out )
+        cout << s << endl;
+}
+
 #pragma mark - run
 
 void Level9::Run()
 {
-    tesetReverseBetween();
+    testRestoreIpAddresses();
 }
