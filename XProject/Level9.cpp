@@ -234,46 +234,21 @@ vector<int> inorderTraversal(TreeNode* root)
     //Traverse the right subtree by recursively calling the in-order function.
     vector<int> out;
     
-    if( root == nullptr )
-        return out;
-    
     vector<TreeNode*> parents;
     TreeNode* it = root;
-    while( true )
+    while( it || !parents.empty() )
     {
-        bool goBack = false;
-        if( !parents.empty() )
+        if( it )
         {
-            TreeNode* parent = parents.back();
-            if( it == parent )
-            {
-                parents.pop_back();
-                goBack = true;;
-            }
-        }
-        
-        if( it->left && !goBack )
-        {
-            parents.push_back(it);
+            parents.push_back( it );
             it = it->left;
-        }
-        else if( it->right )
-        {
-            out.push_back(it->val);
-            it = it->right;
         }
         else
         {
+            it = parents.back();
             out.push_back(it->val);
-            if( !parents.empty() )
-            {
-                TreeNode* parent = parents.back();
-                it = parent;
-            }
-            else
-            {
-                break;
-            }
+            parents.pop_back();
+            it = it->right;
         }
     }
     
