@@ -233,14 +233,68 @@ vector<int> inorderTraversal(TreeNode* root)
     //Display the data part of current element.
     //Traverse the right subtree by recursively calling the in-order function.
     vector<int> out;
-    _inOrderTraversal(root, out);
+    
+    if( root == nullptr )
+        return out;
+    
+    vector<TreeNode*> parents;
+    TreeNode* it = root;
+    while( true )
+    {
+        bool goBack = false;
+        if( !parents.empty() )
+        {
+            TreeNode* parent = parents.back();
+            if( it == parent )
+            {
+                parents.pop_back();
+                goBack = true;;
+            }
+        }
+        
+        if( it->left && !goBack )
+        {
+            parents.push_back(it);
+            it = it->left;
+        }
+        else if( it->right )
+        {
+            out.push_back(it->val);
+            it = it->right;
+        }
+        else
+        {
+            out.push_back(it->val);
+            if( !parents.empty() )
+            {
+                TreeNode* parent = parents.back();
+                it = parent;
+            }
+            else
+            {
+                break;
+            }
+        }
+    }
+    
     
     return out;
+}
+
+void testInorderTraversal()
+{
+    TreeNode* root = new TreeNode(4);
+    root->left = new TreeNode(2);
+    //root->left->left = new TreeNode(3);
+    
+    vector<int> out = inorderTraversal( root );
+    for( auto& v : out )
+        cout << v << " ";
 }
 
 #pragma mark - run
 
 void Level9::Run()
 {
-    testRestoreIpAddresses();
+    testInorderTraversal();
 }
