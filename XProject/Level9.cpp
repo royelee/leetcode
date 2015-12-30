@@ -17,6 +17,7 @@
 #include <numeric>
 #include <set>
 #include <cmath>
+#include <stack>
 
 using namespace std;
 
@@ -267,9 +268,183 @@ void testInorderTraversal()
         cout << v << " ";
 }
 
+#pragma mark - numTrees
+//Given n, how many structurally unique BST's (binary search trees) that store values 1...n?
+//
+//For example,
+//Given n = 3, there are a total of 5 unique BST's.
+//
+//1         3     3      2      1
+//\       /     /      / \      \
+//3     2     1      1   3      2
+///     /       \                 \
+//2     1         2                 3
+int numTrees(int n)
+{
+    // P(0) = 1
+    // P(1) = 1
+    // P(2) = P(1) + P(1) = 2( 1,0 0,1 )
+    // P(3) = P(2) + P(2) + P(1)*P(1) = 5( 0,2 2,0 1,1)
+    // P(4) = P(3) + P(3) + P(2)*P(1) + P(2)*P(1) + P(1)*P(2) = 14( 3,0 0,3, 2,1, 1,2 )
+    // P(5) = P(4) + P(4) + P(3)*P(1) + P(1)*P(3) + P(2)*P(2) = 28 + 10 + 4 = 42( 4,0 0,4 3,1 1,3 2,2 )
+    vector<int> dp( n + 1 );
+    dp[0] = 1;
+    dp[1] = 1;
+    
+    for( int j = 2; j <= n; j++ )
+    {
+        for( int i = 0; i < j; i++ )
+        {
+            dp[j] += dp[i]*dp[j-1-i];
+        }
+    }
+    
+    return dp[n];
+}
+
+void testNumTrees()
+{
+    for( int i = 2; i < 6; i++ )
+    {
+        cout << numTrees(i) << endl;
+    }
+}
+
+//Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.
+//
+//Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.
+//
+//For example, you may serialize the following tree
+//
+//1
+/// \
+//2   3
+/// \
+//4   5
+//as "[1,2,3,null,null,4,5]", just the same as how LeetCode OJ serializes a binary tree. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.
+//Note: Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.
+// Encodes a tree to a single string.
+class Codec {
+public:
+    
+    // Encodes a tree to a single string.
+    string serialize(TreeNode* root)
+    {
+        stringstream ss;
+        
+        stack<TreeNode*> treeStack;
+        treeStack.push(root);
+        while( !treeStack.empty() )
+        {
+            TreeNode* it = treeStack.top();
+            treeStack.pop();
+            
+            if( it )
+            {
+                treeStack.push(it->left);
+                treeStack.push(it->right);
+                
+                ss << to_string(it->val) << "|";
+            }
+            else
+            {
+                ss << "#" << "|";
+            }
+        }
+        
+        return ss.str();
+    }
+    
+    bool getNext(string& data, string& sub, size_t& startFrom )
+    {
+        size_t index = data.find('|', startFrom);
+        if( index == string::npos )   // can't find it
+        {
+            return false;
+        }
+        else
+        {
+            sub = data.substr(startFrom, index - startFrom );
+            startFrom = index + 1;
+            return true;
+        }
+    }
+    
+    void testGetNext(string data)
+    {
+        size_t startFrom = 0;
+        string sub;
+        while (getNext(data, sub, startFrom ))
+        {
+            cout << sub;
+        }
+        cout << endl;
+    }
+    
+    // Decodes your encoded data to tree.
+    TreeNode* deserialize(string data)
+    {
+        size_t startFrom = 0;
+        string sub;
+        TreeNode* head = nullptr;
+        stack<TreeNode**> treeStack;
+        while (getNext(data, sub, startFrom ))
+        {
+            TreeNode* node;
+            if( sub == "#" )
+                node = nullptr;
+            else
+                node = new TreeNode( stoi( sub ) );
+            
+            if( head == nullptr )
+            {
+                head = node;
+            }
+            else
+            {
+                TreeNode** newNode = treeStack.top();
+                treeStack.pop();
+                
+                *newNode = node;
+            }
+            
+            if( node != nullptr )
+            {
+                treeStack.push( &node->left );
+                treeStack.push( &node->right );
+            }
+        }
+    
+        return head;
+    }
+};
+
+void testSerializeDeserialize()
+{
+    TreeNode* root = new TreeNode(0);
+    root->left = new TreeNode(1);
+    Codec codec;
+    TreeNode* output = codec.deserialize(codec.serialize(root));
+    cout << codec.serialize(output) << endl;;
+    
+    root->left->left = new TreeNode(2);
+    output = codec.deserialize(codec.serialize(root));
+    cout << codec.serialize(output) << endl;
+    
+    root->left->left = nullptr;
+    root->right = new TreeNode(3);
+    root->right->left = new TreeNode(4);
+    root->right->right = new TreeNode(5);
+    output = codec.deserialize(codec.serialize(root));
+    cout << codec.serialize(output) << endl;
+    
+    output = codec.deserialize(codec.serialize(nullptr));
+    cout << codec.serialize(output) << endl;
+}
+
 #pragma mark - run
 
 void Level9::Run()
 {
-    testInorderTraversal();
+    testSerializeDeserialize();
 }
