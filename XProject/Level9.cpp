@@ -442,9 +442,70 @@ void testSerializeDeserialize()
     cout << codec.serialize(output) << endl;
 }
 
+#pragma mark - generateTrees
+
+//Given n, generate all structurally unique BST's (binary search trees) that store values 1...n.
+//
+//For example,
+//Given n = 3, your program should return all 5 unique BST's shown below.
+//
+//1         3     3      2      1
+//\       /     /      / \      \
+//3     2     1      1   3      2
+///     /       \                 \
+//2     1         2                 3
+//confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on OJ.
+void findAndGenenerate( TreeNode* root, TreeNode* node, int n )
+{
+    if( n <= 1 )
+    {
+        Codec codec;
+        cout << codec.serialize(root) << endl;;
+
+        return ;
+    }
+
+    if( node )
+    {
+        node->left = new TreeNode( n - 1 );
+        findAndGenenerate( root, node->left , n - 1 );
+        node->left = nullptr;
+        
+        node->right = new TreeNode( n - 1 );
+        findAndGenenerate( root, node->right, n - 1 );
+        node->right = nullptr;
+        
+        if( n > 2 )
+        {
+            node->left = new TreeNode( n - 1 );
+            node->right = new TreeNode( n - 2 );
+            findAndGenenerate( root, node->left , n - 2 );
+            if( n - 2 == 1 )
+                return;
+            
+            node->left = new TreeNode( n - 1 );
+            node->right = new TreeNode( n - 2 );
+            findAndGenenerate( root, node->right , n - 2 );
+        }
+    }
+}
+
+vector<TreeNode*> generateTrees(int n)
+{
+    vector<TreeNode*> tree;
+    TreeNode* root = new TreeNode(n);
+    findAndGenenerate( root, root, n );
+    return tree;
+}
+
+void testGenerateTrees()
+{
+    generateTrees(5);
+}
+
 #pragma mark - run
 
 void Level9::Run()
 {
-    testSerializeDeserialize();
+    testGenerateTrees();
 }
