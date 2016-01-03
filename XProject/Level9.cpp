@@ -341,8 +341,8 @@ public:
             
             if( it )
             {
-                treeStack.push(it->left);
                 treeStack.push(it->right);
+                treeStack.push(it->left);
                 
                 ss << to_string(it->val) << "|";
             }
@@ -410,8 +410,8 @@ public:
             
             if( node != nullptr )
             {
-                treeStack.push( &node->left );
                 treeStack.push( &node->right );
+                treeStack.push( &node->left );
             }
         }
     
@@ -455,52 +455,66 @@ void testSerializeDeserialize()
 ///     /       \                 \
 //2     1         2                 3
 //confused what "{1,#,2,3}" means? > read more on how binary tree is serialized on OJ.
-void findAndGenenerate( TreeNode* root, TreeNode* node, int n )
+void copyAndRewrite( TreeNode* node, TreeNode*& copied, int& n )
 {
-    if( n <= 1 )
-    {
-        Codec codec;
-        cout << codec.serialize(root) << endl;;
-
-        return ;
-    }
-
     if( node )
     {
-        node->left = new TreeNode( n - 1 );
-        findAndGenenerate( root, node->left , n - 1 );
-        node->left = nullptr;
-        
-        node->right = new TreeNode( n - 1 );
-        findAndGenenerate( root, node->right, n - 1 );
-        node->right = nullptr;
-        
-        if( n > 2 )
-        {
-            node->left = new TreeNode( n - 1 );
-            node->right = new TreeNode( n - 2 );
-            findAndGenenerate( root, node->left , n - 2 );
-            if( n - 2 == 1 )
-                return;
-            
-            node->left = new TreeNode( n - 1 );
-            node->right = new TreeNode( n - 2 );
-            findAndGenenerate( root, node->right , n - 2 );
-        }
+        copied = new TreeNode( n );
+        copyAndRewrite( node->left, copied->left, n );
+        copied->val = n;
+        n++;
+        copyAndRewrite( node->right, copied->right, n );
     }
 }
 
 vector<TreeNode*> generateTrees(int n)
 {
-    vector<TreeNode*> tree;
-    TreeNode* root = new TreeNode(n);
-    findAndGenenerate( root, root, n );
-    return tree;
+    if( n <= 0 )
+        return vector<TreeNode*>();
+
+    vector<vector<TreeNode*>> dp(n + 1, vector<TreeNode*>());
+    dp[0] = {  nullptr };
+    dp[1] = { new TreeNode(1) };
+    for( int j = 2; j <= n; j++ )
+    {
+        for( int i = 0; i < j; i++ )
+        {
+            for( TreeNode* leftNode: dp[i] )
+            {
+                for( TreeNode* rightNode : dp[j-1-i])
+                {
+                    TreeNode* newNode = new TreeNode( j );
+                    newNode->left = leftNode;
+                    newNode->right = rightNode;
+                    
+                    dp[j].push_back( newNode );
+                }
+            }
+        }
+    }
+    
+    // Copy the tree and rewrite value.
+    vector<TreeNode*> output;
+    for( TreeNode* node : dp[n] )
+    {
+        TreeNode* newNode = nullptr;
+        int i = 1;
+        copyAndRewrite( node, newNode, i );
+        output.push_back(newNode);
+    }
+    
+
+    return output;
 }
 
 void testGenerateTrees()
 {
-    generateTrees(5);
+    vector<TreeNode*> out = generateTrees(0);
+    Codec codec;
+    for( TreeNode* node : out )
+    {
+        cout << codec.serialize( node ) << endl;
+    }
 }
 
 #pragma mark - run
