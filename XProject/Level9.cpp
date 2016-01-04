@@ -517,6 +517,61 @@ void testGenerateTrees()
     }
 }
 
+
+#pragma mark - isValidBST
+//Given a binary tree, determine if it is a valid binary search tree (BST).
+//
+//Assume a BST is defined as follows:
+//
+//The left subtree of a node contains only nodes with keys less than the node's key.
+//The right subtree of a node contains only nodes with keys greater than the node's key.
+//Both the left and right subtrees must also be binary search trees.
+bool _isValidBST( TreeNode* node, int64_t min, int64_t max )
+{
+    if( node )
+    {
+        // Check current node.
+        if( node->val > min && node->val < max )
+        {
+            if( !_isValidBST( node->left, min, node->val ) || !_isValidBST( node->right, node->val, max ) )
+                return false;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+bool isValidBST(TreeNode* root)
+{
+    return _isValidBST( root, numeric_limits<int64_t>::min(), numeric_limits<int64_t>::max() );
+}
+
+#pragma mark - isSameTree
+//Given two binary trees, write a function to check if they are equal or not.
+//
+//Two binary trees are considered equal if they are structurally identical and the nodes have the same value.
+bool isSameTree(TreeNode* p, TreeNode* q)
+{
+    if( ( p && !q ) || ( !p && q ) )
+    {
+        return false;
+    }
+    
+    if( p && q )
+    {
+        if( p->val == q->val )
+            return isSameTree( p->left, q->left ) && isSameTree( p->right, q->right );
+        else
+            return false;
+    }
+    
+    return true;
+}
+
 #pragma mark - run
 
 void Level9::Run()
