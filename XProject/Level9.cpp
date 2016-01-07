@@ -572,6 +572,48 @@ bool isSameTree(TreeNode* p, TreeNode* q)
     return true;
 }
 
+#pragma mark - isSymmetric
+//Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).
+//
+//For example, this binary tree is symmetric:
+//
+//1
+/// \
+//2   2
+/// \ / \
+//3  4 4  3
+//But the following is not:
+//1
+/// \
+//2   2
+//\   \
+//3    3
+//Note:
+//Bonus points if you could solve it both recursively and iteratively.
+bool _isSymmetric( TreeNode* left, TreeNode* right )
+{
+    if( left && right )
+    {
+        if( left->val != right->val )
+        {
+            return false;
+        }
+        return _isSymmetric( left->left, right->right ) && _isSymmetric( left->right, right->left );
+    }
+    else if( !left && !right )
+        return true;
+    
+    return false;
+}
+
+bool isSymmetric(TreeNode* root)
+{
+    if( root )
+        return _isSymmetric(root->left, root->right);
+    
+    return true;
+}
+
 #pragma mark - run
 
 void Level9::Run()
