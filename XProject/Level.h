@@ -9,6 +9,13 @@
 #ifndef __XProject__Level__
 #define __XProject__Level__
 
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+};
+
 class ILevel
 {
 public:
@@ -30,5 +37,6 @@ DECLARE_LEVEL(6);
 DECLARE_LEVEL(7);
 DECLARE_LEVEL(8);
 DECLARE_LEVEL(9);
+DECLARE_LEVEL(10);
 
 #endif /* defined(__XProject__Level__) */

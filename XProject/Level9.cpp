@@ -210,13 +210,6 @@ void testRestoreIpAddresses()
 //\
 //5
 //The above binary tree is serialized as "{1,2,3,#,#,4,#,#,5}".
-struct TreeNode {
-    int val;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
-};
-
 void _inOrderTraversal( TreeNode* root, vector<int>& out )
 {
     if( root == nullptr )
