@@ -152,9 +152,90 @@ int maxDepth(TreeNode* root)
     return maxLevel;
 }
 
+#pragma mark - buildTree
+void _buildTree(TreeNode*& node, vector<int>& preorder, vector<int>& inorder, size_t preOrderStart, size_t inOrderStart, int length )
+{
+    if( length > 0)
+    {
+        // Has element we want.
+        int value = preorder[preOrderStart];
+        
+        size_t inOrderMidIndex = inOrderStart;
+        for( size_t i = inOrderStart; i < inOrderStart + length; i++ )
+        {
+            if( inorder[i] == value )
+            {
+                inOrderMidIndex = i;
+                break;
+            }
+        }
+        
+        node = new TreeNode( value );
+        
+        int leftLength = inOrderMidIndex - inOrderStart;
+        _buildTree( node->left, preorder, inorder, preOrderStart + 1, inOrderStart, leftLength );
+        
+        int rightLength = length - leftLength - 1;
+        _buildTree( node->right, preorder, inorder, preOrderStart + leftLength + 1, inOrderMidIndex + 1, rightLength );
+    }
+}
+
+//Given preorder and inorder traversal of a tree, construct the binary tree.
+//Note:
+//You may assume that duplicates do not exist in the tree.
+//
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder)
+{
+    if( preorder.size() == 0 || preorder.size() != inorder.size() )
+    {
+        return nullptr;
+    }
+    
+    TreeNode* root = nullptr;
+    _buildTree( root, preorder, inorder, 0, 0, preorder.size() );
+    
+    return root;
+}
+
+void preOrderTrasveral( TreeNode* node )
+{
+    if( node )
+    {
+        cout << node->val << " ";
+        preOrderTrasveral(node->left);
+        preOrderTrasveral(node->right);
+    }
+}
+
+void inOrderTrasveral( TreeNode* node )
+{
+    if( node )
+    {
+        inOrderTrasveral(node->left);
+        cout << node->val << " ";
+        inOrderTrasveral(node->right);
+    }
+}
+
+void testBuildTree()
+{
+    vector<int> preorder = { 1, 2, 3, 4, 5, 6, 7 };
+    vector<int> inorder = { 3, 2, 4, 1, 6, 5, 7 };
+    TreeNode* root = buildTree( preorder, inorder );
+    
+    cout << "pre order :";
+    preOrderTrasveral(root);
+    cout << endl;
+    
+    cout << "in order :";
+    inOrderTrasveral(root);
+    cout << endl;
+}
+
+
 #pragma mark - run
 
 void Level10::Run()
 {
-    cout << "level 10";
+    testBuildTree();
 }
