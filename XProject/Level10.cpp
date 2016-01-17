@@ -217,6 +217,17 @@ void inOrderTrasveral( TreeNode* node )
     }
 }
 
+void postOrderTrasveral( TreeNode* node )
+{
+    if( node )
+    {
+        postOrderTrasveral(node->left);
+        postOrderTrasveral(node->right);
+        cout << node->val << " ";
+    }
+}
+
+
 void testBuildTree()
 {
     vector<int> preorder = { 1, 2, 3, 4, 5, 6, 7 };
@@ -230,12 +241,76 @@ void testBuildTree()
     cout << "in order :";
     inOrderTrasveral(root);
     cout << endl;
+    
+    cout << "post order :";
+    postOrderTrasveral(root);
+    cout << endl;
 }
 
+
+#pragma mark - build tree 2
+//Given inorder and postorder traversal of a tree, construct the binary tree.
+//
+//Note:
+//You may assume that duplicates do not exist in the tree.
+void _buildTree2(TreeNode*& node, vector<int>& inorder, vector<int>& postorder,  size_t postOrderStart, size_t inOrderStart, int length )
+{
+    if( length > 0)
+    {
+        // Has element we want.
+        int value = postorder[postOrderStart + length - 1];
+        
+        size_t inOrderMidIndex = inOrderStart;
+        for( size_t i = inOrderStart; i < inOrderStart + length; i++ )
+        {
+            if( inorder[i] == value )
+            {
+                inOrderMidIndex = i;
+                break;
+            }
+        }
+        
+        node = new TreeNode( value );
+        
+        int leftLength = inOrderMidIndex - inOrderStart;
+        _buildTree2( node->left, inorder, postorder, postOrderStart, inOrderStart, leftLength );
+        
+        int rightLength = length - leftLength - 1;
+        _buildTree2( node->right, inorder, postorder, postOrderStart + leftLength, inOrderMidIndex + 1, rightLength );
+    }
+}
+
+TreeNode* buildTree2(vector<int>& inorder, vector<int>& postorder)
+{
+    if( inorder.size() == 0 || postorder.size() != inorder.size() )
+    {
+        return nullptr;
+    }
+    
+    TreeNode* root = nullptr;
+    _buildTree2( root, inorder, postorder, 0, 0, inorder.size() );
+    
+    return root;
+}
+
+void testBuildTree2()
+{
+    vector<int> postOrder = { 3, 4, 2, 6, 7, 5, 1  };
+    vector<int> inorder = { 3, 2, 4, 1, 6, 5, 7 };
+    TreeNode* root = buildTree2( inorder, postOrder );
+    
+    cout << "post order :";
+    postOrderTrasveral(root);
+    cout << endl;
+    
+    cout << "in order :";
+    inOrderTrasveral(root);
+    cout << endl;
+}
 
 #pragma mark - run
 
 void Level10::Run()
 {
-    testBuildTree();
+    testBuildTree2();
 }
