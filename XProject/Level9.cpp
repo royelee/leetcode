@@ -21,12 +21,6 @@
 
 using namespace std;
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
-
 //Reverse a linked list from position m to n. Do it in-place and in one-pass.
 //
 //For example:

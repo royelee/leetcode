@@ -21,13 +21,6 @@
 
 using namespace std;
 
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
-
-
 //Given a binary tree, return the level order traversal of its nodes' values. (ie, from left to right, level by level).
 //
 //For example:
@@ -308,9 +301,104 @@ void testBuildTree2()
     cout << endl;
 }
 
+#pragma mark - levelOrderBottom
+//Given a binary tree, return the bottom-up level order traversal of its nodes' values. (ie, from left to right, level by level from leaf to root).
+//
+//For example:
+//Given binary tree {3,9,20,#,#,15,7},
+//3
+/// \
+//9  20
+///  \
+//15   7
+//return its bottom-up level order traversal as:
+//[
+// [15,7],
+// [9,20],
+// [3]
+// ]
+vector<vector<int>> levelOrderBottom(TreeNode* root)
+{
+    vector<vector<int>> output;
+    if( root == nullptr )
+        return output;
+    
+    vector<TreeNode*> levelNodes;
+    levelNodes.push_back( root );
+    while (!levelNodes.empty())
+    {
+        vector<TreeNode*> nexts;
+        vector<int> values;
+        for( TreeNode* tmp : levelNodes )
+        {
+            values.push_back(tmp->val);
+            if( tmp->left )
+                nexts.push_back(tmp->left);
+            if( tmp ->right )
+                nexts.push_back(tmp->right);
+        }
+        
+        levelNodes.clear();
+        levelNodes.insert(levelNodes.begin(), nexts.begin(), nexts.end());
+        
+        output.insert(output.begin(), values);
+    }
+    
+    return output;
+}
+
+#pragma mark - sortedArrayToBST
+void _sortedArrayToBST(vector<int>& nums, TreeNode*& node, int start, int end)
+{
+    if( end >= start )
+    {
+        int mid = (start + end ) / 2;
+        node = new TreeNode( nums[mid] );
+        _sortedArrayToBST( nums, node->left, start, mid - 1 );
+        _sortedArrayToBST( nums, node->right, mid + 1, end );
+    }
+}
+
+
+//Given an array where elements are sorted in ascending order, convert it to a height balanced BST.
+TreeNode* sortedArrayToBST(vector<int>& nums)
+{
+    TreeNode* root = nullptr;
+    _sortedArrayToBST(nums, root, 0, nums.size() - 1);
+    return root;
+}
+
+void testSortedArrayToBST()
+{
+    vector<int> v = {1,2,3,4,5};
+    TreeNode* root = sortedArrayToBST(v);
+    inOrderTrasveral(root);
+    
+    v = {};
+    root = sortedArrayToBST(v);
+    inOrderTrasveral(root);
+    
+    v = {1};
+    root = sortedArrayToBST(v);
+    inOrderTrasveral(root);
+    
+    v = {1,2};
+    root = sortedArrayToBST(v);
+    inOrderTrasveral(root);
+}
+
+#pragma mark - sortedListToBST
+//Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
+TreeNode* sortedListToBST(ListNode* head)
+{
+    return nullptr;
+}
+
+
+
 #pragma mark - run
 
 void Level10::Run()
 {
-    testBuildTree2();
+    testSortedArrayToBST();
 }

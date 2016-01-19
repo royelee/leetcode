@@ -21,11 +21,6 @@
 using namespace std;
 
 #pragma mark - deleteDuplicates
-struct ListNode {
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL) {}
-};
 
 //Given a sorted linked list, delete all duplicates such that each element appear only once.
 //

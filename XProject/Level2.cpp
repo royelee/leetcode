@@ -742,23 +742,6 @@ void test4Sum()
 
 
 #pragma mark - removeNthFromEnd
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
-struct ListNode
-{
-    int val;
-    ListNode *next;
-    ListNode(int x) : val(x), next(NULL)
-    {
-    }
-};
-
 ListNode* removeNthFromEnd(ListNode* head, int n)
 {
     if( n < 1 )
