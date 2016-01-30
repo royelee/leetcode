@@ -388,10 +388,49 @@ void testSortedArrayToBST()
 }
 
 #pragma mark - sortedListToBST
+TreeNode* _sortedListToBST( ListNode*& node, int start, int end )
+{
+    if( start > end )
+        return nullptr;
+    
+    int mid = ( start + end ) / 2;
+    TreeNode* left = _sortedListToBST( node,  start, mid - 1 );
+    TreeNode* parent = new TreeNode( node->val );
+    parent->left = left;
+    node = node->next;
+    parent->right = _sortedListToBST( node, mid + 1, end );
+    
+    return parent;
+}
+
 //Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced BST.
 TreeNode* sortedListToBST(ListNode* head)
 {
-    return nullptr;
+    // http://articles.leetcode.com/2010/11/convert-sorted-list-to-balanced-binary.html
+    // http://bangbingsyb.blogspot.com/2014/11/leetcode-convert-sorted-list-to-binary.html
+    int size = 0;
+    ListNode* it = head;
+    while( it )
+    {
+        it = it->next;
+        size++;
+    }
+    
+    return _sortedListToBST( head, 0, size - 1 );
+}
+
+void testSortedListToBST()
+{
+    ListNode* head = new ListNode(-1);
+    ListNode* node = head;
+    vector<int> v = {1, 3};
+    for( auto& i : v )
+    {
+        node->next = new ListNode( i );
+        node = node->next;
+    }
+    
+    sortedListToBST( head->next );
 }
 
 
@@ -400,5 +439,5 @@ TreeNode* sortedListToBST(ListNode* head)
 
 void Level10::Run()
 {
-    testSortedArrayToBST();
+    testSortedListToBST();
 }
