@@ -433,11 +433,51 @@ void testSortedListToBST()
     sortedListToBST( head->next );
 }
 
+#pragma mark - isBalanced
+//Given a binary tree, determine if it is height-balanced.
+//
+//For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of every node never differ by more than 1.
+//
+bool _isBalanced( TreeNode* node, int& height )
+{
+    if( node == nullptr )
+        return true;
+    
+    height = height + 1;
+    
+    int leftHeight = height;
+    bool isLeftB = _isBalanced( node->left, leftHeight );
+    int rightHeight = height;
+    bool isRightB = _isBalanced( node->right, rightHeight );
+    
+    if( !isLeftB || !isRightB || abs( leftHeight - rightHeight ) > 1 )
+        return false;
+    
+    height = max( leftHeight, rightHeight );
+    return true;
+}
+
+bool isBalanced(TreeNode* root)
+{
+    int height = 0;
+    return _isBalanced( root, height);
+}
+
+void testInBalanced()
+{
+//    [1,null,2,null,3]
+    TreeNode* root = new TreeNode(1);
+    root->right = new TreeNode(2);
+    root->right->right = new TreeNode(3);
+    cout << isBalanced( root );
+}
+
+
 
 
 #pragma mark - run
 
 void Level10::Run()
 {
-    testSortedListToBST();
+    testInBalanced();
 }
