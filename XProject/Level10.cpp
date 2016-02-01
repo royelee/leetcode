@@ -472,7 +472,31 @@ void testInBalanced()
     cout << isBalanced( root );
 }
 
+#pragma mark - minDepth(
 
+void _minDepth( TreeNode* node, int height, int& minHeight )
+{
+    if( node == nullptr )
+        return;
+    
+    if( node->left == nullptr && node->right == nullptr )
+    {
+        minHeight = min( minHeight, height );
+    }
+    
+    _minDepth(node->left, height + 1, minHeight);
+    _minDepth(node->right, height + 1, minHeight);
+}
+
+int minDepth(TreeNode* root)
+{
+    if( root == nullptr )
+        return 0;
+    
+    int minHeight = numeric_limits<int>::max();
+    _minDepth(root, 1, minHeight);
+    return minHeight;
+}
 
 
 #pragma mark - run
