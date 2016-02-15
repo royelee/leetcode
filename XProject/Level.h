@@ -35,6 +35,8 @@ public:\
     void Run() override;\
 }
 
+void preOrderTrasveral( TreeNode* node );
+
 DECLARE_LEVEL(1);
 DECLARE_LEVEL(2);
 DECLARE_LEVEL(3);
