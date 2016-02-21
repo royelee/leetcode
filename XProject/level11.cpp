@@ -154,9 +154,59 @@ void testFlatten()
     preOrderTrasveral(node);
 }
 
+#pragma mark - generate
+//Given numRows, generate the first numRows of Pascal's triangle.
+//
+//For example, given numRows = 5,
+//Return
+//
+//[
+//     [1],
+//    [1,1],
+//   [1,2,1],
+//  [1,3,3,1],
+// [1,4,6,4,1]
+//]
+vector<vector<int>> generate(int numRows)
+{
+    vector<vector<int>> output;
+    for( int i = 0; i < numRows; i++ )
+    {
+        vector<int> row( i + 1 );
+        row[0] = 1;
+        row[row.size() - 1] = 1;
+        
+        if( i > 0 )
+        {
+            // Not for first row.
+            int k = 0;
+            for( int j = 1; j < row.size() - 1; j++ )
+            {
+                row[j] = output[i-1][k] + output[i-1][k+1];
+                k++;
+            }
+        }
+        
+        output.push_back(row);
+    }
+    
+    return output;
+}
+
+void testGenerate()
+{
+    vector<vector<int>> o = generate(3);
+    for( auto& v : o )
+    {
+        for_each(v.begin(), v.end(), [](int value){
+            cout << value << " ";
+        });
+        cout << endl;
+    }
+}
 #pragma mark - run
 
 void Level11::Run()
 {
-    testFlatten();
+    testGenerate();
 }
