@@ -155,6 +155,7 @@ void testFlatten()
 }
 
 #pragma mark - generate
+
 //Given numRows, generate the first numRows of Pascal's triangle.
 //
 //For example, given numRows = 5,
@@ -178,7 +179,7 @@ vector<vector<int>> generate(int numRows)
         for( int j = 0; j < row.size(); j++ )
         {
             // => C(i, j)
-            row[j] = factorial(i) / ( factorial(j) * factorial(i-j) );
+            row[j] = factorial(i) / (factorial(j) * factorial(i-j));
         }
         output.push_back(row);
     }
@@ -188,7 +189,7 @@ vector<vector<int>> generate(int numRows)
 
 void testGenerate()
 {
-    vector<vector<int>> o = generate(5);
+    vector<vector<int>> o = generate(14);
     for( auto& v : o )
     {
         for_each(v.begin(), v.end(), [](int value){
@@ -199,6 +200,22 @@ void testGenerate()
 }
 
 #pragma mark - getRow
+uint64_t permutation(int n, int j)
+{
+    uint64_t ret = 1;
+    for(uint64_t i = 0; i < j; i++, n--)
+        ret *= n;
+    return ret;
+}
+
+uint64_t factorial64(unsigned int n)
+{
+    uint64_t ret = 1;
+    for(unsigned int i = 1; i <= n; ++i)
+        ret *= i;
+    return ret;
+}
+
 //Given an index k, return the kth row of the Pascal's triangle.
 //
 //For example, given k = 3,
@@ -208,12 +225,31 @@ void testGenerate()
 //Could you optimize your algorithm to use only O(k) extra space?
 vector<int> getRow(int rowIndex)
 {
+    vector<int> output;
+    // For a particular row. it's C(n,k)
+    for( int i = 0; i < rowIndex + 1; i++ )
+    {
+        // C(i,N) = f(N) / (f(N-i)*f(i) )
+        cout << permutation(rowIndex, i) << endl;
+        int64_t r = permutation(rowIndex, i)/factorial64(i);
+        cout << r << endl;
+        output.push_back(r);
+    }
     
+    return output;
+}
+
+void testGetRow()
+{
+    for( const auto& v : getRow(13) )
+    {
+        cout << v << " ";
+    }
 }
 
 #pragma mark - run
 
 void Level11::Run()
 {
-    testGenerate();
+    testGetRow();
 }
