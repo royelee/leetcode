@@ -169,24 +169,17 @@ void testFlatten()
 //]
 vector<vector<int>> generate(int numRows)
 {
+    
+    //The binomial coefficients can be arranged to form Pascal's triangle. which is C(n,k)
     vector<vector<int>> output;
     for( int i = 0; i < numRows; i++ )
     {
         vector<int> row( i + 1 );
-        row[0] = 1;
-        row[row.size() - 1] = 1;
-        
-        if( i > 0 )
+        for( int j = 0; j < row.size(); j++ )
         {
-            // Not for first row.
-            int k = 0;
-            for( int j = 1; j < row.size() - 1; j++ )
-            {
-                row[j] = output[i-1][k] + output[i-1][k+1];
-                k++;
-            }
+            // => C(i, j)
+            row[j] = factorial(i) / ( factorial(j) * factorial(i-j) );
         }
-        
         output.push_back(row);
     }
     
@@ -195,7 +188,7 @@ vector<vector<int>> generate(int numRows)
 
 void testGenerate()
 {
-    vector<vector<int>> o = generate(3);
+    vector<vector<int>> o = generate(5);
     for( auto& v : o )
     {
         for_each(v.begin(), v.end(), [](int value){
@@ -204,6 +197,20 @@ void testGenerate()
         cout << endl;
     }
 }
+
+#pragma mark - getRow
+//Given an index k, return the kth row of the Pascal's triangle.
+//
+//For example, given k = 3,
+//Return [1,3,3,1].
+//
+//Note:
+//Could you optimize your algorithm to use only O(k) extra space?
+vector<int> getRow(int rowIndex)
+{
+    
+}
+
 #pragma mark - run
 
 void Level11::Run()
