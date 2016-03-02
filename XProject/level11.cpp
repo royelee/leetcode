@@ -225,15 +225,23 @@ uint64_t factorial64(unsigned int n)
 //Could you optimize your algorithm to use only O(k) extra space?
 vector<int> getRow(int rowIndex)
 {
-    vector<int> output;
-    // For a particular row. it's C(n,k)
+    vector<int> output(rowIndex + 1, 1 );
     for( int i = 0; i < rowIndex + 1; i++ )
     {
-        // C(i,N) = f(N) / (f(N-i)*f(i) )
-        cout << permutation(rowIndex, i) << endl;
-        int64_t r = permutation(rowIndex, i)/factorial64(i);
-        cout << r << endl;
-        output.push_back(r);
+        // from {1,2,1} => {3, 3, 1}
+        for( int j = 0; j < i - 1; j++ )
+        {
+            output[j] = output[j] + output[j+1];
+        }
+        
+        // from {3, 3, 1} move to { x, 3, 3}
+        for( int j = i - 1; j > 0; j-- )
+        {
+            output[j] = output[j-1];
+        }
+
+        output[0] = 1;
+        output[i] = 1;
     }
     
     return output;
@@ -241,7 +249,7 @@ vector<int> getRow(int rowIndex)
 
 void testGetRow()
 {
-    for( const auto& v : getRow(13) )
+    for( const auto& v : getRow(4) )
     {
         cout << v << " ";
     }
