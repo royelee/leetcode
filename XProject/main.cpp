@@ -11,12 +11,12 @@
 
 template <typename T>
 void runLevel() {
-    std::unique_ptr<ILevel> level( new T );
-    level->Run();
+    T level;
+    level.Run();
 }
 
 int main(int argc, const char * argv[]) {
-    runLevel<Level11>();
+    runLevel<Level12>();
     return 0;
 }
 
