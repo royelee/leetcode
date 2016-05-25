@@ -91,76 +91,70 @@ void testIsPalindrome()
 //Return 0 if there is no such transformation sequence.
 //All words have the same length.
 //All words contain only lowercase alphabetic characters.
-int ladderLength(string beginWord, string endWord, vector<string>& wordList)
+bool canChange( const string& a, const string& b )
 {
-    size_t count = wordList.size() + 2;
-    vector<vector<int>> dp( wordList.size() + 2,  std::vector<int>( count, numeric_limits<int>::max() ) );
-    vector<string> words( wordList.size() );
-    copy(wordList.begin(), wordList.end(), words.begin());
-    words.insert(words.begin(), beginWord);
-    words.push_back(endWord);
+    if( a.size() != b.size() )
+        return false;
     
-    for( size_t i = 0; i < count; i++ )
+    unsigned int diff = 0;
+    for( size_t i = 0; i < a.size(); i++ )
     {
-        for( size_t j = i; j < count; j++ )
-        {
-            if( i == j )
-            {
-                dp[i][j] = 0;
-                continue;
-            }
+        if( a[i] != b[i] )
+            diff++;
+        
+        if( diff > 1 )
+            break;
+    }
+    
+    return diff == 1;
+}
 
-            string& from = words[i];
-            string& to = words[j];
-            
-            int different = 0;
-            for( size_t k = 0; k < from.size(); k++ )
-            {
-                if( from[k] != to[k] )
-                    different++;
-                
-                if( different > 1 )
-                    break;
-            }
-            
-            if( different == 1 )
-            {
-                dp[i][j] = 1;
-            }
-            
-            // Update DP table.
-            for( size_t k = 0; k < j; k++ )
-            {
-                if( dp[j][k] < numeric_limits<int>::max() )
-                    dp[k][j] = min( dp[k][j], dp[j][k] + 1);
-            }
-            
-            for( size_t k = 0; k < i; k++ )
-            {
-                if( dp[k][i] < numeric_limits<int>::max() )
-                    dp[k][j] = min( dp[k][j], dp[k][i] + 1);
-            }
-        }
-    }
-    
-    for( size_t i = 0; i < count; i++ )
+void _ladderLength(string beginWord, string endWord, unordered_set<string>& wordList, int level, int& maxLevel )
+{
+    unordered_set<string> connectedWordList;
+    for( const auto& word : wordList )
     {
-        for( size_t j = 0; j < count; j++ )
+        if( canChange( beginWord, word ) )
         {
-            cout << dp[i][j] << " ";
+            connectedWordList.insert(word);
         }
-        cout << endl;
     }
     
-    return dp[0][count - 1];
+    for( const auto& word : connectedWordList )
+    {
+        if( endWord == word )
+        {
+            maxLevel = min( maxLevel, level + 1 );
+        }
+        else
+        {
+            wordList.erase(word);
+            _ladderLength( word, endWord, wordList, level + 1, maxLevel );
+            wordList.insert(word);
+        }
+    }
+}
+
+int ladderLength(string beginWord, string endWord, unordered_set<string>& wordList)
+{
+    wordList.erase(beginWord);
+    wordList.insert(endWord);
+    int maxLevel = numeric_limits<int>::max();
+    _ladderLength( beginWord, endWord, wordList, 1, maxLevel );
+    return maxLevel == numeric_limits<int>::max() ? 0 : maxLevel;
 }
 
 void testLadderLength()
 {
-//    unordered_set<string> wordList( {"hot","dot","dog","lot","log"} );
+#if 0
+    unordered_set<string> wordList( {"hot","dot","dog","lot","log" } );
 //    vector<string> wordList = {"hot","dot","dog","lot","log"};
-    vector<string> wordList = {"log","dog","lot","dot","hot"};
+//    vector<string> wordList = {"log","dog","lot","dot","hot"};
     cout << ladderLength("hit", "cog", wordList);
+#else
+    unordered_set<string> wordList( {"si","go","se","cm","so","ph","mt","db","mb","sb","kr","ln","tm","le","av","sm","ar","ci","ca","br","ti","ba","to","ra","fa","yo","ow","sn","ya","cr","po","fe","ho","ma","re","or","rn","au","ur","rh","sr","tc","lt","lo","as","fr","nb","yb","if","pb","ge","th","pm","rb","sh","co","ga","li","ha","hz","no","bi","di","hi","qa","pi","os","uh","wm","an","me","mo","na","la","st","er","sc","ne","mn","mi","am","ex","pt","io","be","fm","ta","tb","ni","mr","pa","he","lr","sq","ye"} );
+    cout << ladderLength("qa", "sq", wordList);
+#endif
 }
 
 #pragma mark - run
