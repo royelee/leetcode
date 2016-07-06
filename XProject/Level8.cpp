@@ -217,7 +217,7 @@ ListNode* partition(ListNode* head, int x)
     return newHead ? newHead : bigHead;
 }
 
-void testPartition()
+static void testPartition()
 {
     vector<pair<vector<int>, int>> tests = {
         {{1,4,3,2,5,2}, 3},
