@@ -8,6 +8,7 @@
 
 #ifndef __XProject__Level__
 #define __XProject__Level__
+#include <vector>
 
 struct TreeNode {
     int val;
@@ -28,7 +29,13 @@ struct TreeLinkNode {
     TreeLinkNode(int x) : val(x), left(nullptr), right(nullptr), next(nullptr) {}
 };
 
+struct UndirectedGraphNode {
+    int label;
+    std::vector<UndirectedGraphNode *> neighbors;
+    UndirectedGraphNode(int x) : label(x) {};
+};
 
+    
 class ILevel
 {
 public:
@@ -55,5 +62,6 @@ DECLARE_LEVEL(9);
 DECLARE_LEVEL(10);
 DECLARE_LEVEL(11);
 DECLARE_LEVEL(12);
+DECLARE_LEVEL(13);
 
 #endif /* defined(__XProject__Level__) */

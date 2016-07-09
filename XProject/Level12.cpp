@@ -394,6 +394,7 @@ bool isPalindome( const string& s )
 
 vector<vector<string>> partition(string s)
 {
+    // TODO : Use longestPalindromeDP get s palindrome then we can query it faster.
     vector<vector<string>> r;
     for( size_t i = 0; i < s.size(); i++ )
     {
