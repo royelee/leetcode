@@ -111,37 +111,24 @@ void testCloneGraph()
 int canCompleteCircuit(vector<int>& gas, vector<int>& cost)
 {
     vector<int> relativeCost( gas.size() );
+    int total = 0;
+    size_t minIndex = 0;
+    int minValue = numeric_limits<int>::max();
     for( size_t i = 0; i < gas.size(); i++ )
     {
         relativeCost[i] = gas[i] - cost[i];
-    }
-    
-    for( size_t i = 0; i < relativeCost.size(); i++ )
-    {
-        int totalCost = 0;
-        size_t j = 0;
-        for( ; j < relativeCost.size(); j++ )
+        total += relativeCost[i];
+        if( total < minValue )
         {
-            size_t index = ( j + i ) % relativeCost.size();
-            totalCost += relativeCost[ index ];
-            if( totalCost < 0 )
-                break;
-        }
-        
-        if( totalCost >= 0 && j == relativeCost.size() )
-        {
-            int total = 0;
-            for( size_t k = 0; k < gas.size(); k++ )
-            {
-                total += relativeCost[( k + i ) % relativeCost.size()];
-                cout << total << ", ";
-            }
-            cout << endl;
-            return (int)i;
+            minIndex = i;
+            minValue = total;
         }
     }
-    
-    return -1;
+
+    if( total < 0 )
+        return -1;
+    else
+        return (int)( 1 + minIndex ) % relativeCost.size(); // +1 because at minIndex it still go down( cost is negtive ), we need to start from positive
 }
 
 void testCanCompleteCircuit()
