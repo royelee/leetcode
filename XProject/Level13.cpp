@@ -160,37 +160,21 @@ void testSingleNumber()
 //Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
 int singleNumber2(vector<int>& nums)
 {
-    size_t posNum = 0;
-    size_t negNum = 0;
-    vector<int> bits( sizeof( int ) * 8 );
-    for( size_t i = 0; i < nums.size(); i++ )
-    {
-        long num = nums[i];
-        if( num < 0 )
-            negNum++;
-        else
-            posNum++;
-        num = abs(num);
-        size_t j = 0;
-        while( num != 0 )
-        {
-            int bit = num & 1;
-            if( bit == 1 )
-                bits[bits.size() - j -1] += 1;
-            j++;
-            num = num >> 1;
-        }
-    }
-    
     int r = 0;
-    for( auto& bit : bits )
+    for( size_t i = 0; i < sizeof( int ) * 8; i++ )
     {
-        bit = bit % 3;
-        r = r << 1;
-        r |= bit;
+        int bitMask = 1 << i;
+        int count = 0;
+        for( auto num : nums )
+        {
+            if( ( num & bitMask ) != 0 )
+                count++;
+        }
+        if( count % 3 == 1 )
+            r |= bitMask;
     }
     
-    return r * ( posNum > negNum ? 1 : -1 );
+    return r;
 }
 
 void testSingleNumber2()
