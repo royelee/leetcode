@@ -189,9 +189,69 @@ void testSingleNumber2()
     cout << singleNumber2(v) << endl;
 }
 
+#pragma mark - wordBreak
+//Given a string s and a dictionary of words dict, determine if s can be segmented into a space-separated sequence of one or more dictionary words.
+//
+//For example, given
+//s = "leetcode",
+//dict = ["leet", "code"].
+//
+//Return true because "leetcode" can be segmented as "leet code".
+bool wordBreak(string s, unordered_set<string>& wordDict)
+{
+    int length = s.size();
+    if( length == 0 )
+        return false;
+
+    vector<vector<bool>> dp( length, vector<bool>(length));
+    for( int i = length - 1; i >= 0; i-- )
+    {
+        for( int j = i; j < length; j++ )
+        {
+            string w = s.substr(i, j - i + 1);
+            if( wordDict.find(w) != wordDict.end() )
+            {
+                dp[i][j] = true;
+            }
+            else
+            {
+                for( int k = i; k < j; k++ )
+                {
+                    if( dp[i][k] )
+                    {
+                        if( k + 1 < length && dp[k + 1][j])
+                            dp[i][j] = true;
+                    }
+                }
+            }
+        }
+    }
+    
+    for( const auto& v : dp )
+    {
+        for( const auto& i : v )
+            cout << ( i ? "true" : "false" ) << ", ";
+        
+        cout << endl;
+    }
+    
+    return dp[0][length - 1];
+}
+
+void testWordBreak()
+{
+    string s = "leetcode";
+    unordered_set<string> dic = {"leet", "code"};
+    cout << wordBreak(s, dic) << endl;
+    
+    s = "aaaab";
+    dic = {"a", "aab"};
+    cout << wordBreak(s, dic) << endl;
+}
+
 #pragma mark - run
 
 void Level13::Run()
 {
-    testSingleNumber2();
+    testWordBreak();
 }
