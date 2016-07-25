@@ -199,43 +199,21 @@ void testSingleNumber2()
 //Return true because "leetcode" can be segmented as "leet code".
 bool wordBreak(string s, unordered_set<string>& wordDict)
 {
-    int length = s.size();
-    if( length == 0 )
-        return false;
-
-    vector<vector<bool>> dp( length, vector<bool>(length));
-    for( int i = length - 1; i >= 0; i-- )
+    vector<bool> dp( s.size() + 1);
+    dp[0] = true;
+    for( size_t i = 0; i < s.size(); i++ )
     {
-        for( int j = i; j < length; j++ )
+        for( int j = i; j >= 0; j-- )
         {
-            string w = s.substr(i, j - i + 1);
-            if( wordDict.find(w) != wordDict.end() )
+            string substring = s.substr(j, i - j + 1);
+            if( dp[j] && wordDict.find(substring) != wordDict.end() )
             {
-                dp[i][j] = true;
-            }
-            else
-            {
-                for( int k = i; k < j; k++ )
-                {
-                    if( dp[i][k] )
-                    {
-                        if( k + 1 < length && dp[k + 1][j])
-                            dp[i][j] = true;
-                    }
-                }
+                dp[i + 1] = true;
+                break;
             }
         }
     }
-    
-    for( const auto& v : dp )
-    {
-        for( const auto& i : v )
-            cout << ( i ? "true" : "false" ) << ", ";
-        
-        cout << endl;
-    }
-    
-    return dp[0][length - 1];
+    return dp.back();
 }
 
 void testWordBreak()
@@ -249,9 +227,95 @@ void testWordBreak()
     cout << wordBreak(s, dic) << endl;
 }
 
+//Given a linked list, determine if it has a cycle in it.
+//
+//Follow up:
+//Can you solve it without using extra space?
+bool hasCycle(ListNode *head)
+{
+    ListNode* oneStepIter = head;
+    ListNode* twoStepIter = head;
+    while( twoStepIter != nullptr )
+    {
+        oneStepIter = oneStepIter->next;
+        twoStepIter = twoStepIter->next;
+        if( twoStepIter == nullptr )
+            return false;
+        
+        twoStepIter = twoStepIter->next;
+        if( oneStepIter == twoStepIter )
+            return true;
+    }
+    
+    return false;
+}
+
+#pragma mark - detectCycle
+//Given a linked list, return the node where the cycle begins. If there is no cycle, return null.
+//
+//Note: Do not modify the linked list.
+//
+//Follow up:
+//Can you solve it without using extra space?
+ListNode *detectCycle(ListNode *head)
+{
+    if( head == nullptr )
+        return nullptr;
+
+    ListNode* next = head;
+    ListNode* pre = nullptr;
+    ListNode* startReverse = nullptr;
+    ListNode* output = nullptr;
+    while( next != nullptr )
+    {
+        ListNode* current = next;
+        if( current->next != pre )
+        {
+            // found it
+            output = current;
+            startReverse = pre;
+            break;
+        }
+        next = current->next;
+        current->next = pre;
+        pre = current;
+    }
+
+    // Reverse it back to original.
+    // if no cycle, start reverse from last node.
+    if( startReverse == nullptr )
+    {
+        startReverse = pre;
+        next = pre;
+    }
+    else
+    {
+        pre = startReverse;
+        next = startReverse->next;
+    }
+
+    while( next != nullptr )
+    {
+        ListNode* current = next;
+        next = current->next;
+        current->next = pre;
+        pre = current;
+    }
+    
+    startReverse->next = output;
+    
+    return output;
+}
+
+void testDetectCycle()
+{
+    ListNode* node = new ListNode( 1 );
+    detectCycle(node);
+}
+
 #pragma mark - run
 
 void Level13::Run()
 {
-    testWordBreak();
+    testDetectCycle();
 }
