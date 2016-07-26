@@ -262,55 +262,56 @@ ListNode *detectCycle(ListNode *head)
     if( head == nullptr )
         return nullptr;
 
-    ListNode* next = head;
-    ListNode* pre = nullptr;
-    ListNode* startReverse = nullptr;
-    ListNode* output = nullptr;
-    while( next != nullptr )
+    //    Fast = 2 * slow
+    //    Slow = X + Y ( X - node went before into the circle, Y node went in circle )
+    //    Fast = X + circleNum + Y ( circleNum - node went loop inside of circle )
+    //    2X + 2Y = X + circleNum + Y
+    //    => X+Y = circle Num = slow
+    //    => X = slow – Y = circleNum - Y
+    
+    ListNode* oneStepIter = head;
+    ListNode* twoStepIter = head;
+    while( twoStepIter != nullptr )
     {
-        ListNode* current = next;
-        if( current->next != pre )
-        {
-            // found it
-            output = current;
-            startReverse = pre;
+        oneStepIter = oneStepIter->next;
+        twoStepIter = twoStepIter->next;
+        if( twoStepIter == nullptr )
+            return nullptr;
+        
+        twoStepIter = twoStepIter->next;
+        if( oneStepIter == twoStepIter )
             break;
-        }
-        next = current->next;
-        current->next = pre;
-        pre = current;
-    }
-
-    // Reverse it back to original.
-    // if no cycle, start reverse from last node.
-    if( startReverse == nullptr )
-    {
-        startReverse = pre;
-        next = pre;
-    }
-    else
-    {
-        pre = startReverse;
-        next = startReverse->next;
-    }
-
-    while( next != nullptr )
-    {
-        ListNode* current = next;
-        next = current->next;
-        current->next = pre;
-        pre = current;
     }
     
-    startReverse->next = output;
+    if( twoStepIter == nullptr )
+        return twoStepIter;
     
-    return output;
+    oneStepIter = head;
+    while( oneStepIter != twoStepIter )
+    {
+        oneStepIter = oneStepIter->next;
+        twoStepIter = twoStepIter->next;
+    }
+    
+    return oneStepIter;
 }
 
 void testDetectCycle()
 {
     ListNode* node = new ListNode( 1 );
     detectCycle(node);
+}
+
+#pragma mark - reorderList
+//Given a singly linked list L: L0→L1→…→Ln-1→Ln,
+//reorder it to: L0→Ln→L1→Ln-1→L2→Ln-2→…
+//
+//You must do this in-place without altering the nodes' values.
+//
+//For example,
+//Given {1,2,3,4}, reorder it to {1,4,2,3}.
+void reorderList(ListNode* head) {
+    
 }
 
 #pragma mark - run
