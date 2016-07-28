@@ -310,13 +310,110 @@ void testDetectCycle()
 //
 //For example,
 //Given {1,2,3,4}, reorder it to {1,4,2,3}.
-void reorderList(ListNode* head) {
+void reorderList(ListNode* head)
+{
+    if( head == nullptr )
+        return;
+
+    size_t count = 0;
+    ListNode* it = head;
+    while( it )
+    {
+        count++;
+        it = it->next;
+    }
     
+    it = head;
+    ListNode* tail = nullptr;
+    for( size_t i = 0; i < count; i++ )
+    {
+        ListNode* current = it;
+        it = it->next;
+        
+        if( i >= count / 2 )
+        {
+            current->next = tail;
+            tail = current;
+        }
+    }
+    
+    ListNode* headIt = head;
+    ListNode* tailIt = tail;
+    while(tailIt && tailIt->next) {
+        ListNode *target = tailIt;
+        tailIt = tailIt->next;
+        target->next = headIt->next;
+        headIt->next = target;
+        headIt = headIt->next->next;
+    }
+}
+
+void testReorderList()
+{
+    ListNode* node = new ListNode(1);
+    reorderList(node);
+    
+    node = new ListNode(1);
+    node->next = new ListNode(2);
+    reorderList(node);
+    
+    node = new ListNode(1);
+    node->next = new ListNode(2);
+    node->next->next = new ListNode(3);
+    reorderList(node);
+    
+    cout << node;
+}
+
+#pragma mark - preorderTraversal
+//Given a binary tree, return the preorder traversal of its nodes' values.
+//
+//For example:
+//Given binary tree {1,#,2,3},
+//   1
+//    \
+//     2
+//    /
+//   3
+//return [1,2,3].
+//
+//Note: Recursive solution is trivial, could you do it iteratively?
+vector<int> preorderTraversal(TreeNode* root)
+{
+    vector<int> output;
+    if( root == nullptr )
+        return output;
+    
+    stack<TreeNode*> s;
+    s.push(root);
+    while( s.size() != 0 )
+    {
+        TreeNode* top = s.top();
+        s.pop();
+        output.push_back(top->val);
+        if( top->right )
+            s.push(top->right);
+        if( top->left )
+            s.push(top->left);
+    }
+    
+    return output;
+}
+
+void testPreorderTraversal()
+{
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(4);
+    root->right = new TreeNode(3);
+    root->left->left = new TreeNode(2);
+    vector<int> v = preorderTraversal(root);
+    for( const auto i : v )
+        cout << i << ", ";
 }
 
 #pragma mark - run
 
 void Level13::Run()
 {
-    testDetectCycle();
+    testPreorderTraversal();
 }
