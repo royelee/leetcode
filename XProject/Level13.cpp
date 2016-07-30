@@ -411,9 +411,72 @@ void testPreorderTraversal()
         cout << i << ", ";
 }
 
+#pragma mark - insertionSortList
+//Sort a linked list using insertion sort.
+ListNode* insertionSortList(ListNode* head)
+{
+    if( head == nullptr )
+        return nullptr;
+    
+    ListNode* newHead = new ListNode( -1 );
+    newHead->next = head;
+    ListNode* target = head->next;
+    while( target != nullptr )
+    {
+        ListNode* toBeInsert = newHead;
+        ListNode* it = newHead->next;
+        ListNode* nodeBeforeTarget = nullptr;
+        while( it != target )
+        {
+            if( it->val < target->val )
+                toBeInsert = it;
+            
+            if( it->next == target )
+                nodeBeforeTarget = it;
+            it = it->next;
+        }
+        
+        nodeBeforeTarget->next = target->next;
+        ListNode* nextTarget = target->next;
+        ListNode* nodeAfterToBeInsert = toBeInsert->next;
+        toBeInsert->next = target;
+        target->next = nodeAfterToBeInsert;
+        
+        target = nextTarget;
+    }
+    
+    return newHead->next;
+}
+
+void testInsertionSortList()
+{
+    auto PrintNodeFun = []( ListNode* head )
+    {
+        ListNode* iter = head;
+        while( iter != nullptr )
+        {
+            cout << iter->val << " ,";
+            iter = iter->next;
+        }
+        cout << endl;
+    };
+    ListNode* node = new ListNode(1);
+    PrintNodeFun( insertionSortList(node) );
+    
+    node = new ListNode(4);
+    node->next = new ListNode(2);
+    PrintNodeFun( insertionSortList(node) );
+    
+    node = new ListNode(3);
+    node->next = new ListNode(2);
+    node->next->next = new ListNode(4);
+    PrintNodeFun( insertionSortList(node) );
+}
+
+
 #pragma mark - run
 
 void Level13::Run()
 {
-    testPreorderTraversal();
+    testInsertionSortList();
 }
