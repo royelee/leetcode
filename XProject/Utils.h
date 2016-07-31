@@ -10,7 +10,9 @@
 #define __XProject__Utils__
 
 #include <stdio.h>
+#include <vector>
 
 unsigned int factorial(unsigned int n);
+std::vector<int> ReadIntVectorFromFile( const std::string& fileName );
 
 #endif /* defined(__XProject__Utils__) */

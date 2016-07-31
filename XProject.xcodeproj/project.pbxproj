@@ -11,6 +11,7 @@
 		B25CED981C3E2CD700657B17 /* Level10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B25CED971C3E2CD700657B17 /* Level10.cpp */; };
 		B25CED9A1C5F21C700657B17 /* level11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B25CED991C5F21C700657B17 /* level11.cpp */; };
 		B27DA3531B425867006755E7 /* FindMedian.c in Sources */ = {isa = PBXBuildFile; fileRef = B27DA3511B425867006755E7 /* FindMedian.c */; };
+		B28A78841D4DBF9A00EFCCD3 /* InsertionSortList in CopyFiles */ = {isa = PBXBuildFile; fileRef = B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */; };
 		B297916C1CACE5D0001386A7 /* Level12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B297916B1CACE5D0001386A7 /* Level12.cpp */; };
 		B2A703B71B3274760011EC87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A703B61B3274760011EC87 /* main.cpp */; };
 		B2CD00BC1C2A6F9D00C253A0 /* Level1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A703BD1B3275270011EC87 /* Level1.cpp */; };
@@ -28,12 +29,13 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		B2A703B11B3274760011EC87 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
+			buildActionMask = 12;
+			dstPath = "";
+			dstSubfolderSpec = 16;
 			files = (
+				B28A78841D4DBF9A00EFCCD3 /* InsertionSortList in CopyFiles */,
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -50,6 +52,7 @@
 		B25CED991C5F21C700657B17 /* level11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = level11.cpp; sourceTree = "<group>"; };
 		B27DA3511B425867006755E7 /* FindMedian.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FindMedian.c; sourceTree = "<group>"; };
 		B27DA3521B425867006755E7 /* FindMedian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindMedian.h; sourceTree = "<group>"; };
+		B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = InsertionSortList; path = Resources/InsertionSortList; sourceTree = "<group>"; };
 		B297916B1CACE5D0001386A7 /* Level12.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level12.cpp; sourceTree = "<group>"; };
 		B297C5261B4B8DE1005936C8 /* Level2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level2.cpp; sourceTree = "<group>"; };
 		B2A703B31B3274760011EC87 /* XProject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = XProject; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -71,9 +74,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		B28A78821D4DBC7500EFCCD3 /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */,
+			);
+			name = Resource;
+			path = XProject;
+			sourceTree = "<group>";
+		};
 		B2A703AA1B3274760011EC87 = {
 			isa = PBXGroup;
 			children = (
+				B28A78821D4DBC7500EFCCD3 /* Resource */,
 				B2A703B51B3274760011EC87 /* XProject */,
 				B2A703B41B3274760011EC87 /* Products */,
 			);
