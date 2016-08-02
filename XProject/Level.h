@@ -63,5 +63,6 @@ DECLARE_LEVEL(10);
 DECLARE_LEVEL(11);
 DECLARE_LEVEL(12);
 DECLARE_LEVEL(13);
+DECLARE_LEVEL(14);
 
 #endif /* defined(__XProject__Level__) */

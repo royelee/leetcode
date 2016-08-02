@@ -11,8 +11,34 @@
 
 #include <stdio.h>
 #include <vector>
+#include <functional>
+
+#include <fstream>
+#include <iostream>
+
+template <typename T>
+std::vector<T> ReadVectorFromFile( const std::string& fileName, const std::function<T(std::string)>& convertFun )
+{
+    std::vector<T> v;
+    std::string line;
+    std::ifstream myfile(fileName);
+    if (myfile.is_open())
+    {
+        while ( getline (myfile,line, ',') )
+        {
+            v.push_back(convertFun(line));
+            //            cout << line << '\n';
+            
+        }
+        myfile.close();
+    }
+    
+    return v;
+}
+
 
 unsigned int factorial(unsigned int n);
 std::vector<int> ReadIntVectorFromFile( const std::string& fileName );
+
 
 #endif /* defined(__XProject__Utils__) */

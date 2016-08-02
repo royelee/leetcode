@@ -12,6 +12,8 @@
 		B25CED9A1C5F21C700657B17 /* level11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B25CED991C5F21C700657B17 /* level11.cpp */; };
 		B27DA3531B425867006755E7 /* FindMedian.c in Sources */ = {isa = PBXBuildFile; fileRef = B27DA3511B425867006755E7 /* FindMedian.c */; };
 		B28A78841D4DBF9A00EFCCD3 /* InsertionSortList in CopyFiles */ = {isa = PBXBuildFile; fileRef = B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */; };
+		B28A78861D50553000EFCCD3 /* Level14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B28A78851D50553000EFCCD3 /* Level14.cpp */; };
+		B28A78881D505D9D00EFCCD3 /* evalRPN in CopyFiles */ = {isa = PBXBuildFile; fileRef = B28A78871D505D8400EFCCD3 /* evalRPN */; };
 		B297916C1CACE5D0001386A7 /* Level12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B297916B1CACE5D0001386A7 /* Level12.cpp */; };
 		B2A703B71B3274760011EC87 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A703B61B3274760011EC87 /* main.cpp */; };
 		B2CD00BC1C2A6F9D00C253A0 /* Level1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2A703BD1B3275270011EC87 /* Level1.cpp */; };
@@ -33,6 +35,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				B28A78881D505D9D00EFCCD3 /* evalRPN in CopyFiles */,
 				B28A78841D4DBF9A00EFCCD3 /* InsertionSortList in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -53,6 +56,8 @@
 		B27DA3511B425867006755E7 /* FindMedian.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FindMedian.c; sourceTree = "<group>"; };
 		B27DA3521B425867006755E7 /* FindMedian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindMedian.h; sourceTree = "<group>"; };
 		B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = InsertionSortList; path = Resources/InsertionSortList; sourceTree = "<group>"; };
+		B28A78851D50553000EFCCD3 /* Level14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level14.cpp; sourceTree = "<group>"; };
+		B28A78871D505D8400EFCCD3 /* evalRPN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = evalRPN; path = Resources/evalRPN; sourceTree = "<group>"; };
 		B297916B1CACE5D0001386A7 /* Level12.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level12.cpp; sourceTree = "<group>"; };
 		B297C5261B4B8DE1005936C8 /* Level2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level2.cpp; sourceTree = "<group>"; };
 		B2A703B31B3274760011EC87 /* XProject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = XProject; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */,
+				B28A78871D505D8400EFCCD3 /* evalRPN */,
 			);
 			name = Resource;
 			path = XProject;
@@ -120,6 +126,7 @@
 				B25CED991C5F21C700657B17 /* level11.cpp */,
 				B297916B1CACE5D0001386A7 /* Level12.cpp */,
 				B2D4E1311D2CD36100BDBDFD /* Level13.cpp */,
+				B28A78851D50553000EFCCD3 /* Level14.cpp */,
 				B24F65E31C0AC43E00C7EA85 /* Utils.cpp */,
 				B24F65E41C0AC43E00C7EA85 /* Utils.h */,
 			);
@@ -195,6 +202,7 @@
 				B297916C1CACE5D0001386A7 /* Level12.cpp in Sources */,
 				B2CD00C31C2A6F9D00C253A0 /* Level8.cpp in Sources */,
 				B2CD00C41C2A6F9D00C253A0 /* Level9.cpp in Sources */,
+				B28A78861D50553000EFCCD3 /* Level14.cpp in Sources */,
 				B24F65E51C0AC43E00C7EA85 /* Utils.cpp in Sources */,
 				B2A703B71B3274760011EC87 /* main.cpp in Sources */,
 				B27DA3531B425867006755E7 /* FindMedian.c in Sources */,

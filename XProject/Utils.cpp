@@ -8,9 +8,6 @@
 
 #include "Utils.h"
 
-#include <fstream>
-#include <iostream>
-
 using namespace std;
 
 unsigned int factorial(unsigned int n)
@@ -23,19 +20,5 @@ unsigned int factorial(unsigned int n)
 
 std::vector<int> ReadIntVectorFromFile( const std::string& fileName )
 {
-    vector<int> v;
-    string line;
-    ifstream myfile(fileName);
-    if (myfile.is_open())
-    {
-        while ( getline (myfile,line, ',') )
-        {
-            v.push_back(stoi(line));
-//            cout << line << '\n';
-            
-        }
-        myfile.close();
-    }
-    
-    return v;
+    return ReadVectorFromFile<int>(fileName, [](std::string s) { return stoi(s); });
 }

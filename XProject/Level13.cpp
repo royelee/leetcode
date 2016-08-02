@@ -453,18 +453,19 @@ ListNode* insertionSortList(ListNode* head)
     return newHead;
 }
 
+static void PrintNodeFun( ListNode* head )
+{
+    ListNode* iter = head;
+    while( iter != nullptr )
+    {
+        cout << iter->val << " ,";
+        iter = iter->next;
+    }
+    cout << endl;
+}
+
 void testInsertionSortList()
 {
-    auto PrintNodeFun = []( ListNode* head )
-    {
-        ListNode* iter = head;
-        while( iter != nullptr )
-        {
-            cout << iter->val << " ,";
-            iter = iter->next;
-        }
-        cout << endl;
-    };
     ListNode* node = new ListNode(1);
     PrintNodeFun( insertionSortList(node) );
     
@@ -489,12 +490,83 @@ void testInsertionSortList()
     PrintNodeFun( insertionSortList(newHead->next) );
 }
 
+#pragma mark - sortList
+//Sort a linked list in O(n log n) time using constant space complexity.
+ListNode* mergeList(ListNode* list1, ListNode* list2)
+{
+    if( list1 == nullptr )
+        return list2;
+    
+    if( list2 == nullptr )
+        return list1;
+    
+    std::unique_ptr< ListNode > head( new ListNode(-1) );
+    ListNode* returnList = head.get();
+    while( list1 != nullptr || list2 != nullptr )
+    {
+        if( list1 && list2 )
+        {
+            if( list1->val < list2->val )
+            {
+                returnList->next = list1;
+                list1 = list1->next;
+            }
+            else
+            {
+                returnList->next = list2;
+                list2 = list2->next;
+            }
+        }
+        else if( list1 )
+        {
+            returnList->next = list1;
+            list1 = list1->next;
+        }
+        else
+        {
+            returnList->next = list2;
+            list2 = list2->next;
+        }
+        
+        returnList = returnList->next;
+    }
+    
+    return head->next;
+}
 
+ListNode* sortList(ListNode* head)
+{
+    if( head == nullptr || head->next == nullptr )
+        return head;
+    
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while ( fast->next && fast->next->next ) {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    
+    fast = slow->next;
+    slow->next = nullptr;
+    
+    ListNode* p1 = sortList(head);
+    ListNode* p2 = sortList(fast);
+    
+    return mergeList(p1, p2);
+}
+
+void testSortList()
+{
+    ListNode* node = new ListNode(3);
+    node->next = new ListNode(2);
+    node->next->next = new ListNode(4);
+    PrintNodeFun( sortList(node) );
+}
 
 
 #pragma mark - run
 
 void Level13::Run()
 {
-    testInsertionSortList();
+    testSortList();
 }
