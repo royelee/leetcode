@@ -89,9 +89,94 @@ void testEvalRPN()
     cout << evalRPN(t1) << endl;
 }
 
+#pragma mark - reverseWords
+//Given an input string, reverse the string word by word.
+//
+//For example,
+//Given s = "the sky is blue",
+//return "blue is sky the".
+//
+//Update (2015-02-12):
+//For C programmers: Try to solve it in-place in O(1) space.
+//Clarification:
+//What constitutes a word?
+//A sequence of non-space characters constitutes a word.
+//Could the input string contain leading or trailing spaces?
+//Yes. However, your reversed string should not contain leading or trailing spaces.
+//How about multiple spaces between two words?
+//Reduce them to a single space in the reversed string.
+string getNextWord(string& s, int start, int& next )
+{
+    stringstream ss;
+    bool begined = false;
+    int i = start;
+    for( ; i < s.length(); i++ )
+    {
+        if( s[i] == ' ' )
+        {
+            if( begined )
+            {
+                break;
+            }
+            else
+                continue;
+        }
+        else
+        {
+            ss << s[i];
+            begined = true;
+        }
+    }
+    
+    string rtn = ss.str();
+    next = i;
+    return rtn;
+}
+
+void reverseWords(string &s)
+{
+    int i = 0;
+    vector<string> output;
+    while( i < s.size() )
+    {
+        int next = i;
+        string word = getNextWord(s, i, next);
+        if( word.size() > 0 )
+            output.push_back( word );
+        i = next + 1;
+    }
+    
+    stringstream ss;
+    for( auto it = output.rbegin(); it != output.rend(); it++ )
+    {
+        ss << *it;
+        if( it + 1 != output.rend() )
+            ss << " ";
+    };
+    
+    s = ss.str();
+}
+
+void testReverseWords()
+{
+    vector<string> tests =
+    {
+        "    a    ",
+        "the sky is blue",
+        "    ",
+    };
+
+    for( auto& s : tests )
+    {
+        string currentString = s;
+        reverseWords( currentString );
+        cout << currentString << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level14::Run()
 {
-    testEvalRPN();
+    testReverseWords();
 }
