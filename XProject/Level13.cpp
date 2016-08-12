@@ -257,7 +257,7 @@ bool hasCycle(ListNode *head)
 //
 //Follow up:
 //Can you solve it without using extra space?
-ListNode *detectCycle(ListNode *head)
+static ListNode *detectCycle(ListNode *head)
 {
     if( head == nullptr )
         return nullptr;

@@ -400,7 +400,7 @@ void testMinStack()
 //Your code should preferably run in O(n) time and use only O(1) memory.
 //Credits:
 //Special thanks to @stellari for adding this problem and creating all test cases.
-ListNode *detectCycle(ListNode *head)
+static ListNode *detectCycle(ListNode *head)
 {
     if( head == nullptr )
         return nullptr;
@@ -439,22 +439,13 @@ ListNode *detectCycle(ListNode *head)
     return oneStepIter;
 }
 
-ListNode *getIntersectionNode(ListNode *headA, ListNode *headB)
-{
-    if( !headA || !headB )
-        return nullptr;
-    
-    ListNode* beforeLastA = nullptr;
-    ListNode* itA = headA;
-    while (itA != nullptr) {
-        beforeLastA = itA;
-        itA = itA->next;
+ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+    ListNode *cur1 = headA, *cur2 = headB;
+    while(cur1 != cur2){
+        cur1 = cur1?cur1->next:headB;
+        cur2 = cur2?cur2->next:headA;
     }
-    beforeLastA->next = headB;
-    
-    ListNode* result = detectCycle( headA );
-    beforeLastA->next = nullptr;
-    return result;
+    return cur1;
 }
 
 void testGetIntersectionNode()
