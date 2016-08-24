@@ -45,85 +45,59 @@ string fractionToDecimal(int numerator, int denominator)
 {
     double f = numerator * 1.0 / denominator;
     
-    numerator = abs(numerator);
-    denominator = abs(denominator);
-
-    stringstream ss;
-    size_t i = 0;
-    bool fDot = false;
-    int dotPos = -1;
-    while( i < 100 )
-    {
-        int remainder = numerator % denominator;
-        int quotient = numerator / denominator;
-        if( remainder == 0 )
-        {
-            ss << to_string(quotient);
-            break;
-        }
-        else
-        {
-            string s = to_string(quotient);
-            ss << s;
-            if( !fDot )
-            {
-                dotPos = (int)s.size();
-                ss << ".";
-                fDot = true;
-            }
-            numerator = 10 * remainder;
-        }
-        
-        i++;
-    }
+    long long num = numerator;
+    long long denom = denominator;
+    num = abs(num);
+    denom = abs(denom);
     
-    string out = ss.str();
-    if( dotPos == -1 )
+    long long big = num / denom;
+    long long remain = num % denom;
+    if( remain == 0 )
     {
+        string out = to_string(big);
         if( f < 0 )
             out.insert(out.begin(), '-');
+        
         return out;
     }
     
-    cout << "original = " << out << endl;
-    int startRepeat = -1;
-    int endRepeat = -1;
-    size_t pos = dotPos + 1;
-    while( pos < out.size() )
+    string out;
+    stringstream ss;
+    int i = 0;
+    map< long long , int > map;
+    while( remain != 0 )
     {
-        size_t firstOccurOfCurrentChar = out.find(out[pos], pos + 1);
-        if( firstOccurOfCurrentChar == string::npos )
+        if( map.find(remain) != map.end() )
         {
-            pos++;
-            continue;
-        }
-        
-        size_t i = 0;
-        for( ; i < firstOccurOfCurrentChar - pos; i++ )
-        {
-            if( firstOccurOfCurrentChar + i >= out.size() || out[pos + i] != out[firstOccurOfCurrentChar + i] )
-                break;
-        }
-        
-        if( pos + i == firstOccurOfCurrentChar )
-        {
-            startRepeat = (int)pos;
-            endRepeat = (int)firstOccurOfCurrentChar;
+            // find repeat.
+            out = ss.str();
+            int repeatIndex = map[remain];
+            out.insert(out.begin() + repeatIndex, '(' );
+            out.insert(out.end(), ')');
+            string before = to_string(big) + ".";
+            out.insert(0, before );
             break;
         }
-        pos++;
-    }
-    
-    if( startRepeat != -1 && endRepeat != -1 )
-    {
-        out.erase( endRepeat );
-        out.insert(out.begin() + startRepeat, '(' );
-        out.insert(out.end(), ')');
+        
+        map[remain] = i;
+        remain = remain * 10;
+        ss << to_string(remain / denom);
+        remain = remain % denom;
+        
+        if( remain == 0 )
+        {
+            // No repeat done.
+            out = ss.str();
+            string before = to_string(big) + ".";
+            out.insert(0, before );
+        }
+
+        i++;
     }
     
     if( f < 0 )
         out.insert(out.begin(), '-');
-    
+
     return out;
 }
 
@@ -133,6 +107,12 @@ string fractionToDecimal(int numerator, int denominator)
 void Level15::Run()
 {
     vector<int> tests = {
+        -1, -2147483648,
+        1,6,
+        1,3,
+        1,5,
+        1,214748364,
+        1, 333,
         2, 3,
         4, 15,
         1, 2,
