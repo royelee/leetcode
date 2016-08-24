@@ -35,18 +35,12 @@ struct UndirectedGraphNode {
     UndirectedGraphNode(int x) : label(x) {};
 };
 
-    
-class ILevel
-{
-public:
-    virtual void Run() = 0;
-};
 
-#define DECLARE_LEVEL(LEVELNAME) class Level##LEVELNAME : public ILevel\
+#define DECLARE_LEVEL(LEVELNAME) class Level##LEVELNAME\
 {\
 public:\
-    void Run() override;\
-}
+    void Run();\
+};
 
 void preOrderTrasveral( TreeNode* node );
 
@@ -64,5 +58,6 @@ DECLARE_LEVEL(11);
 DECLARE_LEVEL(12);
 DECLARE_LEVEL(13);
 DECLARE_LEVEL(14);
+DECLARE_LEVEL(15);
 
 #endif /* defined(__XProject__Level__) */

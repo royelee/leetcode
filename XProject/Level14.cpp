@@ -473,9 +473,107 @@ void testGetIntersectionNode()
         cout << node->next;
 }
 
+#pragma mark - findPeakElement
+//A peak element is an element that is greater than its neighbors.
+//
+//Given an input array where num[i] ≠ num[i+1], find a peak element and return its index.
+//
+//The array may contain multiple peaks, in that case return the index to any one of the peaks is fine.
+//
+//You may imagine that num[-1] = num[n] = -∞.
+//
+//For example, in array [1, 2, 3, 1], 3 is a peak element and your function should return the index number 2.
+//
+int findPeakElement(vector<int>& nums) {
+    // Find the local max.
+    size_t begin = 0;
+    size_t end = nums.size() - 1;
+    while( begin < end )
+    {
+        size_t mid = (end + begin) / 2;
+        if( nums[mid] < nums[mid + 1] )
+        {
+            begin = mid + 1;
+        }
+        else
+        {
+            end = mid;
+        }
+    }
+    
+    return begin;
+}
+
+void testFindPeakElement()
+{
+    vector<int> v = {1,2};
+    cout << findPeakElement(v) << endl;
+}
+
+#pragma mark - compareVersion
+//Compare two version numbers version1 and version2.
+//If version1 > version2 return 1, if version1 < version2 return -1, otherwise return 0.
+//
+//You may assume that the version strings are non-empty and contain only digits and the . character.
+//The . character does not represent a decimal point and is used to separate number sequences.
+//For instance, 2.5 is not "two and a half" or "half way to version three", it is the fifth second-level revision of the second first-level revision.
+//
+//Here is an example of version numbers ordering:
+//
+//0.1 < 1.1 < 1.2 < 13.37
+int compareVersion(string version1, string version2)
+{
+    auto splitVersion = [](string version, vector<string>& versions){
+        stringstream ss(version);
+        string tmp;
+        while (getline(ss, tmp, '.')) {
+            if( !tmp.empty() )
+                versions.push_back(tmp);
+        }
+    };
+    
+    vector<string> versions1, versions2;
+    splitVersion( version1, versions1 );
+    splitVersion( version2, versions2 );
+    for( size_t i = 0; i < max( versions1.size(), versions2.size() ); i++ )
+    {
+        unsigned long v1 = 0, v2 = 0;
+        if( i < versions1.size() )
+            v1 = stoul( versions1[i] );
+        if( i < versions2.size() )
+            v2 = stoul( versions2[i] );
+     
+        if( v1 < v2 )
+            return -1;
+        else if( v1 > v2 )
+            return 1;
+    }
+    
+    return 0;
+}
+
+void testCompareVersion()
+{
+    vector<string> tests = {
+        "1.0.1", "1",    // 1
+        "1", "1.1",     // -1
+        "0.1", "0.11",  // -1
+        "1.0", "0.5",   // 1
+        "0.1", "1.0",   // -1
+        "0.4", "0.4",   // 0
+        "12.4", "2.4",  // 1
+    };
+    for( size_t i = 0; i < tests.size() / 2; i++ )
+    {
+        string v1 = tests[2 * i];
+        string v2 = tests[2 * i + 1];
+        cout << compareVersion(v1, v2) << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level14::Run()
 {
-    testGetIntersectionNode();
+    testCompareVersion();
 }
