@@ -101,10 +101,7 @@ string fractionToDecimal(int numerator, int denominator)
     return out;
 }
 
-
-#pragma mark - run
-
-void Level15::Run()
+void testFractionToDecimal()
 {
     vector<int> tests = {
         -1, -2147483648,
@@ -134,5 +131,43 @@ void Level15::Run()
             cout << "_--______----_____" << endl;
         cout << "Fraction=" << s << endl;
     }
-    
+}
+
+//Given an array of integers that is already sorted in ascending order, find two numbers such that they add up to a specific target number.
+//
+//The function twoSum should return indices of the two numbers such that they add up to the target, where index1 must be less than index2. Please note that your returned answers (both index1 and index2) are not zero-based.
+//
+//You may assume that each input would have exactly one solution.
+//
+//Input: numbers={2, 7, 11, 15}, target=9
+//Output: index1=1, index2=2
+#pragma mark - twoSum
+vector<int> twoSum(vector<int>& numbers, int target) {
+    vector<int> out;
+    for( size_t i = 0; i < numbers.size(); i++ )
+    {
+        int lookingFor = target - numbers[i];
+        auto it = lower_bound(numbers.begin() + i + 1, numbers.end(), lookingFor );
+        if( it < numbers.end() && *it == lookingFor )
+        {
+            out.push_back(i + 1);
+            out.push_back(it - numbers.begin() + 1);
+        }
+    }
+    return out;
+}
+
+void testTwoSum()
+{
+    vector<int> t = {2,7,11,15};
+    auto r = twoSum(t, 9);
+    for( auto& i : r )
+        cout << i << ", ";
+}
+
+#pragma mark - run
+
+void Level15::Run()
+{
+    testTwoSum();
 }
