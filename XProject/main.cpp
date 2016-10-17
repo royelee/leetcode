@@ -16,7 +16,7 @@ void runLevel() {
 }
 
 int main(int argc, const char * argv[]) {
-    runLevel<Level15>();
+    runLevel<Level16>();
     return 0;
 }
 

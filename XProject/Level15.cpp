@@ -520,36 +520,62 @@ void testReverseBits()
 //["AAAAACCCCC", "CCCCCAAAAA"].
 vector<string> findRepeatedDnaSequences(string s)
 {
-    set<string> dnaSet;
-    set<string> answer;
-    for( size_t i = 0; i + 10 <= s.size(); i++ )
+    int32_t mask = 0x000fffff;
+    auto convertFn = []( char c )
     {
-        string sub = s.substr(i, 10);
-        if( dnaSet.find(sub) == dnaSet.end() )
+        switch(c)
         {
-            dnaSet.insert(sub);
+            case 'A': return 0;
+            case 'C': return 1;
+            case 'G': return 2;
+            case 'T': return 3;
         }
+        return 0;
+    };
+    set<int32_t> reorder;
+    set<string> out;
+    int32_t init = 0;
+    if( s.length() >= 10 )
+    {
+        for( int j = 0; j < 10; j++ )
+            init = (init << 2) + convertFn(s[j]);
+        
+        reorder.insert(init);
+    }
+
+    for( size_t i = 10; i < s.length(); i++ )
+    {
+        init = ( init << 2 ) & mask;
+        init += convertFn(s[i]);
+        
+        if(reorder.find(init) != reorder.end() )
+            out.insert(s.substr(i - 9, 10));
         else
-        {
-            answer.insert(sub);
-        }
+            reorder.insert(init);
     }
     
-    vector<string> out;
-    for( auto& v : answer )
-    {
-        out.push_back(v);
-    }
+    vector<string> output;
+    for( const auto& v : out )
+        output.push_back(v);
     
-    return out;
+    return output;
 }
 
 void testFindRepeatedDnaSequences()
 {
-    string s = "AAAAAAAAAAA";
-    vector<string> out = findRepeatedDnaSequences(s);
-    for( auto& v : out )
-        cout << v << " ";
+    vector<string> tests = {
+        "AAAAAAAAAAAAAAAAAAAA",
+        "AAAAAAAAAA",
+        "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
+        "CCCCCCCCCCC"
+    };
+    for( auto s : tests )
+    {
+        vector<string> out = findRepeatedDnaSequences(s);
+        for( auto& v : out )
+            cout << v << " ";
+        cout << endl;
+    }
 }
 
 #pragma mark - run
