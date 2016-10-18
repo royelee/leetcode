@@ -78,10 +78,75 @@ void testRob()
     cout << rob(t);
 }
 
+#pragma mark - rightSideView
+//Given a binary tree, imagine yourself standing on the right side of it, return the values of the nodes you can see ordered from top to bottom.
+//
+//For example:
+//Given the following binary tree,
+//   1            <---
+// /   \
+//2     3         <---
+// \     \
+//  5     4       <---
+//You should return [1, 3, 4].
+vector<int> rightSideView(TreeNode* root)
+{
+    struct LevelTreeNode
+    {
+        TreeNode* node{ nullptr };
+        int level{ -1 };
+        LevelTreeNode( TreeNode* n, int l ) : node( n ), level( l ) {}
+    };
+    
+    queue<LevelTreeNode> q;
+    q.push( { root, 1 } );
+    
+    vector<int> out;
+    TreeNode* lastVisited = nullptr;
+    int currentLevel = 1;
+    while( !q.empty() )
+    {
+        LevelTreeNode tmp = q.front();
+        q.pop();
+        if( tmp.node != nullptr )
+        {
+            if( tmp.node->left )
+                q.push( { tmp.node->left, tmp.level + 1 } );
+            
+            if( tmp.node->right )
+                q.push( { tmp.node->right, tmp.level + 1 } );
+        }
+        
+        if( tmp.level != currentLevel )
+        {
+            // Go into next level, now last visit is most right node.
+            currentLevel = tmp.level;
+            out.push_back(lastVisited->val);
+        }
+        
+        lastVisited = tmp.node;
+    }
+    
+    if( lastVisited )
+        out.push_back(lastVisited->val);
+
+    return out;
+}
+
+void testRightSideView()
+{
+    TreeNode* n1 = new TreeNode(1);
+    n1->left = new TreeNode(2);
+    n1->right = new TreeNode(3);
+    
+    vector<int> v = rightSideView(n1);
+    for( auto& i : v )
+        cout << i << ", ";
+}
 
 #pragma mark - run
 
 void Level16::Run()
 {
-    testRob();
+    testRightSideView();
 }
