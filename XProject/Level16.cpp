@@ -315,9 +315,54 @@ void testRangeBitwiseAnd()
     }
 }
 
+#pragma mark - isHappy
+//Write an algorithm to determine if a number is "happy".
+//
+//A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
+//
+//Example: 19 is a happy number
+//
+//1^2 + 9^2 = 82
+//8^2 + 2^2 = 68
+//6^2 + 8^2 = 100
+//1^2 + 0^2 + 0^2 = 1
+bool isHappy(int n) {
+    if( n <= 0 )
+        return false;
+    
+    set<int> repeated;
+    int c = n;
+    while(true)
+    {
+        int next = 0;
+        while( c > 0 )
+        {
+            next += (c % 10) * (c % 10);
+            c = c / 10;
+        }
+        
+        if( repeated.find(next) == repeated.end() )
+            repeated.insert(next);
+        else
+            return false;
+
+        c = next;
+        if( c == 1 )
+            return true;
+    }
+    
+    return false;
+}
+
+void testIsHappy()
+{
+    for( int i = 1; i < 100; i++ )
+        cout << "i = " << i << isHappy(i) << endl;
+}
+
 #pragma mark - run
 
 void Level16::Run()
 {
-    testRangeBitwiseAnd();
+    testIsHappy();
 }
