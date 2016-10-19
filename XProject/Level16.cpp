@@ -412,16 +412,31 @@ void testRemoveElements()
     PrintList(removeElements(head, 6));
 }
 
+#pragma mark - countPrimes
 //Count the number of prime numbers less than a non-negative number, n.
-int countPrimes(int n) {
+int countPrimes(int n)
+{
+    vector<bool> primes(n, true);
+    primes[0] = false;
+    primes[1] = false;
     
+    for( int i = 2; i * i < n; i++)
+    {
+        if( !primes[i] ) continue;
+        for( int j = i * i; j < n; j = j + i )
+            primes[j] = false;
+    }
+    
+    int count = 0;
+    for( const auto& b : primes )
+        if( b ) count++;
+    
+    return count;
 }
-
-
 
 #pragma mark - run
 
 void Level16::Run()
 {
-    testRemoveElements();
+    cout << countPrimes(120);
 }
