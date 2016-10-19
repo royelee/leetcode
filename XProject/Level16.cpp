@@ -360,9 +360,68 @@ void testIsHappy()
         cout << "i = " << i << isHappy(i) << endl;
 }
 
+#pragma mark - removeElements
+//Remove all elements from a linked list of integers that have value val.
+//
+//Example
+//Given: 1 --> 2 --> 6 --> 3 --> 4 --> 5 --> 6, val = 6
+//Return: 1 --> 2 --> 3 --> 4 --> 5
+ListNode* removeElements(ListNode* head, int val)
+{
+    unique_ptr<ListNode> newHead( new ListNode(-1) );
+    newHead->next = head;
+    
+    ListNode* it = newHead.get();
+    while(it->next)
+    {
+        ListNode* next = it->next;
+        if( next->val == val )
+        {
+            it->next = next->next;
+        }
+        else
+            it = it->next;
+    }
+    
+    return newHead->next;
+}
+
+void testRemoveElements()
+{
+    auto PrintList = [](ListNode* head)
+    {
+        ListNode* it = head;
+        while(it)
+        {
+            cout << it->val << ", ";
+            it = it->next;
+        }
+        cout << endl;
+    };
+    
+    ListNode* head = new ListNode(6);
+    PrintList(removeElements(head, 6));
+    
+    head = new ListNode(6);
+    head->next = new ListNode(2);
+    head->next->next = new ListNode(6);
+    PrintList(removeElements(head, 6));
+    
+    head = new ListNode(4);
+    head->next = new ListNode(2);
+    PrintList(removeElements(head, 6));
+}
+
+//Count the number of prime numbers less than a non-negative number, n.
+int countPrimes(int n) {
+    
+}
+
+
+
 #pragma mark - run
 
 void Level16::Run()
 {
-    testIsHappy();
+    testRemoveElements();
 }
