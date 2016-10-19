@@ -259,9 +259,65 @@ void testNumIslands()
     cout << numIslands(t3);
 }
 
+#pragma mark - rangeBitwiseAnd
+//Given a range [m, n] where 0 <= m <= n <= 2147483647, return the bitwise AND of all numbers in this range, inclusive.
+//
+//For example, given the range [5, 7], you should return 4.
+int rangeBitwiseAnd(int m, int n)
+{
+    uint32_t um = static_cast<uint32_t>(m);
+    uint32_t un = static_cast<uint32_t>(n);
+    uint32_t count = n - m;
+    uint32_t rtn = 0;
+    uint32_t c = 1;
+    uint32_t um1 = um | un;
+    uint32_t all1 = 1;
+    while( um1 > 0 )
+    {
+        uint32_t countToAll1 = all1 - ( all1 & um );
+        uint32_t t = um & c;
+        if( t != 0 &&  count <= countToAll1 )
+            rtn |= t;
+        c = c << 1;
+        um1 >>= 1;
+        all1 <<= 1;
+        all1 |= 1;
+    }
+    
+    return rtn;
+}
+
+int btRangeBitwiseAnd(int m, int n)
+{
+    int rtn = m;
+    for( int i = m; i <= n; i++ )
+        rtn &= i;
+    
+    return rtn;
+}
+
+void testRangeBitwiseAnd()
+{
+    rangeBitwiseAnd(8, 16);
+    
+    for( int j = 0; j < 1000; j++ )
+    {
+        for( int i = 1; i < 1000; i++ )
+        {
+            int m = j;
+            int n = j+i;
+            if( rangeBitwiseAnd(m,n) != btRangeBitwiseAnd(m, n) )
+            {
+                cout << "m = " << m << " n = " << n << " ";
+                cout << rangeBitwiseAnd(m, n) << " , " << btRangeBitwiseAnd(m, n) << endl;
+            }
+        }
+    }
+}
+
 #pragma mark - run
 
 void Level16::Run()
 {
-    testNumIslands();
+    testRangeBitwiseAnd();
 }
