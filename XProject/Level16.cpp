@@ -23,6 +23,7 @@
 #include <unordered_set>
 #include <queue>
 #include <fstream>
+#include <unordered_map>
 
 using namespace std;
 
@@ -434,9 +435,69 @@ int countPrimes(int n)
     return count;
 }
 
+#pragma mark - isIsomorphic
+//Given two strings s and t, determine if they are isomorphic.
+//
+//Two strings are isomorphic if the characters in s can be replaced to get t.
+//
+//All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.
+//
+//For example,
+//Given "egg", "add", return true.
+//
+//Given "foo", "bar", return false.
+//
+//Given "paper", "title", return true.
+//
+//Note:
+//You may assume both s and t have the same length.
+bool isIsomorphic(string s, string t)
+{
+    unordered_map<char, char> froms;
+    unordered_map<char, char> tos;
+    for( size_t i = 0; i < s.length(); i++ )
+    {
+        char from = s[i];
+        char to = t[i];
+        // from -> to
+        
+        if( froms.find(from) == froms.end() )
+        {
+            if( tos.find(to) == tos.end() )
+            {
+                froms[from] = to;
+                tos[to] = from;
+            }
+        }
+        
+        if( froms.find( from ) != froms.end() && froms[from] == to )
+            continue;
+        else
+            return false;
+    }
+    
+    return true;
+}
+
+void testIsIsomorphic()
+{
+    vector<string> tests = {
+        "aba", "baa",//false
+        "ab", "aa",//false
+        "egg", "add",//true
+        "foo", "bar",//false
+        "paper", "title"//true
+    };
+
+    for( size_t i = 0; i < tests.size(); i = i + 2)
+    {
+        cout << tests[i] << " " << tests[i+1] << " = " << isIsomorphic(tests[i], tests[i+1]) << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level16::Run()
 {
-    cout << countPrimes(120);
+    testIsIsomorphic();
 }
