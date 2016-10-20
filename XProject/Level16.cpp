@@ -583,9 +583,110 @@ void testCanFinish()
     cout << canFinish(6, t1) << endl;
 }
 
+#pragma mark - Trie
+//Implement a trie with insert, search, and startsWith methods.
+//
+//Note:
+//You may assume that all inputs are consist of lowercase letters a-z.
+// https://www.topcoder.com/community/data-science/data-science-tutorials/using-tries/
+class TrieNode {
+public:
+    // Initialize your data structure here.
+    TrieNode()
+    {
+    }
+
+    vector<unique_ptr<TrieNode>> childs{ 26 };
+    int words { 0 };    // The number of words in the node.
+};
+
+class Trie {
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+    
+    // Inserts a word into the trie.
+    void insert(string word) {
+        TrieNode* current = root;
+        for( auto c : word )
+        {
+            int index = c - 'a';
+            if( current->childs[index] == nullptr )
+            {
+                current->childs[index].reset(new TrieNode);
+            }
+            
+            current = current->childs[index].get();
+        }
+        
+        if( current )
+            current->words++;
+    }
+    
+    // Returns if the word is in the trie.
+    bool search(string word) {
+        TrieNode* current = root;
+        for( auto c : word )
+        {
+            int index = c - 'a';
+            if( current->childs[index] == nullptr )
+                return false;
+            
+            current = current->childs[index].get();
+        }
+        
+        return current != nullptr && current->words > 0;
+    }
+    
+    // Returns if there is any word in the trie
+    // that starts with the given prefix.
+    bool startsWith(string prefix)
+    {
+        TrieNode* current = root;
+        for( auto c : prefix )
+        {
+            int index = c - 'a';
+            if( current->childs[index] == nullptr )
+                return false;
+            
+            current = current->childs[index].get();
+        }
+        
+        return current != nullptr;
+    }
+    
+private:
+    TrieNode* root;
+};
+
+void testTried()
+{
+    // Your Trie object will be instantiated and called as such:
+    Trie trie;
+    trie.insert("abc");
+    trie.insert("abcd");
+    trie.insert("bc");
+
+    cout << trie.search("abc") << endl;
+    cout << trie.startsWith("ab") << endl;
+    cout << trie.startsWith("ae") << endl;
+    cout << trie.startsWith("") << endl;
+    cout << trie.search("bce") << endl;
+    cout << trie.search("b") << endl;
+    
+    cout << "TEST 2" << endl;
+    Trie trie1;
+    trie1.insert("abc");
+    cout << trie1.search("abc") << endl;//true
+    cout << trie1.search("ab") << endl;//false
+    trie1.insert("ab");
+    cout << trie1.search("ab") << endl;//true
+}
+
 #pragma mark - run
 
 void Level16::Run()
 {
-    testCanFinish();
+    testTried();
 }
