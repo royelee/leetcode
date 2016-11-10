@@ -477,45 +477,55 @@ void testContainsNearbyDuplicate()
 //Given an array of integers, find out whether there are two distinct indices i and j in the array such that the difference between nums[i] and nums[j] is at most t and the difference between i and j is at most k.
 bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t)
 {
-    if( nums.size() == 0 )
+    if( t < 0 || k < 1 )
         return false;
     
-    for( int i = 1; i <= k; i++ )
+    // Use bucket.
+    int minNum = *min_element(nums.begin(), nums.end());
+    map<int64_t, int64_t> bucket;
+    for( int i = 0; i < nums.size(); i++ )
     {
-        for( int j = 0; j < nums.size() - i; j++ )
-        {
-            int idx1 = j;
-            int idx2 = j + i;
-            if( idx2 >= nums.size() )
-                continue;
-            
-            if( abs((int64_t)nums[idx2]-(int64_t)nums[idx1]) <= t )
-                return true;
-        }
+        int64_t n = (int64_t)nums[i] - minNum;
+        int64_t idx = n / ( t + 1 );
+        if( ( bucket.find(idx) != bucket.end() ) ||
+            ( bucket.find(idx - 1) != bucket.end() && abs( bucket[idx-1] - n ) <= t ) ||
+            ( bucket.find(idx + 1) != bucket.end() && abs( bucket[idx+1] - n ) <= t ) )
+            return true;
+        
+        if( i >= k )
+            bucket.erase(((int64_t)nums[i-k] - minNum) / ( t + 1 ) );
+        
+        bucket[idx] = n;
     }
-    
+
     return false;
 }
 
 void testContainsNearbyAlmostDuplicate()
 {
     vector<int> t = {-1,-1};
-    cout << containsNearbyAlmostDuplicate(t,1, -1) << endl;
+    cout << containsNearbyAlmostDuplicate(t,1, -1) << endl; // false
     
-    cout << containsNearbyAlmostDuplicate(t,1, 0) << endl;
+    cout << containsNearbyAlmostDuplicate(t,1, 0) << endl;  // true
+    
+    t = {1,3,1};
+    cout << containsNearbyAlmostDuplicate(t,1, 1) << endl;  // false
     
     // Integer max test
     t = {-1,2147483647};
-    cout << containsNearbyAlmostDuplicate(t,1, 2147483647) << endl;
+    cout << containsNearbyAlmostDuplicate(t,1, 2147483647) << endl; // false
     
     t = {7,1,3};
-    cout << containsNearbyAlmostDuplicate(t,2, 3) << endl;
+    cout << containsNearbyAlmostDuplicate(t,2, 3) << endl;  // true
     
     t = {7,2,8};
-    cout << containsNearbyAlmostDuplicate(t,2, 1) << endl;
+    cout << containsNearbyAlmostDuplicate(t,2, 1) << endl;  // true
     
     t = {3,6,0,4};
-    cout << containsNearbyAlmostDuplicate(t,2, 2) << endl;
+    cout << containsNearbyAlmostDuplicate(t,2, 2) << endl;  // true
+    
+    t = {-3,3};
+    cout << containsNearbyAlmostDuplicate(t,2, 4) << endl;  // false
 }
 
 #pragma mark - computeArea
