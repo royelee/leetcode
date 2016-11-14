@@ -14,6 +14,7 @@
 		B25CED9A1C5F21C700657B17 /* level11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B25CED991C5F21C700657B17 /* level11.cpp */; };
 		B275D7311DB985B900256419 /* Level17.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B275D7301DB985B900256419 /* Level17.cpp */; };
 		B27DA3531B425867006755E7 /* FindMedian.c in Sources */ = {isa = PBXBuildFile; fileRef = B27DA3511B425867006755E7 /* FindMedian.c */; };
+		B27ED3AA1DD400FD00F5DB12 /* Level18.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B27ED3A91DD400FD00F5DB12 /* Level18.cpp */; };
 		B28A78841D4DBF9A00EFCCD3 /* InsertionSortList in CopyFiles */ = {isa = PBXBuildFile; fileRef = B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */; };
 		B28A78861D50553000EFCCD3 /* Level14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B28A78851D50553000EFCCD3 /* Level14.cpp */; };
 		B28A78881D505D9D00EFCCD3 /* evalRPN in CopyFiles */ = {isa = PBXBuildFile; fileRef = B28A78871D505D8400EFCCD3 /* evalRPN */; };
@@ -61,6 +62,7 @@
 		B275D7301DB985B900256419 /* Level17.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level17.cpp; sourceTree = "<group>"; };
 		B27DA3511B425867006755E7 /* FindMedian.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FindMedian.c; sourceTree = "<group>"; };
 		B27DA3521B425867006755E7 /* FindMedian.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FindMedian.h; sourceTree = "<group>"; };
+		B27ED3A91DD400FD00F5DB12 /* Level18.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level18.cpp; sourceTree = "<group>"; };
 		B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = InsertionSortList; path = Resources/InsertionSortList; sourceTree = "<group>"; };
 		B28A78851D50553000EFCCD3 /* Level14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level14.cpp; sourceTree = "<group>"; };
 		B28A78871D505D8400EFCCD3 /* evalRPN */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = evalRPN; path = Resources/evalRPN; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				B20627521D62D85600CD362F /* Level15.cpp */,
 				B2545E231DB54BF000112E1E /* Level16.cpp */,
 				B275D7301DB985B900256419 /* Level17.cpp */,
+				B27ED3A91DD400FD00F5DB12 /* Level18.cpp */,
 				B24F65E31C0AC43E00C7EA85 /* Utils.cpp */,
 				B24F65E41C0AC43E00C7EA85 /* Utils.h */,
 			);
@@ -213,6 +216,7 @@
 				B297916C1CACE5D0001386A7 /* Level12.cpp in Sources */,
 				B2CD00C31C2A6F9D00C253A0 /* Level8.cpp in Sources */,
 				B20627531D62D85600CD362F /* Level15.cpp in Sources */,
+				B27ED3AA1DD400FD00F5DB12 /* Level18.cpp in Sources */,
 				B2CD00C41C2A6F9D00C253A0 /* Level9.cpp in Sources */,
 				B28A78861D50553000EFCCD3 /* Level14.cpp in Sources */,
 				B24F65E51C0AC43E00C7EA85 /* Utils.cpp in Sources */,
