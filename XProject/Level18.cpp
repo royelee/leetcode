@@ -28,62 +28,6 @@
 using namespace std;
 
 #pragma mark - maximalSquare
-int maxS(vector<vector<char>>& matrix, int row, int col )
-{
-    if( matrix.size() == 0 )
-        return 0;
-
-    size_t rowCount = matrix.size();
-    size_t colCount = matrix[0].size();
-    if( row >= rowCount || col >= colCount || matrix[row][col] == '0' )
-        return 0;
-    
-    int level = 1;
-    queue<pair<int, int>> q;
-    q.push(make_pair(row, col));
-    while( true )
-    {
-        set<pair<int, int>> levelSet;
-        while( !q.empty() )
-        {
-            auto current = q.front();
-            q.pop();
-            
-            if( current.first + 1 < rowCount )
-                levelSet.insert(make_pair(current.first+1, current.second));
-            if( current.second + 1 < colCount )
-                levelSet.insert(make_pair(current.first, current.second+1));
-            if( current.first + 1 < rowCount && current.second + 1 < colCount )
-                levelSet.insert(make_pair(current.first+1, current.second+1));
-        }
-        
-        // Mistake 1 : Not count test case {1}
-        // Mistake 2 : Not count test case {1,1}
-        if( levelSet.size() != pow(level+1, 2) - pow(level, 2) )
-            break;
-        
-        bool allTrue = true;
-        for( auto& p : levelSet )
-        {
-            if( matrix[p.first][p.second] == '0' )
-            {
-                allTrue = false;
-                break;
-            }
-
-            q.push(p);
-        }
-        
-        if( allTrue )
-        {
-            level++;
-        }
-        else
-            break;
-    }
-    
-    return level;
-}
 
 //Given a 2D binary matrix filled with 0's and 1's, find the largest square containing only 1's and return its area.
 //
@@ -96,17 +40,33 @@ int maxS(vector<vector<char>>& matrix, int row, int col )
 //Return 4.
 int maximalSquare(vector<vector<char>>& matrix)
 {
-    int rtn = 0;
-    for( size_t row = 0; row < matrix.size(); row++ )
+    int rowCount = (int)matrix.size();
+    if(rowCount == 0 )
+        return 0;
+
+    int colCount = (int)matrix[0].size();
+    vector<vector<int>> dp( matrix.size(), vector<int>( colCount ) );
+    
+    int maxSquare = 0;
+    
+    for( int row = 0; row < rowCount; row++ )
     {
-        for( size_t col = 0; col < matrix[row].size(); col++ )
+        for( int col = 0; col < colCount; col++ )
         {
-            int v = maxS(matrix, (int)row, (int)col);
-            if( v > 0 )
-                rtn = max(v*v, rtn);
+            int c = matrix[row][col];
+            if( c == '1' )
+            {
+                int up = row - 1 >= 0 ? dp[row-1][col] : 0;
+                int left = col - 1 >= 0 ? dp[row][col-1] : 0;
+                int leftUp = row - 1 >= 0 && col - 1 >= 0 ? dp[row-1][col-1] : 0;
+                dp[row][col] = min(min(up, left), leftUp) + 1;
+                
+                maxSquare = max( maxSquare, dp[row][col] * dp[row][col] );
+            }
         }
     }
-    return rtn;
+    
+    return maxSquare;
 }
 
 void TestMaximalSquare()
@@ -127,23 +87,104 @@ void TestMaximalSquare()
         {"1111","1111","1111"}
     };
     
-    vector<vector<char>> tests;
-    for( auto& s : m4 )
+    vector<vector<string>> ms = { m1, m2, m3, m4 };
+    for( auto& m : ms )
     {
-        vector<char> vC;
-        for( auto& c : s )
+        vector<vector<char>> tests;
+        for( auto& s : m )
         {
-            if( c == '1' || c == '0' )
-                vC.push_back(c);
+            vector<char> vC;
+            for( auto& c : s )
+            {
+                if( c == '1' || c == '0' )
+                    vC.push_back(c);
+            }
+            tests.push_back(vC);
         }
-        tests.push_back(vC);
+        cout << maximalSquare(tests) << endl;
     }
-    cout << maximalSquare(tests);
 }
+
+#pragma mark - countNodes
+//Given a complete binary tree, count the number of nodes.
+//
+//Definition of a complete binary tree from Wikipedia:
+//In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
+int _countNode( TreeNode* node, int& visitedLastLevel, int currentLevel, const int expectedLevel )
+{
+    if( currentLevel > expectedLevel )
+        return 0;
+
+    if( currentLevel == expectedLevel )
+    {
+        if( node->left || node->right )
+        {
+            int nodeCount = 0;
+            int fullNodeCount = (pow(2, expectedLevel-1) - visitedLastLevel - 1) * 2;
+            nodeCount += fullNodeCount;
+            nodeCount += node->left ? 1 : 0;
+            nodeCount += node->right ? 1 : 0;
+            nodeCount += pow(2, expectedLevel) - 1;
+            return nodeCount;
+        }
+        else
+        {
+            visitedLastLevel++;
+            if( visitedLastLevel == pow(2, expectedLevel-1) )
+                return pow(2, expectedLevel) - 1;
+        }
+    }
+    
+    int r = _countNode(node->right, visitedLastLevel, currentLevel+1, expectedLevel);
+    if( r != 0 )
+        return r;
+    
+    return _countNode(node->left, visitedLastLevel, currentLevel+1, expectedLevel);
+}
+
+
+int countNodes(TreeNode* root)
+{
+    if( root == nullptr ) return 0;
+
+    int lastFullLevel = 1;
+    TreeNode* node = root;
+    while( node->right )
+    {
+        node = node->right;
+        lastFullLevel++;
+    }
+    
+    int visitedLastLevel = 0;
+    return _countNode(root, visitedLastLevel, 1, lastFullLevel);
+}
+
+void testCountNodes()
+{
+    auto F = [](bool a) -> string { return a ? "true" : "false"; };
+    
+    TreeNode* node = new TreeNode(1);
+    auto P = [&](int expect){ cout << F( countNodes(node) == expect ) << endl; };
+    
+    P(1);
+    
+    node->left = new TreeNode(2);
+    P(2);
+    
+    node->right = new TreeNode(3);
+    P(3);
+
+    node->left->left= new TreeNode(4);
+    P(4);
+    
+    node->left->right= new TreeNode(4);
+    P(5);
+}
+
 
 #pragma mark - run
 
 void Level18::Run()
 {
-    TestMaximalSquare();
+    testCountNodes();
 }
