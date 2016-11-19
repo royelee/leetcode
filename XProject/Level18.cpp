@@ -242,6 +242,44 @@ private:
     queue<int> m_queue;
 };
 
+#pragma mark - invertTree
+//Invert a binary tree.
+//
+//     4
+//   /   \
+//  2     7
+// / \   / \
+//1   3 6   9
+//to
+//     4
+//   /   \
+//  7     2
+// / \   / \
+//9   6 3   1
+TreeNode* invertTree(TreeNode* root)
+{
+    if( root == nullptr )   return root;
+
+    queue<TreeNode*> q;
+    q.push(root);
+    while( !q.empty() )
+    {
+        size_t s = q.size();
+        size_t i = 0;
+        while( i++ < s )
+        {
+            TreeNode* n = q.front();
+            q.pop();
+            if( n->left != nullptr )    q.push(n->left);
+            if( n->right != nullptr )   q.push(n->right);
+            
+            swap( n->left, n->right );
+        }
+    }
+    
+    return root;
+}
+
 #pragma mark - run
 
 void Level18::Run()
