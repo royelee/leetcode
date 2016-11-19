@@ -9,6 +9,7 @@
 #ifndef __XProject__Level__
 #define __XProject__Level__
 #include <vector>
+#include <string>
 
 struct TreeNode {
     int val;
@@ -35,6 +36,8 @@ struct UndirectedGraphNode {
     UndirectedGraphNode(int x) : label(x) {};
 };
 
+
+inline std::string BoolToStr(bool a) { return a ? "true" : "false"; };
 
 #define DECLARE_LEVEL(LEVELNAME) class Level##LEVELNAME\
 {\

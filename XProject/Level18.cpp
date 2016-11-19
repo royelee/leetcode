@@ -110,61 +110,25 @@ void TestMaximalSquare()
 //
 //Definition of a complete binary tree from Wikipedia:
 //In a complete binary tree every level, except possibly the last, is completely filled, and all nodes in the last level are as far left as possible. It can have between 1 and 2h nodes inclusive at the last level h.
-int _countNode( TreeNode* node, int& visitedLastLevel, int currentLevel, const int expectedLevel )
-{
-    if( currentLevel > expectedLevel )
-        return 0;
-
-    if( currentLevel == expectedLevel )
-    {
-        if( node->left || node->right )
-        {
-            int nodeCount = 0;
-            int fullNodeCount = (pow(2, expectedLevel-1) - visitedLastLevel - 1) * 2;
-            nodeCount += fullNodeCount;
-            nodeCount += node->left ? 1 : 0;
-            nodeCount += node->right ? 1 : 0;
-            nodeCount += pow(2, expectedLevel) - 1;
-            return nodeCount;
-        }
-        else
-        {
-            visitedLastLevel++;
-            if( visitedLastLevel == pow(2, expectedLevel-1) )
-                return pow(2, expectedLevel) - 1;
-        }
-    }
-    
-    int r = _countNode(node->right, visitedLastLevel, currentLevel+1, expectedLevel);
-    if( r != 0 )
-        return r;
-    
-    return _countNode(node->left, visitedLastLevel, currentLevel+1, expectedLevel);
-}
-
-
 int countNodes(TreeNode* root)
 {
     if( root == nullptr ) return 0;
 
-    int lastFullLevel = 1;
+    int leftHeight = 1;
+    int rightHeight = 1;
     TreeNode* node = root;
-    while( node->right )
-    {
-        node = node->right;
-        lastFullLevel++;
-    }
+    while( node->left ) { node = node->left; leftHeight++; }
+    node = root;
+    while( node->right ) { node = node->right; rightHeight++; }
     
-    int visitedLastLevel = 0;
-    return _countNode(root, visitedLastLevel, 1, lastFullLevel);
+    if( leftHeight == rightHeight ) return pow(2, leftHeight) - 1;
+    return countNodes(root->left) + countNodes(root->right) + 1;
 }
 
 void testCountNodes()
 {
-    auto F = [](bool a) -> string { return a ? "true" : "false"; };
-    
     TreeNode* node = new TreeNode(1);
-    auto P = [&](int expect){ cout << F( countNodes(node) == expect ) << endl; };
+    auto P = [&](int expect){ cout << BoolToStr( countNodes(node) == expect ) << endl; };
     
     P(1);
     
@@ -181,10 +145,106 @@ void testCountNodes()
     P(5);
 }
 
+#pragma mark - calculate
+//Implement a basic calculator to evaluate a simple expression string.
+//
+//The expression string may contain open ( and closing parentheses ), the plus + or minus sign -, non-negative integers and empty spaces .
+//
+//You may assume that the given expression is always valid.
+//
+//Some examples:
+//"1 + 1" = 2
+//" 2-1 + 2 " = 3
+//"(1+(4+5+2)-3)+(6+8)" = 23
+//Note: Do not use the eval built-in library function.
+uint64_t GetNextNumber(string s, size_t& start )
+{
+    uint64_t currentNum = 0;
+    for( size_t i = start; i < s.size(); i++ )
+    {
+        char c = s[i];
+        if( c >= '0' && c <= '9' )
+            currentNum = currentNum * 10 + ( c - '0' );
+        else
+        {
+            start = i + 1;
+            break;
+        }
+    }
+    
+    return currentNum;
+}
+
+int calculate(string s)
+{
+    stack<uint64_t> numbers;
+    stack<char> ops;
+    
+    // Not done yet!!!!
+    return 0;
+}
+
+void testCacluate()
+{
+    vector<pair<string, int>> v = {
+        {"1 + 1", 2},
+        {" 2-1 + 2 ", 3},
+        {"(1+(4+5+2)-3)+(6+8)", 23}
+    };
+    
+    for( auto& p : v )
+    {
+        cout << BoolToStr( calculate(p.first) == p.second ) << endl;
+    }
+}
+
+#pragma mark - Stack
+//Implement the following operations of a stack using queues.
+//
+//push(x) -- Push element x onto stack.
+//pop() -- Removes the element on top of the stack.
+//top() -- Get the top element.
+//empty() -- Return whether the stack is empty.
+//Notes:
+//You must use only standard operations of a queue -- which means only push to back, peek/pop from front, size, and is empty operations are valid.
+//Depending on your language, queue may not be supported natively. You may simulate a queue by using a list or deque (double-ended queue), as long as you use only standard operations of a queue.
+//You may assume that all operations are valid (for example, no pop or top operations will be called on an empty stack).
+//Update (2015-06-11):
+//The class name of the Java function had been updated to MyStack instead of Stack.
+class Stack {
+public:
+    // Push element x onto stack.
+    void push(int x) {
+        m_queue.push(x);
+    }
+
+    // Removes the element on top of the stack.
+    void pop() {
+        queue<int> newQueue;
+        while( m_queue.size() > 1 )
+        {
+            newQueue.push(m_queue.front());
+            m_queue.pop();
+        }
+        m_queue = std::move( newQueue );
+    }
+
+    // Get the top element.
+    int top() {
+        return m_queue.back();
+    }
+
+    // Return whether the stack is empty.
+    bool empty() {
+        return m_queue.empty();
+    }
+private:
+    queue<int> m_queue;
+};
 
 #pragma mark - run
 
 void Level18::Run()
 {
-    testCountNodes();
+    testCacluate();
 }
