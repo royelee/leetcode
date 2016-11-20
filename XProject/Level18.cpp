@@ -280,9 +280,119 @@ TreeNode* invertTree(TreeNode* root)
     return root;
 }
 
+#pragma mark - calculate2
+//Implement a basic calculator to evaluate a simple expression string.
+//
+//The expression string contains only non-negative integers, +, -, *, / operators and empty spaces . The integer division should truncate toward zero.
+//
+//You may assume that the given expression is always valid.
+//
+//Some examples:
+//"3+2*2" = 7
+//" 3/2 " = 1
+//" 3+5 / 2 " = 5
+string getNextActionable( string s, size_t& start)
+{
+    while (s[start] == ' ' ) { start++; }
+    
+    if( start >= s.size() )
+        return "E";
+    
+    if( s[start] == '+' || s[start] == '-' || s[start] == '*' || s[start] == '/' )
+        return string(1, s[start]);
+    
+    size_t end = start+1;
+    while( end < s.size() && s[end] >= '0' && s[end] <= '9' ) end++;
+    
+    return s.substr(start, end - start);
+}
+
+int calculate2(string s)
+{
+    stack<long> numbers;
+    vector<char> ops;
+    size_t start = 0;
+    string o;
+    while( (o = getNextActionable(s, start) ) != "E" )
+    {
+        start += o.size();
+
+        char current = o[0];
+        if( o == "+" || o == "-" )
+        {
+            ops.push_back(current);
+        }
+        else if( o == "*" || o == "/" )
+        {
+            o = getNextActionable(s, start);
+            long right = stol(o);
+            
+            long left = numbers.top();
+            long r = current == '*' ? left * right : left / right;
+            
+            numbers.pop();
+            numbers.push(r);
+            start++;
+        }
+        else
+        {
+            numbers.push(stol(o));
+        }
+    }
+    
+    while (!ops.empty()) {
+        char op = ops.front();
+        ops.erase(ops.begin());
+        
+        long right = numbers.top();
+        numbers.pop();
+        long left = numbers.top();
+        numbers.pop();
+        
+        long r = op == '+' ? left + right : left - right;
+        numbers.push(r);
+    }
+    
+    return numbers.empty() ? 0 : (int)numbers.top();
+}
+
+void testCacluate2()
+{
+    vector<pair<string, int>> v = {
+        {"1-1+1", 1},
+        {"1-1*5",-4},
+        {"1+1-1", 1},  // didn't consider the number in the stack could be negtive number.
+        {"2454-54",2400},
+        {"43",43},  // Didn't consider number could be more than 1 digit
+        {"", 0},
+        {"2*3-5",1},
+        {"3+2*2", 7},
+        {" 3/2 ", 1},
+        {" 3+5 / 2 ", 5}
+    };
+    
+    for( auto& p : v )
+    {
+#if PRINT_GET_NEXT
+        cout << "SSS" << endl;
+        size_t start = 0;
+        string o;
+        while( (o = getNextActionable(p.first, start) ) != "E" )
+        {
+            cout << o << endl;
+            start++;
+        }
+        cout << "EEE" << endl;
+#endif
+
+        cout << BoolToStr( calculate2(p.first) == p.second ) << endl;
+    }
+}
+
+
 #pragma mark - run
 
 void Level18::Run()
 {
-    testCacluate();
+    testCacluate2();
 }
