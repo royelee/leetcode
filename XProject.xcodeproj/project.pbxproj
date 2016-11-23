@@ -30,6 +30,7 @@
 		B2CD00C31C2A6F9D00C253A0 /* Level8.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B24F65E61C12A7D600C7EA85 /* Level8.cpp */; };
 		B2CD00C41C2A6F9D00C253A0 /* Level9.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2CD00B61C2A6BE700C253A0 /* Level9.cpp */; };
 		B2D4E1321D2CD36100BDBDFD /* Level13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B2D4E1311D2CD36100BDBDFD /* Level13.cpp */; };
+		B2F8FB161DE273B300C06368 /* basicCalculateii in CopyFiles */ = {isa = PBXBuildFile; fileRef = B2F8FB151DE2737E00C06368 /* basicCalculateii */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +40,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				B2F8FB161DE273B300C06368 /* basicCalculateii in CopyFiles */,
 				B28A78881D505D9D00EFCCD3 /* evalRPN in CopyFiles */,
 				B28A78841D4DBF9A00EFCCD3 /* InsertionSortList in CopyFiles */,
 			);
@@ -74,6 +76,7 @@
 		B2CD00B61C2A6BE700C253A0 /* Level9.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level9.cpp; sourceTree = "<group>"; };
 		B2CD00BA1C2A6C4A00C253A0 /* Level.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Level.h; sourceTree = "<group>"; };
 		B2D4E1311D2CD36100BDBDFD /* Level13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Level13.cpp; sourceTree = "<group>"; };
+		B2F8FB151DE2737E00C06368 /* basicCalculateii */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = basicCalculateii; path = Resources/basicCalculateii; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +95,7 @@
 			children = (
 				B28A78831D4DBEFE00EFCCD3 /* InsertionSortList */,
 				B28A78871D505D8400EFCCD3 /* evalRPN */,
+				B2F8FB151DE2737E00C06368 /* basicCalculateii */,
 			);
 			name = Resource;
 			path = XProject;

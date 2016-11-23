@@ -36,6 +36,8 @@ std::vector<T> ReadVectorFromFile( const std::string& fileName, const std::funct
     return v;
 }
 
+std::string ReadStringFromFile( const std::string& fileName );
+
 
 unsigned int factorial(unsigned int n);
 std::vector<int> ReadIntVectorFromFile( const std::string& fileName );

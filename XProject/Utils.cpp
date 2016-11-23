@@ -18,6 +18,15 @@ unsigned int factorial(unsigned int n)
     return ret;
 }
 
+std::string ReadStringFromFile( const std::string& fileName )
+{
+    std::ifstream myfile(fileName);
+    std::string contents((std::istreambuf_iterator<char>(myfile)),
+                         std::istreambuf_iterator<char>());
+    
+    return contents;
+}
+
 std::vector<int> ReadIntVectorFromFile( const std::string& fileName )
 {
     return ReadVectorFromFile<int>(fileName, [](std::string s) { return stoi(s); });
