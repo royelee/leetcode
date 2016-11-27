@@ -478,9 +478,64 @@ void testMajorityElement2()
         majorityElement(t);
 }
 
+//Kth Smallest Element in a BST   Add to List QuestionEditorial Solution  My Submissions
+//Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
+//
+//Note: 
+//You may assume k is always valid, 1 ≤ k ≤ BST's total elements.
+//
+//Follow up:
+//What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
+//
+//Hint:
+//
+//Try to utilize the property of a BST.
+//What if you could modify the BST node's structure?
+//The optimal runtime complexity is O(height of BST).
+void _kthSmallest(TreeNode* node, int& k, int& rtn )
+{
+    if( node->left )
+        _kthSmallest(node->left, k, rtn);
+    
+    k--;
+    if( k == 0 )
+    {
+        rtn = node->val;
+        return;
+    }
+    
+    if( node->right )
+        _kthSmallest(node->right, k, rtn);
+}
+
+int kthSmallest(TreeNode* root, int k)
+{
+    if( root == nullptr ) return -1;
+
+    int rtn = -1;
+    _kthSmallest(root, k, rtn);
+    return rtn;
+}
+
+void testKthSmallest()
+{
+    TreeNode* node = new TreeNode(8);
+    node->left = new TreeNode(3);
+    node->left->left = new TreeNode(1);
+    node->left->right = new TreeNode(6);
+    node->left->right->left = new TreeNode(4);
+    node->left->right->right = new TreeNode(7);
+    node->right = new TreeNode(10);
+    node->right->right = new TreeNode(14);
+    
+    vector<int> exepcted{ 1,3,4,6,7,8,10,14 };
+    for( int i = 1; i <= 8; i++ )
+        cout << BoolToStr( kthSmallest(node, i) == exepcted[i-1] ) << endl;
+}
+
 #pragma mark - run
 
 void Level18::Run()
 {
-    testMajorityElement2();
+    testKthSmallest();
 }
