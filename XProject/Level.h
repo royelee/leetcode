@@ -39,7 +39,7 @@ struct UndirectedGraphNode {
 
 inline std::string BoolToStr(bool a) { return a ? "true" : "false"; };
 
-#define DECLARE_LEVEL(LEVELNAME) class Level##LEVELNAME\
+#define D_L(LEVELNAME) class Level##LEVELNAME\
 {\
 public:\
     void Run();\
@@ -47,27 +47,27 @@ public:\
 
 void preOrderTrasveral( TreeNode* node );
 
-DECLARE_LEVEL(1);
-DECLARE_LEVEL(2);
-DECLARE_LEVEL(3);
-DECLARE_LEVEL(4);
-DECLARE_LEVEL(5);
-DECLARE_LEVEL(6);
-DECLARE_LEVEL(7);
-DECLARE_LEVEL(8);
-DECLARE_LEVEL(9);
-DECLARE_LEVEL(10);
-DECLARE_LEVEL(11);
-DECLARE_LEVEL(12);
-DECLARE_LEVEL(13);
-DECLARE_LEVEL(14);
-DECLARE_LEVEL(15);
-DECLARE_LEVEL(16);
-DECLARE_LEVEL(17);
-DECLARE_LEVEL(18);
-DECLARE_LEVEL(19);
-DECLARE_LEVEL(20);
-DECLARE_LEVEL(21);
+D_L(1);
+D_L(2);
+D_L(3);
+D_L(4);
+D_L(5);
+D_L(6);
+D_L(7);
+D_L(8);
+D_L(9);
+D_L(10);
+D_L(11);
+D_L(12);
+D_L(13);
+D_L(14);
+D_L(15);
+D_L(16);
+D_L(17);
+D_L(18);
+D_L(19);
+D_L(20);
+D_L(21);
 
 
 #endif /* defined(__XProject__Level__) */
