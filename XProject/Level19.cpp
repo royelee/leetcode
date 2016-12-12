@@ -104,9 +104,59 @@ public:
     }
 };
 
+#pragma mark - isPalindrome
+//Given a singly linked list, determine if it is a palindrome.
+//Follow up:
+//Could you do it in O(n) time and O(1) space?
+bool isPalindrome(ListNode* head)
+{
+    if( head == nullptr )
+        return false;
+    
+    ListNode* oneStep = head;
+    ListNode* twoStep = head;
+    while( oneStep != nullptr && twoStep != nullptr )   // Alternative twoStep->next && twoStep->next->next, save the if( twoStep ) below
+    {
+        oneStep = oneStep->next;
+        twoStep = twoStep->next;
+        if( twoStep )
+            twoStep = twoStep->next;
+    }
+    
+    ListNode* pre = nullptr;
+    ListNode* next = oneStep;
+    while( next )
+    {
+        ListNode* nn = next->next;
+        next->next = pre;
+        pre = next;
+        next = nn;
+    }
+    
+    oneStep = head;
+    while( oneStep )
+    {
+        if( oneStep->val != pre->val )
+            return false;
+        
+        oneStep = oneStep->next;
+        pre = pre->next;
+    }
+    
+    return true;
+}
+
+static void TestIsPalindrome()
+{
+    ListNode* node = new ListNode(1);
+    node->next = new ListNode(0);
+    node->next->next = new ListNode(0);
+    cout << BoolToStr(isPalindrome(node));
+}
+
 #pragma mark - run
 
 void Level19::Run()
 {
-    testIsPowerOfTwo();
+    TestIsPalindrome();
 }
