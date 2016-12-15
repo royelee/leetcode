@@ -168,7 +168,7 @@ static void TestIsPalindrome()
 //         /  \
 //         3   5
 //For example, the lowest common ancestor (LCA) of nodes 2 and 8 is 6. Another example is LCA of nodes 2 and 4 is 2, since a node can be a descendant of itself according to the LCA definition.
-TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
+static TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
 {
     if( root == nullptr || p == nullptr || q == nullptr )
         return nullptr;
@@ -184,7 +184,7 @@ TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q)
         return lowestCommonAncestor(root->left, p, q);
 }
 
-void testLowestCommonAncestor()
+static void testLowestCommonAncestor()
 {
     TreeNode* root = new TreeNode(6);
     root->left = new TreeNode(2);
@@ -200,6 +200,7 @@ void testLowestCommonAncestor()
     cout << ( lowestCommonAncestor(root, root->left->right, root->left)->val == 2 ) << endl;
     cout << ( lowestCommonAncestor(root, root->left, root->left->right)->val == 2 ) << endl;
 }
+
 
 #pragma mark - run
 
