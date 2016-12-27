@@ -80,10 +80,79 @@ void deleteNode(ListNode* node)
     node->next = next->next;
 }
 
+#pragma mark - productExceptSelf
+//Given an array of n integers where n > 1, nums, return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+//
+//Solve it without division and in O(n).
+//
+//For example, given [1,2,3,4], return [24,12,8,6].
+//
+//Follow up:
+//Could you solve it with constant space complexity? (Note: The output array does not count as extra space for the purpose of space complexity analysis.)
+vector<int> productExceptSelf(vector<int>& nums) {
+    vector<int> output( nums.size() );
+    
+    // Left
+    output[0] = 1;
+    for( size_t i = 1; i < nums.size(); i++ )
+        output[i] = output[i - 1] * nums[i - 1];
+    
+    // Right
+    int right = 1;
+    for( int i = (int)nums.size() - 1; i >= 0; i-- )
+    {
+        output[i] *= right;
+        right *= nums[i];
+    }
+    
+    return output;
+}
+
+void testProductExceptSelf()
+{
+    vector<int> t = {1, 2, 3, 4};
+    vector<int> o = productExceptSelf(t);
+    for(auto& i : o )
+        cout << i << " ";
+}
+
+#pragma mark - isAnagram
+//Given two strings s and t, write a function to determine if t is an anagram of s.
+//
+//For example,
+//s = "anagram", t = "nagaram", return true.
+//s = "rat", t = "car", return false.
+//
+//Note:
+//You may assume the string contains only lowercase alphabets.
+//
+//Follow up:
+//What if the inputs contain unicode characters? How would you adapt your solution to such case?
+bool isAnagram(string s, string t)
+{
+    int hash[26]{};
+    for( const auto& c : s )
+        hash[c - 'a']++;
+    
+    for( const auto& c : t)
+        hash[c - 'a']--;
+    
+    for( const auto i : hash )
+        if( i != 0 ) return false;
+    
+    return true;
+}
+
+void testIsAnagram()
+{
+    cout << BoolToStr( isAnagram("anagram", "nagaram") == true ) << endl;
+    cout << BoolToStr( isAnagram("rat", "car") == false ) << endl;
+}
+
 
 #pragma mark - run
 
 void Level20::Run()
 {
-   testLowestCommonAncestor();
+   testProductExceptSelf();
 }
