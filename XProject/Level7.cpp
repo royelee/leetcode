@@ -19,6 +19,8 @@
 
 using namespace std;
 
+namespace Level7Functions {
+
 //Write an efficient algorithm that searches for a value in an m x n matrix. This matrix has the following properties:
 //
 //Integers in each row are sorted from left to right.
@@ -533,12 +535,14 @@ static void testSearch()
     
     array = { 1 };
     cout << search(array, 1) << endl;
-
 }
+    
+} // namespace Level7Functions
 
 #pragma mark - run
 
 void Level7::Run()
 {
+    using namespace Level7Functions;
     testSearch();
 }
