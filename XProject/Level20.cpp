@@ -190,7 +190,7 @@ bool searchMatrix(vector<vector<int>>& matrix, int target)
     return false;
 }
 
-static void testSearchMatrix()
+void testSearchMatrix()
 {
     vector<vector<int>> m =
     {
@@ -204,13 +204,212 @@ static void testSearchMatrix()
     cout << BoolToStr( searchMatrix(m, 20) == false ) << endl;
 }
     
-    
 }   // namespace Level20Functions
+
+#pragma mark - diffWaysToCompute
+// Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are +, - and *.
+//
+//
+//Example 1
+//Input: "2-1-1".
+//
+//((2-1)-1) = 0
+//(2-(1-1)) = 2
+//Output: [0, 2]
+//
+//
+//Example 2
+//Input: "2*3-4*5"
+//
+//(2*(3-(4*5))) = -34
+//((2*3)-(4*5)) = -14
+//((2*(3-4))*5) = -10
+//(2*((3-4)*5)) = -10
+//(((2*3)-4)*5) = 10
+//Output: [-34, -14, -10, -10, 10]
+vector<int> _diffWayToCompute(vector<int>& numbers, vector<char>& ops, int start, int size )
+{
+    if( size == 1 )
+        return {numbers[start]};
+    
+    vector<int> output;
+    for( int i = 1; i < size; i++ )
+    {
+        vector<int> left = _diffWayToCompute(numbers, ops, start, i);
+        vector<int> right = _diffWayToCompute(numbers, ops, start + i, size - i);
+        char op = ops[start + i - 1];
+        for( auto& l : left )
+        {
+            for( auto& r : right )
+            {
+                auto result = op == '+' ? l + r : ( op == '-' ? l - r : l * r );
+                output.push_back( result );
+            }
+        }
+    }
+    return output;
+}
+    
+vector<int> diffWaysToCompute(string input)
+{
+    vector<int> numbers;
+    vector<char> ops;
+    for( size_t i = 0; i < input.size(); )
+    {
+        char c = input[i];
+        if( c == '+' || c == '-' || c == '*' )
+        {
+            ops.push_back(c);
+            i++;
+        }
+        else
+        {
+            int n = 0;
+            while( input[i] >= '0' && input[i] <= '9' )
+            {
+                n = n * 10;
+                n += input[i] - '0';
+                i++;
+            }
+            numbers.push_back(n);
+        }
+    }
+    
+    return _diffWayToCompute( numbers, ops, 0, (int)numbers.size() );
+}
+
+void testDiffWayToCompute()
+{
+    vector<string> tests = {
+        "10+5",
+        "",
+        "2-1-1",
+        "2*3-4*5"
+    };
+    for( auto& s : tests )
+    {
+        auto v = diffWaysToCompute(s);
+        for( auto& i : v )
+            cout << i << ", ";
+        cout << endl;
+    }
+}
+
+#pragma mark - binaryTreePaths
+//Given a binary tree, return all root-to-leaf paths.
+//
+//For example, given the following binary tree:
+//
+//   1
+// /   \
+//2     3
+// \
+//  5
+//All root-to-leaf paths are:
+//
+//["1->2->5", "1->3"]
+void _binaryTreePaths(TreeNode* node, vector<int>& s, vector<string>& out )
+{
+    if( node == nullptr )    return;
+    
+    s.push_back( node->val );
+    
+    if( node->left == nullptr && node->right == nullptr )
+    {
+        stringstream ss;
+        for( auto& i : s )
+            ss << to_string(i) << "->";
+        
+        string s = ss.str();
+        s.erase(s.size() - 2);
+        out.push_back(s);
+    }
+    
+    _binaryTreePaths(node->left, s, out );
+    _binaryTreePaths(node->right, s, out );
+
+    s.pop_back();
+}
+
+vector<string> binaryTreePaths(TreeNode* root)
+{
+    vector<int> s;
+    vector<string> out;
+    _binaryTreePaths(root, s, out);
+    return out;
+}
+
+void testBinaryTreePaths()
+{
+    TreeNode* root = new TreeNode(1);
+    root->left = new TreeNode(2);
+    root->left->right = new TreeNode(5);
+    root->right = new TreeNode(3);
+    auto o = binaryTreePaths(root);
+    for( auto& s : o )
+    {
+        cout << s << endl;
+    }
+}
+
+#pragma mark - addDigits
+//Given a non-negative integer num, repeatedly add all its digits until the result has only one digit.
+//
+//For example:
+//
+//Given num = 38, the process is like: 3 + 8 = 11, 1 + 1 = 2. Since 2 has only one digit, return it.
+//
+//Follow up:
+//Could you do it without any loop/recursion in O(1) runtime?
+//Hint:
+//
+//A naive implementation of the above process is trivial. Could you come up with other methods?
+//What are all the possible results?
+//How do they occur, periodically or randomly?
+//You may find this Wikipedia article useful. https://en.wikipedia.org/wiki/Digital_root
+int addDigits(int num)
+{
+    return num < 9 ? num : ( num % 9 == 0 ? 9 : num % 9 );
+}
+
+#pragma mark - singleNumber
+//Given an array of numbers nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once.
+//
+//For example:
+//
+//Given nums = [1, 2, 1, 3, 2, 5], return [3, 5].
+//
+//Note:
+//The order of the result is not important. So in the above example, [5, 3] is also correct.
+//Your algorithm should run in linear runtime complexity. Could you implement it using only constant space complexity?
+vector<int> singleNumber(vector<int>& nums) {
+    int mask = 0;
+    for( const auto& i : nums )
+        mask ^= i;
+    
+    mask &= ~( mask - 1 );
+    vector<int> out(2, 0);
+    for( const auto& i : nums )
+    {
+        if( ( i & mask ) == 0 )
+            out[0] ^= i;
+        else
+            out[1] ^= i;
+    }
+    return out;
+}
+
+void testSingleNumber()
+{
+    vector<int> t = {1, 2, 1, 3, 2, 5};
+    vector<int> o = singleNumber(t);
+    cout << o[0] << " " << o[1] << endl;
+}
 
 #pragma mark - run
 
 void Level20::Run()
 {
     using namespace Level20Functions;
-    testSearchMatrix();
+    testSingleNumber();
 }

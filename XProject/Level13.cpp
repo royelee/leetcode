@@ -131,6 +131,8 @@ int canCompleteCircuit(vector<int>& gas, vector<int>& cost)
         return (int)( 1 + minIndex ) % relativeCost.size(); // +1 because at minIndex it still go down( cost is negtive ), we need to start from positive
 }
 
+namespace Level13Functions {
+
 #pragma mark - singleNumber
 //Given an array of integers, every element appears twice except for one. Find that single one.
 //
@@ -152,6 +154,8 @@ void testSingleNumber()
     vector<int> v = { 1, 2, 1 };
     cout << singleNumber(v) << endl;
 }
+    
+} // namespace Level13Functions
 
 #pragma mark - singleNumber2
 //Given an array of integers, every element appears three times except for one. Find that single one.
