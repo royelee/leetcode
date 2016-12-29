@@ -406,10 +406,54 @@ void testSingleNumber()
     cout << o[0] << " " << o[1] << endl;
 }
 
+#pragma mark - isUgly
+//Write a program to check whether a given number is an ugly number.
+//
+//Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 6, 8 are ugly while 14 is not ugly since it includes another prime factor 7.
+//
+//Note that 1 is typically treated as an ugly number.
+bool isUgly(int num)
+{
+    if( num <= 0 )
+        return false;
+
+    if( num % 2 == 0 && isUgly( num / 2) )
+        return true;
+    
+    if( num % 3 == 0 && isUgly( num / 3 ) )
+        return true;
+    
+    if( num % 5 == 0 && isUgly( num / 5 ) )
+        return true;
+    
+    return num == 1;
+}
+
+void testIsUgly()
+{
+    vector<pair<int, bool>> tests =
+    {
+        { 0, false },
+        { 1, true },
+        { 2, true },
+        { 3, true },
+        { 4, true },
+        { 5, true },
+        { 6, true },
+        { 7, false },
+        { 8, true },
+        { 14, false }
+    };
+    
+    for( const auto& p : tests )
+        cout << p.first << "->" << BoolToStr( isUgly( p.first) == p.second ) << endl;
+}
+
+
 #pragma mark - run
 
 void Level20::Run()
 {
     using namespace Level20Functions;
-    testSingleNumber();
+    testIsUgly();
 }
