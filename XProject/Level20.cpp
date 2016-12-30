@@ -489,10 +489,49 @@ void testNthUglyNumber()
         cout << nthUglyNumber(i) << " ";
 }
 
+#pragma mark - missingNumber
+//Given an array containing n distinct numbers taken from 0, 1, 2, ..., n, find the one that is missing from the array.
+//
+//For example,
+//Given nums = [0, 1, 3] return 2.
+//
+//Note:
+//Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?
+int missingNumber(vector<int>& nums)
+{
+    int expect = 0;
+    for( int i = 0; i < nums.size() + 1; i++ )
+        expect ^= i;
+    
+    int o = expect;
+    for( auto i : nums )
+        o ^= i;
+    
+    return o;
+}
+
+void testMissingNumber()
+{
+    vector<int> tests = {};
+    for( int i = 0; i < 100; i++ )
+    {
+        tests.push_back(i);
+        cout << "expect " << ( i + 1 ) << BoolToStr( missingNumber(tests) == i + 1 ) << endl;
+    }
+    
+    cout << "test round 2" << endl;
+    tests = {};
+    for( int i = 1; i < 100; i++ )
+    {
+        tests.push_back(i);
+        cout << "expect " << ( i + 1 ) << BoolToStr( missingNumber(tests) == 0 ) << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level20::Run()
 {
     using namespace Level20Functions;
-    testNthUglyNumber();
+    testMissingNumber();
 }
