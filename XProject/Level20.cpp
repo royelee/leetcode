@@ -449,11 +449,50 @@ void testIsUgly()
         cout << p.first << "->" << BoolToStr( isUgly( p.first) == p.second ) << endl;
 }
 
+#pragma mark - nthUglyNumber
+//Write a program to find the n-th ugly number.
+//
+//Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+//
+//Note that 1 is typically treated as an ugly number.
+//
+//Hint:
+//
+//The naive approach is to call isUgly for every number until you reach the nth one. Most numbers are not ugly. Try to focus your effort on generating only the ugly ones.
+//An ugly number must be multiplied by either 2, 3, or 5 from a smaller ugly number.
+//The key is how to maintain the order of the ugly numbers. Try a similar approach of merging from three sorted lists: L1, L2, and L3.
+//Assume you have Uk, the kth ugly number. Then Uk+1 must be Min(L1 * 2, L2 * 3, L3 * 5).
+int nthUglyNumber(int n)
+{
+    if( n <= 0 ) return 0;
+
+    vector<int> out(1, 1);
+    int twoIdx = 0, threeIdx = 0, fiveIdx = 0;
+    while( out.size() < n )
+    {
+        int o2 = out[twoIdx] * 2;
+        int o3 = out[threeIdx] * 3;
+        int o5 = out[fiveIdx] * 5;
+        int o = min( min( o2, o3 ), o5);
+        out.push_back(o);
+        if( o == o2 )   twoIdx++;
+        if( o == o3 )   threeIdx++;
+        if( o == o5 )   fiveIdx++;
+    }
+    
+    return out.back();
+}
+
+void testNthUglyNumber()
+{
+    for( int i = 0; i < 20; i++ )
+        cout << nthUglyNumber(i) << " ";
+}
 
 #pragma mark - run
 
 void Level20::Run()
 {
     using namespace Level20Functions;
-    testIsUgly();
+    testNthUglyNumber();
 }
