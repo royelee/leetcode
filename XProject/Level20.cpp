@@ -528,10 +528,190 @@ void testMissingNumber()
     }
 }
 
+#pragma mark- hIndexI
+//Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.
+//
+//According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N − h papers have no more than h citations each."
+//
+//For example, given citations = [3, 0, 6, 1, 5], which means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively. Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, his h-index is 3.
+//
+//Note: If there are several possible values for h, the maximum one is taken as the h-index.
+//
+//Hint:
+//
+//An easy approach is to sort the array first.
+//What are the possible values of h-index?
+//A faster approach is to use extra space.
+int hIndexI(vector<int>& citations)
+{
+    sort(citations.begin(), citations.end());
+    
+    // Now start from end, search for h index.
+    int hIdx = 0;
+    int c = 0;
+    for( int i = (int)citations.size() - 1; i >= 0; i--, c++ )
+    {
+        if( citations[i] > c )
+            hIdx = max( hIdx, c + 1);
+    }
+    return hIdx;
+}
+
+void testHIndexI()
+{
+    vector<pair<vector<int>, int>> tests = {
+        { {3, 0, 6, 1, 5}, 3 },
+        { {9, 8, 7, 6, 5}, 5 },
+        { {9, 8}, 2}
+    };
+    for( auto& p : tests )
+        cout << BoolToStr( hIndexI( p.first ) == p.second ) << endl;
+}
+
+#pragma mark - hIndex II
+// start, end is from end of array to begin of array.
+int binarySearchHIndex(vector<int>& citations, int start, int end )
+{
+    if( start > end )
+        return 0;
+    
+    int mid = ( start + end ) / 2;
+    if( citations[citations.size() - 1 - mid] >= mid + 1 )
+        return mid + 1 - start + binarySearchHIndex(citations, mid + 1, end);
+    else
+        return binarySearchHIndex(citations, start, mid - 1);
+}
+
+//Follow up for H-Index: What if the citations array is sorted in ascending order? Could you optimize your algorithm?
+//
+//Expected runtime complexity is in O(log n) and the input is sorted.
+int hIndex(vector<int>& citations)
+{
+    return binarySearchHIndex( citations, 0, (int)citations.size() - 1);
+}
+
+void testHIndexII()
+{
+    vector<pair<vector<int>, int>> tests = {
+        { {0, 1, 3, 5, 6}, 3 },
+        { {5, 6, 7, 8, 9}, 5 },
+        { {9, 8}, 2}
+    };
+    for( auto& p : tests )
+        cout << BoolToStr( hIndex( p.first ) == p.second ) << endl;
+}
+
+#pragma mark - 
+// Forward declaration of isBadVersion API.
+bool isBadVersion(int version)
+{
+    static int i = 0;
+    constexpr bool A[2] = { true, false };
+    return A[ i++ % 2 ];
+}
+
+//You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
+//
+//Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.
+//
+//You are given an API bool isBadVersion(version) which will return whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.
+int firstBadVersion(int n)
+{
+    if( isBadVersion( 1 ) )
+        return 1;
+    
+    int start = 1;
+    int end = n;
+    
+    while( end - start > 1 )
+    {
+        int mid = ( start + end ) / 2; // <--- NOTE: to fix the overflow.
+        if( isBadVersion( mid ) )
+            end = mid - 1;
+        else
+            start = mid + 1;
+    }
+    return start + 1;
+}
+
+#pragma mark - numSquares
+//Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
+//
+//For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
+int numSquares(int n)
+{
+    int dp[n+1];
+    dp[0] = 0;
+    for( int i = 1; i <= n; i++ )
+    {
+        int s = floor( sqrt(i) );
+        int m = numeric_limits<int>::max();
+        for( int j = 1; j <= s; j++ )
+            m = min( m, 1 + dp[i - j * j] );
+        dp[i] = m;
+    }
+    
+    return dp[n];
+}
+
+void testNumSquares()
+{
+    for( int i = 1; i < 999; i++ )
+        cout << i << " = " << numSquares( i ) << endl;
+}
+
+#pragma mark - moveZeroes
+//Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+//
+//For example, given nums = [0, 1, 0, 3, 12], after calling your function, nums should be [1, 3, 12, 0, 0].
+//
+//Note:
+//You must do this in-place without making a copy of the array.
+//Minimize the total number of operations.
+void moveZeroes(vector<int>& nums)
+{
+    if( nums.size() == 0 )
+        return;
+    
+    int nonZeroIndex = 0;
+    for( int i = 0; i < nums.size(); i++ )
+    {
+        if( nums[i] != 0 )
+        {
+            nums[nonZeroIndex] = nums[i];
+            nonZeroIndex++;
+        }
+    }
+    
+    for( int i = nonZeroIndex; i < nums.size(); i++ )
+        nums[i] = 0;
+}
+
+void testMoveZeros()
+{
+    vector<vector<int>> tests = {
+        {0, 1},
+        {1, 0},
+        {0, 0},
+        {1, 1},
+        {0},
+        {0, 0, 1},
+        {1, 0, 0},
+        {1, 1, 0}
+    };
+    for( auto& t : tests )
+    {
+        moveZeroes(t);
+        for( auto& i : t )
+            cout << i << ", ";
+        cout << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level20::Run()
 {
     using namespace Level20Functions;
-    testMissingNumber();
+    testMoveZeros();
 }
