@@ -176,9 +176,97 @@ void testWordPattern()
     }
 }
 
+#pragma mark - gameOfLife
+//According to the Wikipedia's article( https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) : "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970."
+//
+//Given a board with m by n cells, each cell has an initial state live (1) or dead (0). Each cell interacts with its eight neighbors (horizontal, vertical, diagonal) using the following four rules (taken from the above Wikipedia article):
+//
+//Any live cell with fewer than two live neighbors dies, as if caused by under-population.
+//Any live cell with two or three live neighbors lives on to the next generation.
+//Any live cell with more than three live neighbors dies, as if by over-population..
+//Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
+//Write a function to compute the next state (after one update) of the board given its current state.
+//
+//Follow up: 
+//Could you solve it in-place? Remember that the board needs to be updated at the same time: You cannot update some cells first and then use their updated values to update other cells.
+//In this question, we represent the board using a 2D array. In principle, the board is infinite, which would cause problems when the active area encroaches the border of the array. How would you address these problems?
+void gameOfLife(vector<vector<int>>& board)
+{
+    if( board.size() == 0 )
+        return;
+
+    size_t rowCount = board.size();
+    size_t colCount = board[0].size();
+    vector<vector<int>> newBoard(rowCount, vector<int>(colCount));
+    auto nlc = [rowCount, colCount](vector<vector<int>>& b, int row, int col) -> int{
+        int c = 0;
+        if( row - 1 >= 0 && col - 1 >= 0 && b[row-1][col-1] == 1 ) c++;
+        if( row - 1 >= 0 && b[row-1][col] == 1 )    c++;
+        if( row - 1 >= 0 && col + 1 < colCount && b[row-1][col+1] == 1 )    c++;
+        if( col - 1 >= 0 && b[row][col-1] == 1 )    c++;
+        if( col + 1 < colCount && b[row][col+1] == 1)   c++;
+        if( row + 1 < rowCount && col - 1 >= 0 && b[row+1][col-1] == 1 )    c++;
+        if( row + 1 < rowCount && b[row+1][col] == 1 )  c++;
+        if( row + 1 < rowCount && col + 1 < colCount && b[row+1][col+1] == 1 )  c++;
+        return c;
+    };
+    
+    for( int row = 0; row < rowCount; row++ )
+    {
+        for( int col = 0; col < colCount; col++ )
+        {
+            int c = nlc( board, row, col );
+            if( board[row][col] == 1 )
+            {
+                if( c <= 1 )
+                    newBoard[row][col] = 0;
+                else if( c <= 3 )
+                    newBoard[row][col] = 1;
+                else
+                    newBoard[row][col] = 0;
+            }
+            else if( c == 3 )
+                newBoard[row][col] = 1;
+        }
+    }
+    
+    board = newBoard;
+}
+
+void testGameOfLife()
+{
+    vector<vector<int>> board = {
+        {0,0,0,0,0,0},
+        {0,0,0,0,0,0},
+        {0,0,1,1,1,0},
+        {0,1,1,1,0,0},
+        {0,0,0,0,0,0},
+        {0,0,0,0,0,0}
+    };
+    gameOfLife(board);
+    size_t rowCount = board.size();
+    size_t colCount = board[0].size();
+    
+    // Expect :
+    //    [[0,0,0,0,0,0],
+    //     [0,0,0,1,0,0],
+    //     [0,1,0,0,1,0],
+    //     [0,1,0,0,1,0],
+    //     [0,0,1,0,0,0],
+    //     [0,0,0,0,0,0]]
+    for( int row = 0; row < rowCount; row++ )
+    {
+        for( int col = 0; col < colCount; col++ )
+        {
+            cout << board[row][col] << ", ";
+        }
+        cout << endl;
+    }
+}
+
 #pragma mark - run
 
 void Level21::Run()
 {
-    testWordPattern();
+    testGameOfLife();
 }
