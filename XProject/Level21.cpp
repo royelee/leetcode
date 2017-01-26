@@ -264,9 +264,209 @@ void testGameOfLife()
     }
 }
 
+#pragma mark - canWinNim
+//You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. The one who removes the last stone will be the winner. You will take the first turn to remove the stones.
+//
+//Both of you are very clever and have optimal strategies for the game. Write a function to determine whether you can win the game given the number of stones in the heap.
+//
+//For example, if there are 4 stones in the heap, then you will never win the game: no matter 1, 2, or 3 stones you remove, the last stone will always be removed by your friend.
+//
+//Hint:
+//
+//If there are 5 stones in the heap, could you figure out a way to remove the stones such that you will always be the winner?
+bool canWinNim(int n) {
+    return n % 4 != 0;
+}
+
+#pragma mark - getHint
+//You are playing the following Bulls and Cows game with your friend: You write down a number and ask your friend to guess what the number is. Each time your friend makes a guess, you provide a hint that indicates how many digits in said guess match your secret number exactly in both digit and position (called "bulls") and how many digits match the secret number but locate in the wrong position (called "cows"). Your friend will use successive guesses and hints to eventually derive the secret number.
+//
+//For example:
+//
+//Secret number:  "1807"
+//Friend's guess: "7810"
+//Hint: 1 bull and 3 cows. (The bull is 8, the cows are 0, 1 and 7.)
+//Write a function to return a hint according to the secret number and friend's guess, use A to indicate the bulls and B to indicate the cows. In the above example, your function should return "1A3B".
+//
+//Please note that both secret number and friend's guess may contain duplicate digits, for example:
+//
+//Secret number:  "1123"
+//Friend's guess: "0111"
+//In this case, the 1st 1 in friend's guess is a bull, the 2nd or 3rd 1 is a cow, and your function should return "1A1B".
+//You may assume that the secret number and your friend's guess only contain digits, and their lengths are always equal.
+string getHint(string secret, string guess)
+{
+    vector<int> table( 10, 0 );
+    for( const auto& c : secret )
+        table[c-'0']++;
+    
+    int bulls = 0;
+    int cows = 0;
+    for( size_t i = 0; i < guess.size(); i++ )
+    {
+        int toIndex = guess[i]-'0';
+        if( guess[i] == secret[i] )
+        {
+            bulls++;
+            table[toIndex]--;
+        }
+    }
+
+    for( size_t i = 0; i < guess.size(); i++ )
+    {
+        int toIndex = guess[i]-'0';
+        if( guess[i] != secret[i] )
+        {
+            if( table[toIndex] > 0 )
+            {
+                cows++;
+                table[toIndex]--;
+            }
+        }
+    }
+    
+    return to_string(bulls) + "A" + to_string(cows) + "B";
+}
+
+void testGetHint()
+{
+    vector<pair<string, string>> tests = {
+        {"1807","7810"},
+        {"1123","0111"},
+        {"1122","1222"},//"3A0B"
+    };
+    for( auto& p : tests )
+    {
+        cout << getHint(p.first, p.second) << endl;
+    }
+}
+
+#pragma mark - lengthOfLIS
+//Given an unsorted array of integers, find the length of longest increasing subsequence.
+//
+//For example,
+//Given [10, 9, 2, 5, 3, 7, 101, 18],
+//The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4. Note that there may be more than one LIS combination, it is only necessary for you to return the length.
+//
+//Your algorithm should run in O(n2) complexity.
+//
+//Follow up: Could you improve it to O(n log n) time complexity?
+int lengthOfLIS(vector<int>& nums) {
+    if( nums.size() == 0 )  return 0;
+
+    vector<int> dp(nums.size(), 0);
+    dp[0] = 1;
+    int m = 1;
+    for( size_t i = 0; i < nums.size(); i++ )
+    {
+        int v = 1;
+        for( size_t j = 0; j < i; j++ )
+        {
+            if( nums[j] < nums[i] )
+                v = max( dp[j] + 1, v);
+        }
+        dp[i] = v;
+        m = max(m, dp[i]);
+    }
+    return m;
+}
+
+void testLenghtOfLIS()
+{
+    vector<pair<vector<int>, int>> tests = {
+        {{1,3,6,7,9,4,10,5,6}, 6},
+        {{10, 9, 2, 5, 3, 7, 101, 18}, 4},
+    };
+    for( auto& p : tests )
+        cout << BoolToStr( lengthOfLIS( p.first ) == p.second ) << endl;
+}
+
+#pragma mark - NumArray
+//Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+//
+//Example:
+//Given nums = [-2, 0, 3, -5, 2, -1]
+//
+//sumRange(0, 2) -> 1
+//sumRange(2, 5) -> -1
+//sumRange(0, 5) -> -3
+//Note:
+//You may assume that the array does not change.
+//There are many calls to sumRange function.
+class NumArray {
+    vector<int> m_nums;
+    int m_rS { -1 };
+    int m_rE { -1 };
+    int m_total{ 0 };
+    
+public:
+    NumArray(vector<int> nums)
+        :m_nums( std::move( nums ) )
+    {
+    }
+    
+    int sumRange(int i, int j)
+    {
+        if( i > j || i < 0 || j >= m_nums.size() )
+            return 0;
+        
+        if( j < m_rS || i > m_rE )
+        {
+            m_total = 0;
+            for( int k = i; k <= j; k++ )
+                m_total += m_nums[k];
+        }
+        else
+        {
+            if( i < m_rS )
+            {
+                for( int k = i; k < m_rS; k++ )
+                    m_total += m_nums[k];
+            }
+            else
+            {
+                for( int k = m_rS; k < i; k++ )
+                    m_total -= m_nums[k];
+            }
+            
+            if( j < m_rE )
+            {
+                for( int k = j + 1; k <= m_rE; k++ )
+                    m_total -= m_nums[k];
+            }
+            else
+            {
+                for( int k = m_rE + 1; k <= j; k++ )
+                    m_total += m_nums[k];
+            }
+        }
+        
+        m_rS = i;
+        m_rE = j;
+        return m_total;
+    }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * int param_1 = obj.sumRange(i,j);
+ */
+void testNumArray()
+{
+    vector<int> t = {-2, 0, 3, -5, 2, -1};
+    NumArray obj( t );
+    //sumRange(0, 2) -> 1
+    //sumRange(2, 5) -> -1
+    //sumRange(0, 5) -> -3
+    cout << BoolToStr( obj.sumRange(0, 2) == 1 ) << endl;
+    cout << BoolToStr( obj.sumRange(2, 5) == -1 ) << endl;
+    cout << BoolToStr( obj.sumRange(0, 5) == -3 ) << endl;
+}
+
 #pragma mark - run
 
 void Level21::Run()
 {
-    testGameOfLife();
+    testNumArray();
 }
