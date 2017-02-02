@@ -395,14 +395,14 @@ void testLenghtOfLIS()
 //There are many calls to sumRange function.
 class NumArray {
     vector<int> m_nums;
-    int m_rS { -1 };
-    int m_rE { -1 };
-    int m_total{ 0 };
-    
 public:
     NumArray(vector<int> nums)
-        :m_nums( std::move( nums ) )
+        : m_nums( std::move( nums ) )
     {
+        for( int i = 1; i < m_nums.size(); i++ )
+        {
+            m_nums[i] += m_nums[i-1];
+        }
     }
     
     int sumRange(int i, int j)
@@ -410,40 +410,7 @@ public:
         if( i > j || i < 0 || j >= m_nums.size() )
             return 0;
         
-        if( j < m_rS || i > m_rE )
-        {
-            m_total = 0;
-            for( int k = i; k <= j; k++ )
-                m_total += m_nums[k];
-        }
-        else
-        {
-            if( i < m_rS )
-            {
-                for( int k = i; k < m_rS; k++ )
-                    m_total += m_nums[k];
-            }
-            else
-            {
-                for( int k = m_rS; k < i; k++ )
-                    m_total -= m_nums[k];
-            }
-            
-            if( j < m_rE )
-            {
-                for( int k = j + 1; k <= m_rE; k++ )
-                    m_total -= m_nums[k];
-            }
-            else
-            {
-                for( int k = m_rE + 1; k <= j; k++ )
-                    m_total += m_nums[k];
-            }
-        }
-        
-        m_rS = i;
-        m_rE = j;
-        return m_total;
+        return m_nums[j] - ( i - 1 >= 0 ? m_nums[i - 1] : 0 );
     }
 };
 
@@ -464,9 +431,220 @@ void testNumArray()
     cout << BoolToStr( obj.sumRange(0, 5) == -3 ) << endl;
 }
 
+#pragma mark - NumMatrix
+//Given a 2D matrix matrix, find the sum of the elements inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
+//
+//Range Sum Query 2D
+//The above rectangle (with the red border) is defined by (row1, col1) = (2, 1) and (row2, col2) = (4, 3), which contains sum = 8.
+//
+//Example:
+//Given matrix = [
+//  [3, 0, 1, 4, 2],
+//  [5, 6, 3, 2, 1],
+//  [1, 2, 0, 1, 5],
+//  [4, 1, 0, 1, 7],
+//  [1, 0, 3, 0, 5]
+//]
+//
+//sumRegion(2, 1, 4, 3) -> 8
+//sumRegion(1, 1, 2, 2) -> 11
+//sumRegion(1, 2, 2, 4) -> 12
+//Note:
+//You may assume that the matrix does not change.
+//There are many calls to sumRegion function.
+//You may assume that row1 ≤ row2 and col1 ≤ col2.
+class NumMatrix {
+    vector<vector<int>> m{{}};
+public:
+    NumMatrix(vector<vector<int>> matrix) {
+        if( matrix.empty() || matrix[0].empty() )
+            return;
+
+        m = vector<vector<int>>(matrix.size(), vector<int>(matrix[0].size()));
+        
+        size_t rowSize = matrix.size();
+        size_t colSize = matrix[0].size();
+        
+        for( size_t row = 0; row < rowSize; row++ )
+        {
+            for( size_t col = 0; col < colSize; col++ )
+            {
+                m[row][col] = ( col > 0 ? m[row][col-1] : 0 ) + matrix[row][col];
+            }
+        }
+        
+        for( size_t row = 0; row < rowSize; row++ )
+        {
+            for( size_t col = 0; col < colSize; col++ )
+            {
+                m[row][col] = ( row > 0 ? m[row-1][col] : 0 ) + m[row][col];
+            }
+        }
+    }
+    
+    int sumRegion(int row1, int col1, int row2, int col2)
+    {
+        if( m.empty() || m[0].empty() )
+            return 0;
+
+        int d = m[row2][col2];
+        int a = row1 > 0 && col1 > 0 ? m[row1-1][col1-1] : 0;
+        int b = row1 > 0 ? m[row1-1][col2] : 0;
+        int c = col1 > 0 ? m[row2][col1-1] : 0;
+        return d - b - c + a;
+    }
+};
+
+/**
+ * Your NumMatrix object will be instantiated and called as such:
+ * NumMatrix obj = new NumMatrix(matrix);
+ * int param_1 = obj.sumRegion(row1,col1,row2,col2);
+ */
+void testNumMatrix()
+{
+    vector<vector<int>> matrix = {
+      {3, 0, 1, 4, 2},
+      {5, 6, 3, 2, 1},
+      {1, 2, 0, 1, 5},
+      {4, 1, 0, 1, 7},
+      {1, 0, 3, 0, 5}
+    };
+    
+    NumMatrix obj(matrix);
+    cout << BoolToStr( obj.sumRegion(2, 1, 4, 3) == 8 ) << endl;
+    cout << BoolToStr( obj.sumRegion(1, 1, 2, 2) == 11 ) << endl;
+    cout << BoolToStr( obj.sumRegion(1, 2, 2, 4) == 12 ) << endl;
+    
+    vector<vector<int>> m1 = {
+        {3, 0, 1, 4, 2},
+    };
+    NumMatrix obj1(m1);
+    cout << BoolToStr( obj1.sumRegion(0, 0, 0, 2) == 4 ) << endl;
+    
+    vector<vector<int>> m2 = {
+        {3}, {0}, {1}, {4}, {2},
+    };
+    NumMatrix obj2(m2);
+    cout << BoolToStr( obj2.sumRegion(0, 0, 2, 0) == 4 ) << endl;
+    
+    vector<vector<int>> m3 = {{}};
+    NumMatrix obj3(m3);
+    cout << BoolToStr( obj3.sumRegion(0, 0, 2, 0) == 0 ) << endl;
+}
+
+#pragma mark - isAdditiveNumber
+//Additive number is a string whose digits can form additive sequence.
+//
+//A valid additive sequence should contain at least three numbers. Except for the first two numbers, each subsequent number in the sequence must be the sum of the preceding two.
+//
+//For example:
+//"112358" is an additive number because the digits can form an additive sequence: 1, 1, 2, 3, 5, 8.
+//
+//1 + 1 = 2, 1 + 2 = 3, 2 + 3 = 5, 3 + 5 = 8
+//"199100199" is also an additive number, the additive sequence is: 1, 99, 100, 199.
+//1 + 99 = 100, 99 + 100 = 199
+//Note: Numbers in the additive sequence cannot have leading zeros, so sequence 1, 2, 03 or 1, 02, 3 is invalid.
+//
+//Given a string containing only digits '0'-'9', write a function to determine if it's an additive number.
+//
+//Follow up:
+//How would you handle overflow for very large input integers?
+string twoNumSum( const string& a, const string& b )
+{
+    string left = a;
+    string right = b;
+    int add = 0;
+    string out;
+    while( left.size() > 0 || right.size() > 0 )
+    {
+        int l = 0;
+        if( left.size() > 0 )
+        {
+            l = left.back() - '0';
+            left.pop_back();
+        }
+        
+        int r = 0;
+        if( right.size() > 0 )
+        {
+            r = right.back() - '0';
+            right.pop_back();
+        }
+        
+        int s = l + r + add;
+        add = 0;
+        if( s > 9 )
+            add = 1;
+        
+        out.insert(out.begin(), '0' + s % 10 );
+    }
+    if( add )
+        out.insert(out.begin(), '1' );
+    return out;
+}
+
+bool _isAdditiveNumber( string& num, string& pre, string& prepre, int start )
+{
+    string expect = twoNumSum( pre, prepre );
+    if( start + expect.size() <= num.size() && num.substr( start, expect.size() ) == expect )
+    {
+        if( start + expect.size() == num.size() )
+            return true;
+        
+        if( _isAdditiveNumber( num, expect, pre, (int) ( start + expect.size() ) ) )
+            return true;
+    }
+    
+    return false;
+}
+
+bool isAdditiveNumber(string num)
+{
+    for( int i = 0; i + 2 < num.size(); i++ )
+    {
+        string prepre = num.substr( 0, i + 1 );
+        if( prepre[0] == '0' && prepre.size() > 1 )   // Failed on "000" test case if I don't have pre.size() > 1
+            continue;
+
+        for( int j = i + 1; j + 1 < num.size(); j++ )
+        {
+            string pre = num.substr( i + 1, j - i );
+            if( pre[0] == '0' && pre.size() > 1 )   // Failed on "101" test case if I don't have pre.size() > 1
+                continue;
+
+            if( _isAdditiveNumber( num, pre, prepre, j + 1 ) )
+                return true;
+        }
+    }
+    
+    return false;
+}
+
+void testTwoNumSum()
+{
+    cout << BoolToStr( twoNumSum("0", "0") == "0" ) << endl;
+    cout << BoolToStr( twoNumSum("", "0") == "0" ) << endl;
+    cout << BoolToStr( twoNumSum("2", "") == "2" ) << endl;
+    cout << BoolToStr( twoNumSum("2", "4") == "6" ) << endl;
+    cout << BoolToStr( twoNumSum("12", "14") == "26" ) << endl;
+    cout << BoolToStr( twoNumSum("122", "1") == "123" ) << endl;
+    cout << BoolToStr( twoNumSum("999999999", "9") == "1000000008" ) << endl;
+    
+    cout << BoolToStr( isAdditiveNumber( "000" ) ) << endl;
+    cout << BoolToStr( isAdditiveNumber( "101" ) ) << endl;
+    cout << BoolToStr( isAdditiveNumber( "123" ) ) << endl;
+    cout << BoolToStr( isAdditiveNumber( "112358" ) ) << endl;
+    cout << BoolToStr( isAdditiveNumber( "199100199" ) ) << endl;
+    cout << BoolToStr( isAdditiveNumber( "5491322" ) ) << endl;
+    cout << BoolToStr( !isAdditiveNumber( "54913221" ) ) << endl;
+    cout << BoolToStr( !isAdditiveNumber( "" ) ) << endl;
+
+    
+}
+
 #pragma mark - run
 
 void Level21::Run()
 {
-    testNumArray();
+    testTwoNumSum();
 }
