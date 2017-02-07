@@ -381,6 +381,8 @@ void testLenghtOfLIS()
         cout << BoolToStr( lengthOfLIS( p.first ) == p.second ) << endl;
 }
 
+namespace NumArray1 {
+
 #pragma mark - NumArray
 //Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
 //
@@ -430,6 +432,8 @@ void testNumArray()
     cout << BoolToStr( obj.sumRange(2, 5) == -1 ) << endl;
     cout << BoolToStr( obj.sumRange(0, 5) == -3 ) << endl;
 }
+
+}   // namespace NumArray1
 
 #pragma mark - NumMatrix
 //Given a 2D matrix matrix, find the sum of the elements inside the rectangle defined by its upper left corner (row1, col1) and lower right corner (row2, col2).
@@ -638,13 +642,128 @@ void testTwoNumSum()
     cout << BoolToStr( isAdditiveNumber( "5491322" ) ) << endl;
     cout << BoolToStr( !isAdditiveNumber( "54913221" ) ) << endl;
     cout << BoolToStr( !isAdditiveNumber( "" ) ) << endl;
-
-    
 }
+
+namespace NumArray2 {
+#pragma mark - NumArray 2
+//Given an integer array nums, find the sum of the elements between indices i and j (i ≤ j), inclusive.
+//
+//The update(i, val) function modifies nums by updating the element at index i to val.
+//Example:
+//Given nums = [1, 3, 5]
+//
+//sumRange(0, 2) -> 9
+//update(1, 2)
+//sumRange(0, 2) -> 8
+//Note:
+//The array is only modifiable by the update function.
+//You may assume the number of calls to update and sumRange function is distributed evenly.
+class NumArray {
+    std::vector<int> rangeArray;
+    
+public:
+    NumArray(vector<int> nums)
+    {
+        int n = (int)nums.size();
+        rangeArray = std::vector<int>( n * 2 );
+        for( int i = 0; i < n; i++ )
+        {
+            rangeArray[n + i] = nums[i];
+        }
+        
+        for( int i = n - 1; i > 0; i-- )
+        {
+            rangeArray[i] = rangeArray[2 * i] + rangeArray[2 * i + 1];
+        }
+    }
+    
+    void update(int i, int val)
+    {
+        int n = (int)(rangeArray.size() / 2);
+        if( i >= 0 && i < n )
+        {
+            int t = n + i;
+            rangeArray[t] = val;
+            t = t / 2;
+            while( t > 0 )
+            {
+                rangeArray[t] = rangeArray[t*2] + rangeArray[t*2+1];
+                t = t / 2;
+            }
+        }
+    }
+    
+    int sumRange(int i, int j)
+    {
+        int n = (int)(rangeArray.size() / 2);
+        int sum = 0;
+        if( i >= 0 && i < n && i <= j && j < n )
+        {
+            i += n;
+            j += n;
+            while( i <= j )
+            {
+                if( i % 2 == 1 )
+                {
+                    sum += rangeArray[i];
+                    i++;
+                }
+
+                if( j % 2 == 0 )
+                {
+                    sum += rangeArray[j];
+                    j--;
+                }
+                
+                i = i / 2;
+                j = j / 2;
+            }
+        }
+        
+        return sum;
+    }
+};
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray obj = new NumArray(nums);
+ * obj.update(i,val);
+ * int param_2 = obj.sumRange(i,j);
+ */
+void testNumArray()
+{
+    vector<int> t = {-2, 0, 3, -5, 2, -1};
+    NumArray obj( t );
+    //sumRange(0, 2) -> 1
+    //sumRange(2, 5) -> -1
+    //sumRange(0, 5) -> -3
+    cout << BoolToStr( obj.sumRange(0, 4) == -2 ) << endl;
+    cout << BoolToStr( obj.sumRange(0, 2) == 1 ) << endl;
+    cout << BoolToStr( obj.sumRange(2, 5) == -1 ) << endl;
+    cout << BoolToStr( obj.sumRange(0, 5) == -3 ) << endl;
+    
+    obj.update(0, 0);
+    cout << BoolToStr( obj.sumRange(0, 2) == 3 ) << endl;
+    cout << BoolToStr( obj.sumRange(2, 5) == -1 ) << endl;
+    cout << BoolToStr( obj.sumRange(0, 5) == -1 ) << endl;
+    
+    obj.update(0, -2);
+    cout << BoolToStr( obj.sumRange(0, 0) == -2 ) << endl;
+    cout << BoolToStr( obj.sumRange(2, 5) == -1 ) << endl;
+    cout << BoolToStr( obj.sumRange(1, 2) == 3 ) << endl;
+    
+    vector<int> t1 = {1,3,5};
+    NumArray obj1( t1 );
+    cout << BoolToStr( obj1.sumRange(0, 2) == 9 ) << endl;
+    obj1.update(1, 2);
+    cout << BoolToStr( obj1.sumRange(0, 2) == 8 ) << endl;
+}
+    
+}   // namespace NumArray2
 
 #pragma mark - run
 
 void Level21::Run()
 {
-    testTwoNumSum();
+    NumArray2::testNumArray();
 }
