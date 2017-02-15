@@ -659,70 +659,64 @@ namespace NumArray2 {
 //The array is only modifiable by the update function.
 //You may assume the number of calls to update and sumRange function is distributed evenly.
 class NumArray {
-    std::vector<int> rangeArray;
+    std::vector<int> BIT;
+    std::vector<int> m_nums;
     
 public:
+    // https://www.hackerearth.com/practice/notes/binary-indexed-tree-or-fenwick-tree/
     NumArray(vector<int> nums)
     {
-        int n = (int)nums.size();
-        rangeArray = std::vector<int>( n * 2 );
-        for( int i = 0; i < n; i++ )
+        BIT = std::vector<int>( nums.size() + 1, 0 );
+        m_nums = nums;
+        for( int i = 0; i < nums.size(); i++ )
         {
-            rangeArray[n + i] = nums[i];
+            add(i, nums[i]);
         }
-        
-        for( int i = n - 1; i > 0; i-- )
+    }
+    
+    int LastOneBit(int x )
+    {
+        return x & -x;
+    }
+    
+    void add(int i, int diff)
+    {
+        i++;
+        while( i < BIT.size() )
         {
-            rangeArray[i] = rangeArray[2 * i] + rangeArray[2 * i + 1];
+            BIT[i] += diff;
+            i = i + LastOneBit(i);
         }
     }
     
     void update(int i, int val)
     {
-        int n = (int)(rangeArray.size() / 2);
-        if( i >= 0 && i < n )
+        if( i >= 0 && i < m_nums.size() )
         {
-            int t = n + i;
-            rangeArray[t] = val;
-            t = t / 2;
-            while( t > 0 )
-            {
-                rangeArray[t] = rangeArray[t*2] + rangeArray[t*2+1];
-                t = t / 2;
-            }
+            add(i, val - m_nums[i]);
+
+            m_nums[i] = val;
         }
+    }
+    
+    int sumFrom( int i )
+    {
+        i++;
+        int sum = 0;
+        while( i > 0 )
+        {
+            sum += BIT[i];
+            i = i - LastOneBit(i);
+        }
+        return sum;
     }
     
     int sumRange(int i, int j)
     {
-        int n = (int)(rangeArray.size() / 2);
-        int sum = 0;
-        if( i >= 0 && i < n && i <= j && j < n )
-        {
-            i += n;
-            j += n;
-            while( i <= j )
-            {
-                if( i % 2 == 1 )
-                {
-                    sum += rangeArray[i];
-                    i++;
-                }
-
-                if( j % 2 == 0 )
-                {
-                    sum += rangeArray[j];
-                    j--;
-                }
-                
-                i = i / 2;
-                j = j / 2;
-            }
-        }
-        
-        return sum;
+        return sumFrom(j) - sumFrom(i-1);
     }
 };
+
 
 /**
  * Your NumArray object will be instantiated and called as such:
