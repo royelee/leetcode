@@ -68,6 +68,10 @@ D_L(18);
 D_L(19);
 D_L(20);
 D_L(21);
+D_L(22);
+D_L(23);
+D_L(24);
+D_L(25);
 
 
 #endif /* defined(__XProject__Level__) */
